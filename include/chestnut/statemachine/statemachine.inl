@@ -8,12 +8,12 @@ namespace chestnut::statemachine
 
         DefaultState *defaultState = new DefaultState( dynamic_cast<typename DefaultState::ParentStatemachinePtrType>( this ) );
 
-        m_mapStateNameToState[ defaultState->getName() ] = defaultState;
+        m_mapStateNameToState[ defaultState->name ] = defaultState;
         m_stackStates.push( defaultState );
 
         addStates( SystemTypeList<States...>() );
 
-        defaultState->onEnter( defaultState->getName() );
+        defaultState->onEnter( defaultState->name );
     }
 
     template<typename StateNameType, typename StateInterface>
@@ -27,13 +27,12 @@ namespace chestnut::statemachine
     void IStatemachine<StateNameType, StateInterface>::addStates( SystemTypeList<State, OtherStates...> ) 
     {
         State *state = new State( dynamic_cast<typename State::ParentStatemachinePtrType>( this ) );
-        StateNameType stateName = state->getName();
 
-        auto it = m_mapStateNameToState.find( stateName );
+        auto it = m_mapStateNameToState.find( state->name );
         // add the state only if it's not a duplicate
         if( it == m_mapStateNameToState.end() )
         {
-            m_mapStateNameToState[ stateName ] = state;
+            m_mapStateNameToState[ state->name ] = state;
         }
         else
         {
@@ -74,7 +73,7 @@ namespace chestnut::statemachine
     template<typename StateNameType, typename StateInterface>
     StateNameType IStatemachine<StateNameType, StateInterface>::getCurrentStateName() const
     {
-        return m_stackStates.top()->getName();   
+        return m_stackStates.top()->name;   
     }
 
     template<typename StateNameType, typename StateInterface>
@@ -84,7 +83,7 @@ namespace chestnut::statemachine
         if( it != m_mapStateNameToState.end() )
         {
             StateInterface *currentState = m_stackStates.top();
-            StateNameType currentStateName = currentState->getName();
+            StateNameType currentStateName = currentState->name;
 
             if( currentStateName != nextStateName )
             {
@@ -110,7 +109,7 @@ namespace chestnut::statemachine
         if( it != m_mapStateNameToState.end() )
         {
             StateInterface *currentState = m_stackStates.top();
-            StateNameType currentStateName = currentState->getName();
+            StateNameType currentStateName = currentState->name;
 
             if( currentStateName != nextStateName )
             {
@@ -131,16 +130,13 @@ namespace chestnut::statemachine
         if( m_stackStates.size() > 1 )
         {
             StateInterface *currentState = m_stackStates.top();
-            StateNameType currentStateName = currentState->getName();
 
             m_stackStates.pop();
 
             StateInterface *nextState = m_stackStates.top();
-            StateNameType nextStateName = nextState->getName();
 
-
-            currentState->onExit( nextStateName );
-            nextState->onEnter( currentStateName );
+            currentState->onExit( nextState->name );
+            nextState->onEnter( currentState->name );
         }
     }
 

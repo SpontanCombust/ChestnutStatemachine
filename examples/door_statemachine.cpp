@@ -129,11 +129,10 @@ class CDoorStateClosed : public IDoorState
 {
 public:
     // Again we have to define a special constructor
-    CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm ) {}
-
-    const EDoorStateName getName() const override
+    CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm ) 
     {
-        return DOOR_CLOSED;
+        // Remember to set the name for your state!
+        name = DOOR_CLOSED;
     }
 
     void onEnter( EDoorStateName prevState ) override
@@ -167,11 +166,10 @@ class CDoorStateOpening : public IDoorState
 {
 public:
     // Again we have to define a special constructor
-    CDoorStateOpening( CDoorStatemachine *sm ) : IDoorState( sm ) {}
-
-    const EDoorStateName getName() const override
+    CDoorStateOpening( CDoorStatemachine *sm ) : IDoorState( sm ) 
     {
-        return DOOR_OPENING;
+        // Remember to set the name for your state!
+        name = DOOR_OPENING;
     }
 
     void onEnter( EDoorStateName prevState ) override
@@ -206,11 +204,10 @@ class CDoorStateOpen : public IDoorState
 {
 public:
     // Again we have to define a special constructor
-    CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm ) {}
-
-    const EDoorStateName getName() const override
+    CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm ) 
     {
-        return DOOR_OPEN;
+        // Remember to set the name for your state!
+        name = DOOR_OPEN;
     }
 
     void onEnter( EDoorStateName prevState ) override
@@ -244,11 +241,10 @@ class CDoorStateClosing : public IDoorState
 {
 public:
     // Again we have to define a special constructor
-    CDoorStateClosing( CDoorStatemachine *sm ) : IDoorState( sm ) {}
-
-    const EDoorStateName getName() const override
+    CDoorStateClosing( CDoorStatemachine *sm ) : IDoorState( sm ) 
     {
-        return DOOR_CLOSING;
+        // Remember to set the name for your state!
+        name = DOOR_CLOSING;
     }
 
     void onEnter( EDoorStateName prevState ) override

@@ -6,17 +6,17 @@ namespace chestnut::statemachine
     template< typename StateNameType, class ParentStatemachine >
     class IState
     {
-    public:
-        typedef ParentStatemachine* ParentStatemachinePtrType;
-
     protected:
         ParentStatemachine *parent;
 
     public:
+        typedef ParentStatemachine* ParentStatemachinePtrType;
+        StateNameType name; // has to be set by inheriting state type
+
+    public:
         IState( ParentStatemachine *parent_ );
         virtual ~IState() = default;
-
-        virtual const StateNameType getName() const = 0;
+        
         virtual void onEnter( StateNameType prevState ) = 0;
         virtual void onExit( StateNameType nextState ) = 0;
     };
