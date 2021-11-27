@@ -5,11 +5,19 @@
 
 namespace chestnut::statemachine
 {
+    /**
+     * @brief Base generic abstract class used for creating state interface
+     * 
+     * @tparam ParentStatemachine type of the statemachine that will house the state
+     * 
+     * @details
+     * ParentStatemachine type should be forward declared before the state interface.
+     */
     template< class ParentStatemachine >
     class IState
     {
     protected:
-        ParentStatemachine *parent;
+        ParentStatemachine *parent; /*Pointer to the statemachine that houses the state*/
 
     public:
         typedef ParentStatemachine* ParentStatemachinePtrType;
@@ -18,7 +26,18 @@ namespace chestnut::statemachine
         IState( ParentStatemachine *parent_ );
         virtual ~IState() = default;
         
+        /**
+         * @brief A method called whenever statemachine enters this state
+         * 
+         * @param prevState type of the state statemachine swithed from
+         */
         virtual void onEnter( std::type_index prevState ) = 0;
+
+        /**
+         * @brief A method called whenever statemachine exits this state
+         * 
+         * @param nextState type of the state statemachine is swithing to
+         */
         virtual void onExit( std::type_index nextState ) = 0;
     };
     

@@ -6,24 +6,23 @@
 #include <shared_mutex>
 #include <thread>
 
-using namespace chestnut::statemachine;
 
 
 
+// ===================== 1. Forward declare statemachine type and define the state interface =====================
 
-
-// 1. Forward declare statemachine type and define the state interface
 class CDoorStatemachine;
 
-class IDoorState : public IState<CDoorStatemachine>
+class IDoorState : public chestnut::statemachine::IState<CDoorStatemachine>
 {
 public:
-    typedef IState<CDoorStatemachine> super;
+    typedef chestnut::statemachine::IState<CDoorStatemachine> super;
 
     // 2.1 You have to define the special constructor that takes in statemachine pointer, you can pass the pointer to parent class constructor
     // At the moment this library doesn't support custom state constructors
     IDoorState( CDoorStatemachine *sm ) : super( sm ) {}
 
+    // Declare any number of virtual methods that your state classes should implement
     virtual bool tryOpen() = 0;
     virtual bool tryClose() = 0;
 };
@@ -31,20 +30,20 @@ public:
 
 
 
-// 2. Define your statemachine type
-class CDoorStatemachine : public IStatemachine<IDoorState>
+// ====================================== 2. Define your statemachine type ======================================
+class CDoorStatemachine : public chestnut::statemachine::IStatemachine<IDoorState>
 {
 public:
     // utility parent class typedef
-    typedef IStatemachine<IDoorState> super;
+    typedef chestnut::statemachine::IStatemachine<IDoorState> super;
 
     // You can make your statemachine able to be used across threads in an async manner
     // You have to be very careful with this however, like with any other scenario that involves race conditions
-    // Statemachine is not thread safe on its own!
+    // The base IStatemachine type does not automatically support multithreading
     mutable std::recursive_mutex doorMutex;
 
 
-    // We'll override methods to account for the mutex
+    // We'll override methods from IStatemachine to account for the mutex
     IDoorState *getCurrentState() const override
     {
         std::lock_guard< std::recursive_mutex > lock( doorMutex );
@@ -72,6 +71,7 @@ public:
     }
 
 
+    // Define methods that will call appropriate method in the current state
 
     bool tryOpen()
     {
@@ -90,8 +90,8 @@ public:
 
 
 
-// 3. Define your states
-//
+// ====================================== 3. Define your states ======================================
+
 // If you put state interface and statemachine definition in seperate headers 
 // you'll want to include them both in states' headers if you want to use the parent pointer
 //
@@ -194,6 +194,7 @@ void CDoorStateOpening::onEnter( std::type_index prevState )
 {
     std::cout << "The door is openning...\n";
 
+    // spawn a thread that'll wait 2 seconds and then transition to next state
     std::thread( [this] {
         std::this_thread::sleep_for( std::chrono::seconds(2) );
         parent->gotoState( typeid(CDoorStateOpen) );
@@ -301,9 +302,11 @@ const char *doorStateTypeToString( std::type_index type )
     return "";
 }
 
-// 5. Create a statemachine object
+// ===================== 4. Create and setup your statemachine object =====================
+
 int main(int argc, char const *argv[])
 {
+
     CDoorStatemachine door;
     door.setupStates< CDoorStateClosed, CDoorStateOpen, CDoorStateClosing, CDoorStateOpening >();
 
@@ -322,7 +325,7 @@ int main(int argc, char const *argv[])
         printDoorState();
         while( door.getCurrentStateType() == typeid(CDoorStateOpening) )
         {
-            std::this_thread::sleep_for( std::chrono::milliseconds(100) );
+            std::this_thread::sleep_for( std::chrono::milliseconds(100) ); // we'll keep waiting small intervals until the door fully opens
         }
         printDoorState();
 
