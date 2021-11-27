@@ -65,6 +65,12 @@ namespace chestnut::statemachine
     }
 
     template<class StateInterface>
+    std::type_index IStatemachine<StateInterface>::getCurrentStateType() const
+    {
+        return std::type_index( typeid( *m_stackStates.top() ) );
+    }
+
+    template<class StateInterface>
     void IStatemachine<StateInterface>::gotoState( std::type_index nextStateType ) 
     {
         auto it = m_mapStateTypeToState.find( nextStateType );

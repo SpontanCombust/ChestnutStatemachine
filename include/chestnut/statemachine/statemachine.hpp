@@ -34,6 +34,8 @@ namespace chestnut::statemachine
 
         virtual StateInterface *getCurrentState() const;
 
+        virtual std::type_index getCurrentStateType() const;
+
 
         // If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state
         // State transition happens directly, without consideration of a state below the top
