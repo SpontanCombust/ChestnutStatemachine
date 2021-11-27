@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Chestnut Statemachine: chestnut::statemachine::IState&lt; StateNameType, ParentStatemachine &gt; Class Template Reference</title>
+<title>Chestnut Statemachine: chestnut::statemachine::IState&lt; ParentStatemachine &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chestnut Statemachine
-   &#160;<span id="projectnumber">v1.1</span>
+   &#160;<span id="projectnumber">v1.2.0</span>
    </div>
-   <div id="projectbrief">A C++ header-only library for finite statemachine implementation</div>
+   <div id="projectbrief">A C++ header-only library for finite statemachine implementation.</div>
   </td>
  </tr>
  </tbody>
@@ -70,11 +70,10 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classchestnut_1_1statemachine_1_1_i_state-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">chestnut::statemachine::IState&lt; StateNameType, ParentStatemachine &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">chestnut::statemachine::IState&lt; ParentStatemachine &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -85,64 +84,56 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a9e768ab7564293541e80f106ef7a2c70"><td class="memItemLeft" align="right" valign="top"><a id="a9e768ab7564293541e80f106ef7a2c70"></a>
+<tr class="memitem:a54f73dcff90e6d16cdd6639fc2e4a4b7"><td class="memItemLeft" align="right" valign="top"><a id="a54f73dcff90e6d16cdd6639fc2e4a4b7"></a>
 typedef ParentStatemachine *&#160;</td><td class="memItemRight" valign="bottom"><b>ParentStatemachinePtrType</b></td></tr>
-<tr class="separator:a9e768ab7564293541e80f106ef7a2c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a54f73dcff90e6d16cdd6639fc2e4a4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaf1c0486d5250de1ee94065ebd957c91"><td class="memItemLeft" align="right" valign="top"><a id="aaf1c0486d5250de1ee94065ebd957c91"></a>
+<tr class="memitem:adc8b284527a4eef9aa540aac948cb299"><td class="memItemLeft" align="right" valign="top"><a id="adc8b284527a4eef9aa540aac948cb299"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>IState</b> (ParentStatemachine *parent_)</td></tr>
-<tr class="separator:aaf1c0486d5250de1ee94065ebd957c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af313250f7d92023113c360872ea971a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html#af313250f7d92023113c360872ea971a0">onEnter</a> (StateNameType prevState)=0</td></tr>
-<tr class="memdesc:af313250f7d92023113c360872ea971a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method called whenever statemachine enters this state.  <a href="classchestnut_1_1statemachine_1_1_i_state.html#af313250f7d92023113c360872ea971a0">More...</a><br /></td></tr>
-<tr class="separator:af313250f7d92023113c360872ea971a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac348c2ed096911f5cc842b7a9599eb70"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html#ac348c2ed096911f5cc842b7a9599eb70">onExit</a> (StateNameType nextState)=0</td></tr>
-<tr class="memdesc:ac348c2ed096911f5cc842b7a9599eb70"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method called whenever statemachine exits this state.  <a href="classchestnut_1_1statemachine_1_1_i_state.html#ac348c2ed096911f5cc842b7a9599eb70">More...</a><br /></td></tr>
-<tr class="separator:ac348c2ed096911f5cc842b7a9599eb70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:af4c0a354f7409b3af81522cb6e3fe169"><td class="memItemLeft" align="right" valign="top"><a id="af4c0a354f7409b3af81522cb6e3fe169"></a>
-StateNameType&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
-<tr class="separator:af4c0a354f7409b3af81522cb6e3fe169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:adc8b284527a4eef9aa540aac948cb299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a967ceaaeb1d7485548a3008c850c363f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html#a967ceaaeb1d7485548a3008c850c363f">onEnter</a> (std::type_index prevState)=0</td></tr>
+<tr class="memdesc:a967ceaaeb1d7485548a3008c850c363f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method called whenever statemachine enters this state.  <a href="classchestnut_1_1statemachine_1_1_i_state.html#a967ceaaeb1d7485548a3008c850c363f">More...</a><br /></td></tr>
+<tr class="separator:a967ceaaeb1d7485548a3008c850c363f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b31f2defd3727f876aded2f4ae8f5c1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html#a9b31f2defd3727f876aded2f4ae8f5c1">onExit</a> (std::type_index nextState)=0</td></tr>
+<tr class="memdesc:a9b31f2defd3727f876aded2f4ae8f5c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method called whenever statemachine exits this state.  <a href="classchestnut_1_1statemachine_1_1_i_state.html#a9b31f2defd3727f876aded2f4ae8f5c1">More...</a><br /></td></tr>
+<tr class="separator:a9b31f2defd3727f876aded2f4ae8f5c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a1fedee604bdceb78845687330164b02e"><td class="memItemLeft" align="right" valign="top"><a id="a1fedee604bdceb78845687330164b02e"></a>
+<tr class="memitem:a72a3aca729e56d090f720a09ff92583c"><td class="memItemLeft" align="right" valign="top"><a id="a72a3aca729e56d090f720a09ff92583c"></a>
 ParentStatemachine *&#160;</td><td class="memItemRight" valign="bottom"><b>parent</b></td></tr>
-<tr class="separator:a1fedee604bdceb78845687330164b02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a72a3aca729e56d090f720a09ff92583c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename StateNameType, class ParentStatemachine&gt;<br />
-class chestnut::statemachine::IState&lt; StateNameType, ParentStatemachine &gt;</h3>
+<div class="textblock"><h3>template&lt;class ParentStatemachine&gt;<br />
+class chestnut::statemachine::IState&lt; ParentStatemachine &gt;</h3>
 
 <p>Base generic abstract class used for creating state interface. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">StateNameType</td><td>a type of states' name </td></tr>
     <tr><td class="paramname">ParentStatemachine</td><td>type of the statemachine that will house the state</td></tr>
   </table>
   </dd>
 </dl>
-<p>ParentStatemachine type should be forward declared before the state interface.</p>
-<p>StateNameType can be any type you'd want to identify your states by, like an enum, string or a regular int. The type must however be able to be used for std::unordered_map as a key, so if you have a custom type you would want to use a name, you need to implement a std::hash template specialization for it </p>
+<p>ParentStatemachine type should be forward declared before the state interface. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="af313250f7d92023113c360872ea971a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af313250f7d92023113c360872ea971a0">&#9670;&nbsp;</a></span>onEnter()</h2>
+<a id="a967ceaaeb1d7485548a3008c850c363f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a967ceaaeb1d7485548a3008c850c363f">&#9670;&nbsp;</a></span>onEnter()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , class ParentStatemachine &gt; </div>
+template&lt;class ParentStatemachine &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html">chestnut::statemachine::IState</a>&lt; StateNameType, ParentStatemachine &gt;::onEnter </td>
+          <td class="memname">virtual void <a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html">chestnut::statemachine::IState</a>&lt; ParentStatemachine &gt;::onEnter </td>
           <td>(</td>
-          <td class="paramtype">StateNameType&#160;</td>
+          <td class="paramtype">std::type_index&#160;</td>
           <td class="paramname"><em>prevState</em></td><td>)</td>
           <td></td>
         </tr>
@@ -157,28 +148,28 @@ template&lt;typename StateNameType , class ParentStatemachine &gt; </div>
 <p>A method called whenever statemachine enters this state. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">prevState</td><td>name of the state statemachine swithed from </td></tr>
+    <tr><td class="paramname">prevState</td><td>type of the state statemachine swithed from </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ac348c2ed096911f5cc842b7a9599eb70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac348c2ed096911f5cc842b7a9599eb70">&#9670;&nbsp;</a></span>onExit()</h2>
+<a id="a9b31f2defd3727f876aded2f4ae8f5c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b31f2defd3727f876aded2f4ae8f5c1">&#9670;&nbsp;</a></span>onExit()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , class ParentStatemachine &gt; </div>
+template&lt;class ParentStatemachine &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html">chestnut::statemachine::IState</a>&lt; StateNameType, ParentStatemachine &gt;::onExit </td>
+          <td class="memname">virtual void <a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html">chestnut::statemachine::IState</a>&lt; ParentStatemachine &gt;::onExit </td>
           <td>(</td>
-          <td class="paramtype">StateNameType&#160;</td>
+          <td class="paramtype">std::type_index&#160;</td>
           <td class="paramname"><em>nextState</em></td><td>)</td>
           <td></td>
         </tr>
@@ -193,7 +184,7 @@ template&lt;typename StateNameType , class ParentStatemachine &gt; </div>
 <p>A method called whenever statemachine exits this state. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nextState</td><td>name of the state statemachine is swithing to </td></tr>
+    <tr><td class="paramname">nextState</td><td>type of the state statemachine is swithing to </td></tr>
   </table>
   </dd>
 </dl>

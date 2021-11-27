@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Chestnut Statemachine: chestnut::statemachine::IStatemachine&lt; StateNameType, StateInterface &gt; Class Template Reference</title>
+<title>Chestnut Statemachine: chestnut::statemachine::IStatemachine&lt; StateInterface &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chestnut Statemachine
-   &#160;<span id="projectnumber">v1.1</span>
+   &#160;<span id="projectnumber">v1.2.0</span>
    </div>
-   <div id="projectbrief">A C++ header-only library for finite statemachine implementation</div>
+   <div id="projectbrief">A C++ header-only library for finite statemachine implementation.</div>
   </td>
  </tr>
  </tbody>
@@ -73,7 +73,7 @@ $(function() {
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classchestnut_1_1statemachine_1_1_i_statemachine-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">chestnut::statemachine::IStatemachine&lt; StateNameType, StateInterface &gt; Class Template Reference</div>  </div>
+<div class="title">chestnut::statemachine::IStatemachine&lt; StateInterface &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -84,43 +84,42 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a253e682342a20ee3143794fbf36f4bb9"><td class="memTemplParams" colspan="2">template&lt;class DefaultState , class ... States&gt; </td></tr>
-<tr class="memitem:a253e682342a20ee3143794fbf36f4bb9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a253e682342a20ee3143794fbf36f4bb9">setupStates</a> ()</td></tr>
-<tr class="memdesc:a253e682342a20ee3143794fbf36f4bb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds states of given types to the statemachine and initialize the default state.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a253e682342a20ee3143794fbf36f4bb9">More...</a><br /></td></tr>
-<tr class="separator:a253e682342a20ee3143794fbf36f4bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a762248f04cba642743a86a64dd792bdf"><td class="memItemLeft" align="right" valign="top">virtual StateInterface *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a762248f04cba642743a86a64dd792bdf">getCurrentState</a> () const</td></tr>
-<tr class="memdesc:a762248f04cba642743a86a64dd792bdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the state object on top of the state stack.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a762248f04cba642743a86a64dd792bdf">More...</a><br /></td></tr>
-<tr class="separator:a762248f04cba642743a86a64dd792bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5ec38e8bfaa7638d26c9c306eb82cd3"><td class="memItemLeft" align="right" valign="top">virtual StateNameType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#ab5ec38e8bfaa7638d26c9c306eb82cd3">getCurrentStateName</a> () const</td></tr>
-<tr class="memdesc:ab5ec38e8bfaa7638d26c9c306eb82cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the state object on top of the state stack.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#ab5ec38e8bfaa7638d26c9c306eb82cd3">More...</a><br /></td></tr>
-<tr class="separator:ab5ec38e8bfaa7638d26c9c306eb82cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a622d9c5d3d48b1e83ccdec0cbf074ace"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a622d9c5d3d48b1e83ccdec0cbf074ace">gotoState</a> (StateNameType nextStateName)</td></tr>
-<tr class="memdesc:a622d9c5d3d48b1e83ccdec0cbf074ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions directly to specified state, forgetting its previous state afterwards.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a622d9c5d3d48b1e83ccdec0cbf074ace">More...</a><br /></td></tr>
-<tr class="separator:a622d9c5d3d48b1e83ccdec0cbf074ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5231defcf854a8edb70649aa7f91a9eb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a5231defcf854a8edb70649aa7f91a9eb">pushState</a> (StateNameType nextStateName)</td></tr>
-<tr class="memdesc:a5231defcf854a8edb70649aa7f91a9eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions to the specified state and rememebers its previous state afterwards.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a5231defcf854a8edb70649aa7f91a9eb">More...</a><br /></td></tr>
-<tr class="separator:a5231defcf854a8edb70649aa7f91a9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a856b11a83317a8c2cff0965988383736"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a856b11a83317a8c2cff0965988383736">popState</a> ()</td></tr>
-<tr class="memdesc:a856b11a83317a8c2cff0965988383736"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions to the previous state.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a856b11a83317a8c2cff0965988383736">More...</a><br /></td></tr>
-<tr class="separator:a856b11a83317a8c2cff0965988383736"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acadaba2776886f503fa6604fac8dca36"><td class="memTemplParams" colspan="2">template&lt;class DefaultState , class ... States&gt; </td></tr>
+<tr class="memitem:acadaba2776886f503fa6604fac8dca36"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#acadaba2776886f503fa6604fac8dca36">setupStates</a> ()</td></tr>
+<tr class="memdesc:acadaba2776886f503fa6604fac8dca36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds states of given types to the statemachine and initialize the default state.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#acadaba2776886f503fa6604fac8dca36">More...</a><br /></td></tr>
+<tr class="separator:acadaba2776886f503fa6604fac8dca36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f8997739afb4000e6163c4912ccaf81"><td class="memItemLeft" align="right" valign="top">virtual StateInterface *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a3f8997739afb4000e6163c4912ccaf81">getCurrentState</a> () const</td></tr>
+<tr class="memdesc:a3f8997739afb4000e6163c4912ccaf81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the state object on top of the state stack.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a3f8997739afb4000e6163c4912ccaf81">More...</a><br /></td></tr>
+<tr class="separator:a3f8997739afb4000e6163c4912ccaf81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83e50692b26df8e711b0a405d30f2b73"><td class="memItemLeft" align="right" valign="top">virtual std::type_index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a83e50692b26df8e711b0a405d30f2b73">getCurrentStateType</a> () const</td></tr>
+<tr class="memdesc:a83e50692b26df8e711b0a405d30f2b73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the type_index of the state object on top of the state stack.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a83e50692b26df8e711b0a405d30f2b73">More...</a><br /></td></tr>
+<tr class="separator:a83e50692b26df8e711b0a405d30f2b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a255a53d2e59ecd3e19d45fcc60c0daf4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a255a53d2e59ecd3e19d45fcc60c0daf4">gotoState</a> (std::type_index nextState)</td></tr>
+<tr class="memdesc:a255a53d2e59ecd3e19d45fcc60c0daf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions directly to specified state, forgetting its previous state afterwards.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a255a53d2e59ecd3e19d45fcc60c0daf4">More...</a><br /></td></tr>
+<tr class="separator:a255a53d2e59ecd3e19d45fcc60c0daf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0c37bd9bc929bb0bafbe2ce37677b29"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#ae0c37bd9bc929bb0bafbe2ce37677b29">pushState</a> (std::type_index nextState)</td></tr>
+<tr class="memdesc:ae0c37bd9bc929bb0bafbe2ce37677b29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions to the specified state and rememebers its previous state afterwards.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#ae0c37bd9bc929bb0bafbe2ce37677b29">More...</a><br /></td></tr>
+<tr class="separator:ae0c37bd9bc929bb0bafbe2ce37677b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e8bf5b9473e133774d4d41fd8dcdb90"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a1e8bf5b9473e133774d4d41fd8dcdb90">popState</a> ()</td></tr>
+<tr class="memdesc:a1e8bf5b9473e133774d4d41fd8dcdb90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions to the previous state.  <a href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a1e8bf5b9473e133774d4d41fd8dcdb90">More...</a><br /></td></tr>
+<tr class="separator:a1e8bf5b9473e133774d4d41fd8dcdb90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:afe9a915df8c88c1c2ef519381ef1191a"><td class="memItemLeft" align="right" valign="top"><a id="afe9a915df8c88c1c2ef519381ef1191a"></a>
-std::unordered_map&lt; StateNameType, StateInterface * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_mapStateNameToState</b></td></tr>
-<tr class="separator:afe9a915df8c88c1c2ef519381ef1191a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7461bd1927fb86fa2634b5d1ad1e2d30"><td class="memItemLeft" align="right" valign="top"><a id="a7461bd1927fb86fa2634b5d1ad1e2d30"></a>
+<tr class="memitem:a4f6e8a6112b85e40aac7fa41e9d9394e"><td class="memItemLeft" align="right" valign="top"><a id="a4f6e8a6112b85e40aac7fa41e9d9394e"></a>
+std::unordered_map&lt; std::type_index, StateInterface * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_mapStateTypeToState</b></td></tr>
+<tr class="separator:a4f6e8a6112b85e40aac7fa41e9d9394e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac219d91407405b70c3ba80f313c74b00"><td class="memItemLeft" align="right" valign="top"><a id="ac219d91407405b70c3ba80f313c74b00"></a>
 std::stack&lt; StateInterface * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_stackStates</b></td></tr>
-<tr class="separator:a7461bd1927fb86fa2634b5d1ad1e2d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ac219d91407405b70c3ba80f313c74b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename StateNameType, typename StateInterface&gt;<br />
-class chestnut::statemachine::IStatemachine&lt; StateNameType, StateInterface &gt;</h3>
+<div class="textblock"><h3>template&lt;typename StateInterface&gt;<br />
+class chestnut::statemachine::IStatemachine&lt; StateInterface &gt;</h3>
 
 <p>Base generic class for creating a statemachine. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">StateNameType</td><td>a type of states' name </td></tr>
     <tr><td class="paramname">StateInterface</td><td>a base (interface) class from which all states inherit</td></tr>
   </table>
   </dd>
@@ -128,19 +127,19 @@ class chestnut::statemachine::IStatemachine&lt; StateNameType, StateInterface &g
 <p>StateInterface type must inherit from <a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html" title="Base generic abstract class used for creating state interface.">IState</a> to work properly. It can have any number of virtual methods that proper states should implement in some form</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1statemachine_1_1_i_state.html" title="Base generic abstract class used for creating state interface.">IState</a> </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a762248f04cba642743a86a64dd792bdf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a762248f04cba642743a86a64dd792bdf">&#9670;&nbsp;</a></span>getCurrentState()</h2>
+<a id="a3f8997739afb4000e6163c4912ccaf81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f8997739afb4000e6163c4912ccaf81">&#9670;&nbsp;</a></span>getCurrentState()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , typename StateInterface &gt; </div>
+template&lt;class StateInterface &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">StateInterface * <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateNameType, StateInterface &gt;::getCurrentState</td>
+          <td class="memname">StateInterface * <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateInterface &gt;::getCurrentState</td>
         </tr>
       </table>
   </td>
@@ -155,19 +154,19 @@ template&lt;typename StateNameType , typename StateInterface &gt; </div>
 
 </div>
 </div>
-<a id="ab5ec38e8bfaa7638d26c9c306eb82cd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5ec38e8bfaa7638d26c9c306eb82cd3">&#9670;&nbsp;</a></span>getCurrentStateName()</h2>
+<a id="a83e50692b26df8e711b0a405d30f2b73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83e50692b26df8e711b0a405d30f2b73">&#9670;&nbsp;</a></span>getCurrentStateType()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , typename StateInterface &gt; </div>
+template&lt;class StateInterface &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">StateNameType <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateNameType, StateInterface &gt;::getCurrentStateName</td>
+          <td class="memname">std::type_index <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateInterface &gt;::getCurrentStateType</td>
         </tr>
       </table>
   </td>
@@ -177,27 +176,27 @@ template&lt;typename StateNameType , typename StateInterface &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Get the name of the state object on top of the state stack. </p>
-<dl class="section return"><dt>Returns</dt><dd>StateNameType name of the state </dd></dl>
+<p>Get the type_index of the state object on top of the state stack. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::type_index of the state </dd></dl>
 
 </div>
 </div>
-<a id="a622d9c5d3d48b1e83ccdec0cbf074ace"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a622d9c5d3d48b1e83ccdec0cbf074ace">&#9670;&nbsp;</a></span>gotoState()</h2>
+<a id="a255a53d2e59ecd3e19d45fcc60c0daf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a255a53d2e59ecd3e19d45fcc60c0daf4">&#9670;&nbsp;</a></span>gotoState()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , typename StateInterface &gt; </div>
+template&lt;class StateInterface &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateNameType, StateInterface &gt;::gotoState </td>
+          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateInterface &gt;::gotoState </td>
           <td>(</td>
-          <td class="paramtype">StateNameType&#160;</td>
-          <td class="paramname"><em>nextStateName</em></td><td>)</td>
+          <td class="paramtype">std::type_index&#160;</td>
+          <td class="paramname"><em>nextState</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -209,29 +208,29 @@ template&lt;typename StateNameType , typename StateInterface &gt; </div>
 </div><div class="memdoc">
 
 <p>Transitions directly to specified state, forgetting its previous state afterwards. </p>
-<p>If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state. State transition happens directly, without consideration of a state below the top. If state stack has only 1 element (the default state) the method acts like <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#a5231defcf854a8edb70649aa7f91a9eb" title="Transitions to the specified state and rememebers its previous state afterwards.">pushState()</a>. If state with that name was not supplied in the constructor or the same state is on top of the stack, method does nothing.</p>
+<p>If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state. State transition happens directly, without consideration of a state below the top. If state stack has only 1 element (the default state) the method acts like <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html#ae0c37bd9bc929bb0bafbe2ce37677b29" title="Transitions to the specified state and rememebers its previous state afterwards.">pushState()</a>. If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nextStateName</td><td>name of the state statemachine should transition to </td></tr>
+    <tr><td class="paramname">nextState</td><td>type of the state statemachine should transition to </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a856b11a83317a8c2cff0965988383736"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a856b11a83317a8c2cff0965988383736">&#9670;&nbsp;</a></span>popState()</h2>
+<a id="a1e8bf5b9473e133774d4d41fd8dcdb90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e8bf5b9473e133774d4d41fd8dcdb90">&#9670;&nbsp;</a></span>popState()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , typename StateInterface &gt; </div>
+template&lt;class StateInterface &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateNameType, StateInterface &gt;::popState</td>
+          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateInterface &gt;::popState</td>
         </tr>
       </table>
   </td>
@@ -246,22 +245,22 @@ template&lt;typename StateNameType , typename StateInterface &gt; </div>
 
 </div>
 </div>
-<a id="a5231defcf854a8edb70649aa7f91a9eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5231defcf854a8edb70649aa7f91a9eb">&#9670;&nbsp;</a></span>pushState()</h2>
+<a id="ae0c37bd9bc929bb0bafbe2ce37677b29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0c37bd9bc929bb0bafbe2ce37677b29">&#9670;&nbsp;</a></span>pushState()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , typename StateInterface &gt; </div>
+template&lt;class StateInterface &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateNameType, StateInterface &gt;::pushState </td>
+          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateInterface &gt;::pushState </td>
           <td>(</td>
-          <td class="paramtype">StateNameType&#160;</td>
-          <td class="paramname"><em>nextStateName</em></td><td>)</td>
+          <td class="paramtype">std::type_index&#160;</td>
+          <td class="paramname"><em>nextState</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -273,28 +272,28 @@ template&lt;typename StateNameType , typename StateInterface &gt; </div>
 </div><div class="memdoc">
 
 <p>Transitions to the specified state and rememebers its previous state afterwards. </p>
-<p>Pushes next state onto the state stack. State transition goes from state previously on top of the stack to the specified state. If state with that name was not supplied in the constructor or the same state is on top of the stack, method does nothing.</p>
+<p>Pushes next state onto the state stack. State transition goes from state previously on top of the stack to the specified state. If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nextStateName</td><td>name of the state statemachine should transition to </td></tr>
+    <tr><td class="paramname">nextState</td><td>type of the state statemachine should transition to </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a253e682342a20ee3143794fbf36f4bb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a253e682342a20ee3143794fbf36f4bb9">&#9670;&nbsp;</a></span>setupStates()</h2>
+<a id="acadaba2776886f503fa6604fac8dca36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acadaba2776886f503fa6604fac8dca36">&#9670;&nbsp;</a></span>setupStates()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename StateNameType , typename StateInterface &gt; </div>
+template&lt;class StateInterface &gt; </div>
 <div class="memtemplate">
 template&lt;class DefaultState , class ... States&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateNameType, StateInterface &gt;::setupStates</td>
+          <td class="memname">void <a class="el" href="classchestnut_1_1statemachine_1_1_i_statemachine.html">chestnut::statemachine::IStatemachine</a>&lt; StateInterface &gt;::setupStates</td>
         </tr>
       </table>
 </div><div class="memdoc">
