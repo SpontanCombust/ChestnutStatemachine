@@ -9,33 +9,14 @@
 
 
 
-// ===================== 1. Define the state name type =====================
+// ===================== 1. Forward declare statemachine type and define the state interface =====================
 
-// This can be an enum like shown below, or a string or just a regular number
-// The type must however be able to be used for std::unordered_map as a key
-// so if you have a custom type you would want to use a name, you need to implement a std::hash template specialization for it
-enum EDoorStateName
-{
-    DOOR_OPEN,
-    DOOR_OPENING,
-    DOOR_CLOSED,
-    DOOR_CLOSING
-};
-
-
-
-
-// ===================== 2. Forward declare statemachine type and define the state interface =====================
-
-// Type of the statemachine we will later use
 class CDoorStatemachine;
 
-// Your state interface must inherit from chestnut::statemachine::IState type with appropriate template types
-class IDoorState : public chestnut::statemachine::IState<EDoorStateName, CDoorStatemachine>
+class IDoorState : public chestnut::statemachine::IState<CDoorStatemachine>
 {
 public:
-    // utility parent class typedef
-    typedef chestnut::statemachine::IState<EDoorStateName, CDoorStatemachine> super;
+    typedef chestnut::statemachine::IState<CDoorStatemachine> super;
 
     // 2.1 You have to define the special constructor that takes in statemachine pointer, you can pass the pointer to parent class constructor
     // At the moment this library doesn't support custom state constructors
@@ -49,13 +30,12 @@ public:
 
 
 
-// ===================== 3. Define your statemachine type =====================
-
-class CDoorStatemachine : public chestnut::statemachine::IStatemachine<EDoorStateName, IDoorState>
+// ====================================== 2. Define your statemachine type ======================================
+class CDoorStatemachine : public chestnut::statemachine::IStatemachine<IDoorState>
 {
 public:
     // utility parent class typedef
-    typedef chestnut::statemachine::IStatemachine<EDoorStateName, IDoorState> super;
+    typedef chestnut::statemachine::IStatemachine<IDoorState> super;
 
     // You can make your statemachine able to be used across threads in an async manner
     // You have to be very careful with this however, like with any other scenario that involves race conditions
@@ -72,24 +52,16 @@ public:
         return state;
     }
 
-    EDoorStateName getCurrentStateName() const override
+    void gotoState( std::type_index nextStateType ) override
     {
         std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        EDoorStateName name = super::getCurrentStateName();
-
-        return name;
+        super::gotoState( nextStateType );
     }
 
-    void gotoState( EDoorStateName nextStateName ) override
+    void pushState( std::type_index nextStateType ) override
     {
         std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        super::gotoState( nextStateName );
-    }
-
-    void pushState( EDoorStateName nextStateName ) override
-    {
-        std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        super::pushState( nextStateName );
+        super::pushState( nextStateType );
     }
 
     void popState() override
@@ -118,187 +90,228 @@ public:
 
 
 
-// ===================== 4. Define your states =====================
+// ====================================== 3. Define your states ======================================
 
 // If you put state interface and statemachine definition in seperate headers 
-// you'll want to include them both in states' headers if you want to use the parent pointer.
-
+// you'll want to include them both in states' headers if you want to use the parent pointer
+//
+// Be aware of the include order - if you need a mutual state dependency (e.g. state A goes to state B and vice versa)
+// it's best to properly devide state class body and its methods' definitions
+// You can't make state transition to forward declared, uncomplete classes
 class CDoorStateClosed : public IDoorState
 {
 public:
     // Again we have to define a special constructor
-    CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm ) 
-    {
-        // Remember to set the name for your state!
-        name = DOOR_CLOSED;
-    }
+    CDoorStateClosed( CDoorStatemachine *sm );
 
-
-    // We need to implement onEnter and onExit methods inherited from IState
-
-    void onEnter( EDoorStateName prevState ) override
-    {
-        // if prevState is the same as the name of this state it means the statemachine was initialized with this state
-        if( prevState != name )
-        {
-            std::cout << "The door is now closed!\n";
-        }
-    }
-
-    void onExit( EDoorStateName nextState ) override
-    {
-        std::cout << "The door is no longer closed!\n";
-    }
+    void onEnter( std::type_index prevState ) override;
+    void onExit( std::type_index nextState ) override;
     
-
-    // Implement your custom state methods
-
-    bool tryOpen() override
-    {
-        parent->gotoState( DOOR_OPENING );   
-        return true;  
-    }
-
-    bool tryClose() override
-    {
-        std::cout << "The door is already closed!\n";
-        return false;
-    }
+    bool tryOpen() override;
+    bool tryClose() override;
 };
 
 class CDoorStateOpening : public IDoorState
 {
 public:
-    CDoorStateOpening( CDoorStatemachine *sm ) : IDoorState( sm ) 
-    {
-        name = DOOR_OPENING;
-    }
+    // Again we have to define a special constructor
+    CDoorStateOpening( CDoorStatemachine *sm );
 
-    void onEnter( EDoorStateName prevState ) override
-    {
-        std::cout << "The door is openning...\n";
-
-        // spawn a thread task that will transition the statemachine to DOOR_OPEN state 2 seconds after the start of DOOR_OPENING state
-        std::thread( [this] {
-            std::this_thread::sleep_for( std::chrono::seconds(2) );
-            parent->gotoState( DOOR_OPEN );
-        }).detach();
-    }
-
-    void onExit( EDoorStateName nextState ) override
-    {
-        std::cout << "The door has finished openning!\n";
-    }
+    void onEnter( std::type_index prevState ) override;
+    void onExit( std::type_index nextState ) override;
     
-    bool tryOpen() override
-    {
-        std::cout << "The door is already in the process of openning!\n";
-        return false;
-    }
-
-    bool tryClose() override
-    {
-        std::cout << "I'm sorry. I first need to finish opening.\n";
-        return false;
-    }
+    bool tryOpen() override;
+    bool tryClose() override;
 };
 
 class CDoorStateOpen : public IDoorState
 {
 public:
-    CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm ) 
-    {
-        name = DOOR_OPEN;
-    }
+    // Again we have to define a special constructor
+    CDoorStateOpen( CDoorStatemachine *sm );
 
-    void onEnter( EDoorStateName prevState ) override
-    {
-        if( prevState != name )
-        {
-            std::cout << "The door is now open!\n";
-        }
-    }
-
-    void onExit( EDoorStateName nextState ) override
-    {
-        std::cout << "The door is no longer open!\n";
-    }
+    void onEnter( std::type_index prevState ) override;
+    void onExit( std::type_index nextState ) override;
     
-    bool tryOpen() override
-    {
-        std::cout << "The door is already open!\n";     
-        return false;
-    }
-
-    bool tryClose() override
-    {
-        parent->gotoState( DOOR_CLOSING );
-        return true;
-    }
+    bool tryOpen() override;
+    bool tryClose() override;
 };
 
 class CDoorStateClosing : public IDoorState
 {
 public:
-    CDoorStateClosing( CDoorStatemachine *sm ) : IDoorState( sm ) 
-    {
-        name = DOOR_CLOSING;
-    }
+    // Again we have to define a special constructor
+    CDoorStateClosing( CDoorStatemachine *sm );
 
-    void onEnter( EDoorStateName prevState ) override
-    {
-        std::cout << "The door is closing...\n";
-
-        // spawn a thread task that will transition the statemachine to DOOR_CLOSED state 2 seconds after the start of DOOR_CLOSING state
-        std::thread( [this] {
-            std::this_thread::sleep_for( std::chrono::seconds(2) );
-            parent->gotoState( DOOR_CLOSED );
-        }).detach();
-    }
-
-    void onExit( EDoorStateName nextState ) override
-    {
-        std::cout << "The door has finished closing!\n";
-    }
+    void onEnter( std::type_index prevState ) override;
+    void onExit( std::type_index nextState ) override;
     
-    bool tryOpen() override
-    {   
-        std::cout << "I'm sorry. I first need to finish closing.\n";
-        return false;
-    }
-
-    bool tryClose() override
-    {
-        std::cout << "The door is already in the process of closing!\n";
-        return false;
-    }
+    bool tryOpen() override;
+    bool tryClose() override;
 };
 
 
 
-
-
-const char *doorStateNameToString( EDoorStateName name )
+CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm ) 
 {
-    switch( name )
+
+}
+
+void CDoorStateClosed::onEnter( std::type_index prevState )
+{
+    // guard in case this is the default state
+    if( prevState != typeid(CDoorStateClosed) )
     {
-    case DOOR_OPEN: return "Open";
-    case DOOR_OPENING: return "Opening";
-    case DOOR_CLOSED: return "Closed";
-    case DOOR_CLOSING: return "Closing";
-    default: return "";
+        std::cout << "The door is now closed!\n";
     }
 }
 
+void CDoorStateClosed::onExit( std::type_index nextState )
+{
+    std::cout << "The door is no longer closed!\n";
+}
+
+bool CDoorStateClosed::tryOpen()
+{
+    parent->gotoState( typeid(CDoorStateOpening) );   
+    return true;  
+}
+
+bool CDoorStateClosed::tryClose()
+{
+    std::cout << "The door is already closed!\n";
+    return false;
+}
+
+
+
+CDoorStateOpening::CDoorStateOpening( CDoorStatemachine *sm ) : IDoorState( sm ) 
+{
+
+}
+
+void CDoorStateOpening::onEnter( std::type_index prevState ) 
+{
+    std::cout << "The door is openning...\n";
+
+    // spawn a thread that'll wait 2 seconds and then transition to next state
+    std::thread( [this] {
+        std::this_thread::sleep_for( std::chrono::seconds(2) );
+        parent->gotoState( typeid(CDoorStateOpen) );
+    }).detach();
+}
+
+void CDoorStateOpening::onExit( std::type_index nextState ) 
+{
+    std::cout << "The door has finished openning!\n";
+}
+
+bool CDoorStateOpening::tryOpen() 
+{
+    std::cout << "The door is already in the process of openning!\n";
+    return false;
+}
+
+bool CDoorStateOpening::tryClose() 
+{
+    std::cout << "I'm sorry. I first need to finish opening.\n";
+    return false;
+}
+
+
+
+CDoorStateOpen::CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm ) 
+{
+
+}
+
+void CDoorStateOpen::onEnter( std::type_index prevState ) 
+{
+    // guard in case this is the default state
+    if( prevState != typeid(CDoorStateOpen) )
+    {
+        std::cout << "The door is now open!\n";
+    }
+}
+
+void CDoorStateOpen::onExit( std::type_index nextState ) 
+{
+    std::cout << "The door is no longer open!\n";
+}
+
+bool CDoorStateOpen::tryOpen() 
+{
+    std::cout << "The door is already open!\n";     
+    return false;
+}
+
+bool CDoorStateOpen::tryClose()
+{
+    parent->gotoState( typeid(CDoorStateClosing) );
+    return true;
+}
+
+
+
+CDoorStateClosing::CDoorStateClosing( CDoorStatemachine *sm ) : IDoorState( sm ) 
+{
+
+}
+
+void CDoorStateClosing::onEnter( std::type_index prevState ) 
+{
+    std::cout << "The door is closing...\n";
+
+    std::thread( [this] {
+        std::this_thread::sleep_for( std::chrono::seconds(2) );
+        parent->gotoState( typeid(CDoorStateClosed) );
+    }).detach();
+}
+
+void CDoorStateClosing::onExit( std::type_index nextState )
+{
+    std::cout << "The door has finished closing!\n";
+}
+
+bool CDoorStateClosing::tryOpen() 
+{   
+    std::cout << "I'm sorry. I first need to finish closing.\n";
+    return false;
+}
+
+bool CDoorStateClosing::tryClose()
+{
+    std::cout << "The door is already in the process of closing!\n";
+    return false;
+}
+
+
+
+
+
+const char *doorStateTypeToString( std::type_index type )
+{
+    if( type == typeid(CDoorStateOpen ) )
+        return "Open";
+    if( type == typeid(CDoorStateOpening ) )
+        return "Opening";
+    if( type == typeid(CDoorStateClosed ) )
+        return "Closed";
+    if( type == typeid(CDoorStateClosing ) )
+        return "Closing";
+    return "";
+}
+
+// ===================== 4. Create and setup your statemachine object =====================
+
 int main(int argc, char const *argv[])
 {
-// ===================== 5. Create and setup your statemachine object =====================
 
     CDoorStatemachine door;
     door.setupStates< CDoorStateClosed, CDoorStateOpen, CDoorStateClosing, CDoorStateOpening >();
 
     auto printDoorState = [&door] {
-        std::cout << "Door state: " << doorStateNameToString( door.getCurrentStateName() ) << "\n";
+        std::cout << "Door state: " << doorStateTypeToString( door.getCurrentStateType() ) << "\n";
     };
 
 
@@ -310,7 +323,7 @@ int main(int argc, char const *argv[])
     if( door.tryOpen() )
     {
         printDoorState();
-        while( door.getCurrentStateName() == DOOR_OPENING )
+        while( door.getCurrentStateType() == typeid(CDoorStateOpening) )
         {
             std::this_thread::sleep_for( std::chrono::milliseconds(100) ); // we'll keep waiting small intervals until the door fully opens
         }
@@ -319,7 +332,7 @@ int main(int argc, char const *argv[])
         if( door.tryClose() )
         {
             printDoorState();
-            while( door.getCurrentStateName() == DOOR_CLOSING )
+            while( door.getCurrentStateType() == typeid(CDoorStateClosing) )
             {
                 std::this_thread::sleep_for( std::chrono::milliseconds(100) );
             }
