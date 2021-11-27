@@ -1,7 +1,7 @@
 namespace chestnut::statemachine
 {    
-    template<typename StateNameType, class ParentStatemachine>
-    IState<StateNameType, ParentStatemachine>::IState( ParentStatemachine *parent_ ) 
+    template<class ParentStatemachine>
+    IState<ParentStatemachine>::IState( ParentStatemachine *parent_ ) 
     {
         parent = parent_;
     }

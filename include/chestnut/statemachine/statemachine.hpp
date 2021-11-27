@@ -2,16 +2,17 @@
 #define __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
 
 #include <stack>
+#include <typeindex>
 #include <unordered_map>
 
 namespace chestnut::statemachine
 {
     // StateInterface must inherit from IState
-    template< typename StateNameType, typename StateInterface >
+    template< class StateInterface >
     class IStatemachine
     {
     protected:
-        std::unordered_map< StateNameType, StateInterface* > m_mapStateNameToState;
+        std::unordered_map< std::type_index, StateInterface* > m_mapStateTypeToState;
         std::stack< StateInterface* > m_stackStates;
 
     public:
@@ -33,21 +34,19 @@ namespace chestnut::statemachine
 
         virtual StateInterface *getCurrentState() const;
 
-        virtual StateNameType getCurrentStateName() const;
-
 
         // If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state
         // State transition happens directly, without consideration of a state below the top
         //
         // If state stack has only 1 element (the default state) the method acts like pushState()
         // If state with that name was not supplied in the constructor or the same state is on top of the stack, method does nothing
-        virtual void gotoState( StateNameType nextStateName );
+        virtual void gotoState( std::type_index nextStateType );
 
         // Pushes next state onto the state stack
         // State transition goes from state previously on top of the stack to the specified state
         //
         // If state with that name was not supplied in the constructor or the same state is on top of the stack, method does nothing
-        virtual void pushState( StateNameType nextStateName );
+        virtual void pushState( std::type_index nextStateType );
 
         // Pops the state on top of the state stack unless there's only one state left (the default state)
         virtual void popState();
