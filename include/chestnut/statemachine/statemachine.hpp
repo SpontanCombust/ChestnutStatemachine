@@ -18,7 +18,6 @@
 
 #include <stack>
 #include <typeindex>
-#include <unordered_map>
 
 namespace chestnut::fsm
 {
