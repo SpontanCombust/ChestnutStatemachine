@@ -2,7 +2,7 @@
  * @file statemachine.hpp
  * @author SpontanCombust
  * @brief Header file with base template statemachine type
- * @version 2.1.0
+ * @version 2.2.0
  * @date 2021-11-28
  * 
  * @copyright MIT License (c) 2021
@@ -87,6 +87,8 @@ namespace chestnut::fsm
          * @brief Explicitly initialize the statemachine
          * 
          * @tparam StateType type of the initial state
+         * @tparam Args types of StateType constructor parameters
+         * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
          * 
          * @throw OnEnterException if a state throws exception in a transition method
          * 
@@ -104,13 +106,15 @@ namespace chestnut::fsm
          * 
          * @see NULL_STATE, OnEnterException
          */
-        template< class StateType >
-        void init();
+        template< class StateType, typename ...Args >
+        void init( Args&& ...args );
 
         /**
          * @brief Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)
          * 
          * @tparam StateType type of the state statemachine should transition to
+         * @tparam Args types of StateType constructor parameters
+         * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
          * 
          * @throw OnEnterException or OnExitException if a state throws exception in a transition method
          * 
@@ -134,13 +138,15 @@ namespace chestnut::fsm
          * 
          * @see pushState(), init(), OnEnterException, OnExitException
          */
-        template< class StateType >
-        void gotoState();
+        template< class StateType, typename ...Args >
+        void gotoState( Args&& ...args );
 
         /**
          * @brief Transitions to the specified state and rememebers its previous state afterwards
          * 
          * @tparam StateType type of the state statemachine should transition to
+         * @tparam Args types of StateType constructor parameters
+         * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
          * 
          * @throw OnEnterException or OnExitException if a state throws exception in a transition method
          * 
@@ -161,8 +167,8 @@ namespace chestnut::fsm
          * 
          * @see init()
          */
-        template< class StateType >
-        void pushState();
+        template< class StateType, typename ...Args >
+        void pushState( Args&& ...args );
 
         /**
          * @brief Transitions to the previous state.

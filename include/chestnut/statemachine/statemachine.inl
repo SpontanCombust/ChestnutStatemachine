@@ -53,14 +53,14 @@ namespace chestnut::fsm
     }
 
     template<typename StateInterface>
-    template<class StateType>
-    void IStatemachine<StateInterface>::init() 
+    template<class StateType, typename ...Args>
+    void IStatemachine<StateInterface>::init( Args&& ...args ) 
     {
         static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
         if( m_stackStates.empty() )
         {
-            StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );    
+            StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
 
             m_stackStates.push( initState );
 
@@ -76,8 +76,8 @@ namespace chestnut::fsm
     }
 
     template<typename StateInterface>
-    template<class StateType>
-    void IStatemachine<StateInterface>::gotoState() 
+    template<class StateType, typename ...Args>
+    void IStatemachine<StateInterface>::gotoState( Args&& ...args ) 
     {
         static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
@@ -86,7 +86,7 @@ namespace chestnut::fsm
 
         if( nextStateType != currentStateType )
         {
-            StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
+            StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
 
             if( m_stackStates.size() >= 1 )
             {
@@ -139,8 +139,8 @@ namespace chestnut::fsm
     }
 
     template<typename StateInterface>
-    template<class StateType>
-    void IStatemachine<StateInterface>::pushState() 
+    template<class StateType, typename ...Args>
+    void IStatemachine<StateInterface>::pushState( Args&& ...args ) 
     {
         static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
@@ -149,7 +149,7 @@ namespace chestnut::fsm
 
         if( nextStateType != currentStateType )
         {
-            StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
+            StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
 
             if( m_stackStates.size() >= 1 )
             {

@@ -18,8 +18,7 @@ class IDoorState : public chestnut::fsm::IState<CDoorStatemachine>
 public:
     typedef chestnut::fsm::IState<CDoorStatemachine> super;
 
-    // 1.1 You have to define the special constructor that takes in statemachine pointer, you can pass the pointer to parent class constructor
-    // At the moment this library doesn't support custom state constructors
+    // 1.1 You have to define a constructor that at least takes in parent statemachine pointer (this pointer has to always be first constructor argument)
     IDoorState( CDoorStatemachine *sm ) : super( sm ) {}
 
     // Declare any number of virtual methods that your state classes should implement
@@ -74,13 +73,17 @@ class CDoorStateClosed : public IDoorState
 {
 public:
     // Again we have to define a special constructor
-    CDoorStateClosed( CDoorStatemachine *sm );
+    // Here we're also adding an additional custom parameter
+    CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState = false );
 
     void onEnter( std::type_index prevState ) override;
     void onExit( std::type_index nextState ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
+
+private:
+    bool printOnNullState;
 };
 
 class CDoorStateOpening : public IDoorState
@@ -126,9 +129,9 @@ public:
 
 using chestnut::fsm::NULL_STATE;
 
-CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm ) 
+CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState ) : IDoorState( sm ) 
 {
-
+    this->printOnNullState = printOnNullState;
 }
 
 void CDoorStateClosed::onEnter( std::type_index prevState )
@@ -138,6 +141,10 @@ void CDoorStateClosed::onEnter( std::type_index prevState )
     {
         std::cout << "The door is now closed!\n";
     }
+    else if( printOnNullState )
+    {
+        std::cout << "CDoorStateClosed is the init state!\n";
+    }
 }
 
 void CDoorStateClosed::onExit( std::type_index nextState )
@@ -146,6 +153,10 @@ void CDoorStateClosed::onExit( std::type_index nextState )
     if( nextState != NULL_STATE )
     {
         std::cout << "The door is no longer closed!\n";
+    }
+    else if( printOnNullState )
+    {
+        std::cout << "Statemachine is being destroyed!\n";
     }
 }
 
@@ -299,7 +310,7 @@ int main(int argc, char const *argv[])
         std::cout << "Door state: " << doorStateTypeToString( door.getCurrentStateType() ) << "; state stack size: " << door.getStateStackSize() << "\n";
     };
 
-    door.init<CDoorStateClosed>();
+    door.init<CDoorStateClosed>( true ); // using custom state constructor parameter
 
     printDoorState();
     if( door.tryClose() )
