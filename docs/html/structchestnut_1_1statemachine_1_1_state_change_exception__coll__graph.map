@@ -1,0 +1,4 @@
+<map id="chestnut::statemachine::StateChangeException" name="chestnut::statemachine::StateChangeException">
+<area shape="rect" id="node1" title="Base exception class for OnEnterException and OnExitException." alt="" coords="5,80,168,121"/>
+<area shape="rect" id="node2" title=" " alt="" coords="35,5,138,32"/>
+</map>
