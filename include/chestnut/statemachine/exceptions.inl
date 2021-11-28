@@ -1,4 +1,4 @@
-namespace chestnut::statemachine
+namespace chestnut::fsm
 {
     inline StateChangeException::StateChangeException( const char *msg ) throw()
     {
@@ -20,4 +20,4 @@ namespace chestnut::statemachine
         message = "Exception was thrown when exiting a state: " + message;
     }
 
-} // namespace chestnut::statemachine
+} // namespace chestnut::fsm

@@ -1,4 +1,4 @@
-namespace chestnut::statemachine
+namespace chestnut::fsm
 {    
     template<class ParentStatemachine>
     IState<ParentStatemachine>::IState( ParentStatemachine *parent_ ) 
@@ -6,4 +6,4 @@ namespace chestnut::statemachine
         parent = parent_;
     }
 
-} // namespace chestnut::statemachine
+} // namespace chestnut::fsm
