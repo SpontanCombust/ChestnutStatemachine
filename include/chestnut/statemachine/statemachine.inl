@@ -1,15 +1,25 @@
 #include <type_traits>
+#include <cstdio>
 
 namespace chestnut::statemachine
 {  
     template<class StateInterface>
-    IStatemachine<StateInterface>::~IStatemachine() 
+    IStatemachine<StateInterface>::~IStatemachine() noexcept
     {
         while( !m_stackStates.empty() )
         {
             StateInterface *state = m_stackStates.top();
             m_stackStates.pop();
-            state->onExit( NULL_STATE ); //FIXME this can throw an exception
+
+            try
+            {
+                state->onExit( NULL_STATE );
+            }
+            catch(const std::exception& e)
+            {
+                fprintf( stderr, "%s\n", e.what() );
+            }
+            
             delete state;
         }
     }

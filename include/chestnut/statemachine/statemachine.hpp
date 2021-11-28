@@ -37,7 +37,7 @@ namespace chestnut::statemachine
          * Deletes all states that are on the state stack, but before that calls their onExit with NULL_STATE as type argument.
          * @see NULL_STATE
          */
-        virtual ~IStatemachine();
+        virtual ~IStatemachine() noexcept;
 
 
         /**
