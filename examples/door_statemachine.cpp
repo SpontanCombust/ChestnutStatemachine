@@ -152,7 +152,7 @@ void CDoorStateClosed::onExit( std::type_index nextState )
 bool CDoorStateClosed::tryOpen()
 {
     std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
-    parent->gotoState<CDoorStateOpening>();
+    parent->pushState<CDoorStateOpening>();
     return true;  
 }
 
@@ -250,7 +250,7 @@ void CDoorStateClosing::onEnter( std::type_index prevState )
     std::thread( [this] {
         std::this_thread::sleep_for( std::chrono::seconds(2) );
         std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
-        parent->gotoState<CDoorStateClosed>();
+        parent->popState();
     }).detach();
 }
 

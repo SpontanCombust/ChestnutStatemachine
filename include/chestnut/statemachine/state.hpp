@@ -17,7 +17,9 @@ namespace chestnut::statemachine
     class IState
     {
     protected:
-        /** @brief Pointer to the statemachine that houses the state */
+        /**
+         * @brief Pointer to the statemachine that houses the state
+         */
         ParentStatemachine *parent;
 
     public:
@@ -36,6 +38,10 @@ namespace chestnut::statemachine
 
         /**
          * @brief A method called whenever statemachine exits this state
+         * 
+         * @details
+         * This method should under no circumstances call any state changing method on its parent!
+         * Doing it will lead to undefined behaviour.
          * 
          * @param nextState type of the state statemachine is swithing to
          */

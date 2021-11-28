@@ -2,6 +2,7 @@
 #define __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
 
 #include "state.hpp"
+#include "exceptions.hpp"
 
 #include <stack>
 #include <typeindex>
@@ -23,7 +24,7 @@ namespace chestnut::statemachine
     template< typename StateInterface >
     class IStatemachine
     {
-    protected:
+    private:
         std::stack< StateInterface* > m_stackStates;
 
     public:
@@ -46,7 +47,7 @@ namespace chestnut::statemachine
          * 
          * @return StateInterface* upcasted pointer to the state
          */
-        StateInterface *getCurrentState() const;
+        StateInterface *getCurrentState() const noexcept;
 
         /**
          * @brief Get the type_index of the state object on top of the state stack or NULL_STATE if SM was not initialized
@@ -56,18 +57,19 @@ namespace chestnut::statemachine
          * 
          * @return std::type_index of the state
          */
-        std::type_index getCurrentStateType() const;
+        std::type_index getCurrentStateType() const noexcept;
 
         /**
          * @brief Return the size of statemachine's state stack
          * 
          * @return state stack size
          */
-        int getStateStackSize() const;
+        int getStateStackSize() const noexcept;
 
 
         /**
          * @brief Explicitly initialize the statemachine
+         * 
          * 
          * @details
          * Use this method to explicitly state that you want to setup the initial state of the statemachine.
@@ -78,6 +80,13 @@ namespace chestnut::statemachine
          * 
          * StateType is evaluated on compile time to check if it inherits from StateInterface
          * 
+         * If a state throws an exception during onEnter, the state is still pushed onto the state stack, 
+         * but its condition remains undefined.
+         * 
+         * 
+         * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+         * 
+         * 
          * @tparam StateType type of the initial state
          */
         template< class StateType >
@@ -85,6 +94,7 @@ namespace chestnut::statemachine
 
         /**
          * @brief Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)
+         * 
          * 
          * @details
          * If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state.
@@ -100,6 +110,15 @@ namespace chestnut::statemachine
          * 
          * StateType is evaluated on compile time to check if it inherits from StateInterface.
          * 
+         * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+         * which threw the exception remains undefined.
+         * If the next state throws an exception during onEnter, this state is still pushed onto the state stack, 
+         * but its condition remains undefined.
+         * 
+         * 
+         * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+         * 
+         * 
          * @tparam StateType type of the state statemachine should transition to
          */
         template< class StateType >
@@ -107,6 +126,7 @@ namespace chestnut::statemachine
 
         /**
          * @brief Transitions to the specified state and rememebers its previous state afterwards
+         * 
          * 
          * @details 
          * Pushes next state onto the state stack.
@@ -118,6 +138,15 @@ namespace chestnut::statemachine
          * 
          * StateType is evaluated on compile time to check if it inherits from StateInterface.
          * 
+         * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+         * which threw the exception remains undefined.
+         * If the next state throws an exception during onEnter, this state is still pushed onto the state stack, 
+         * but its condition remains undefined.
+         * 
+         * 
+         * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+         * 
+         * 
          * @tparam StateType type of the state statemachine should transition to
          */
         template< class StateType >
@@ -126,9 +155,18 @@ namespace chestnut::statemachine
         /**
          * @brief Transitions to the previous state.
          * 
+         * 
          * @details 
          * Pops the state on top of the state stack unless there's only one state (the init state) left or none.
          * After the transition, the previous state object is deleted.
+         * 
+         * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+         * which threw the exception remains undefined.
+         * If the next state throws an exception during onEnter, this state still stays on the state stack, 
+         * but its condition remains undefined.
+         * 
+         * 
+         * @throw OnEnterException or OnExitException if a state throws exception in a transition method
          */
         void popState();
     };

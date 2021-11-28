@@ -8,14 +8,14 @@ namespace chestnut::statemachine
         while( !m_stackStates.empty() )
         {
             StateInterface *state = m_stackStates.top();
-            state->onExit( NULL_STATE );
-            delete state;
             m_stackStates.pop();
+            state->onExit( NULL_STATE ); //FIXME this can throw an exception
+            delete state;
         }
     }
 
     template<class StateInterface>
-    StateInterface* IStatemachine<StateInterface>::getCurrentState() const
+    StateInterface* IStatemachine<StateInterface>::getCurrentState() const noexcept
     {
         if( m_stackStates.size() >= 1 )
         {
@@ -26,7 +26,7 @@ namespace chestnut::statemachine
     }
 
     template<class StateInterface>
-    std::type_index IStatemachine<StateInterface>::getCurrentStateType() const
+    std::type_index IStatemachine<StateInterface>::getCurrentStateType() const noexcept
     {
         if( m_stackStates.size() >= 1 )
         {
@@ -37,12 +37,11 @@ namespace chestnut::statemachine
     }
 
     template<typename StateInterface>
-    int IStatemachine<StateInterface>::getStateStackSize() const
+    int IStatemachine<StateInterface>::getStateStackSize() const noexcept
     {
         return (int)m_stackStates.size();
     }
 
-    //TODO guard against possible exceptions from onEnter and onExit
     template<typename StateInterface>
     template<class StateType>
     void IStatemachine<StateInterface>::init() 
@@ -51,13 +50,21 @@ namespace chestnut::statemachine
 
         if( m_stackStates.empty() )
         {
-            StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
+            StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );    
+
             m_stackStates.push( initState );
-            initState->onEnter( NULL_STATE );
+
+            try
+            {
+                initState->onEnter( NULL_STATE );
+            }
+            catch(const std::exception& e)
+            {
+                throw OnEnterException( e.what() );   
+            }
         }
     }
 
-    //TODO guard against possible exceptions from onEnter and onExit
     template<typename StateInterface>
     template<class StateType>
     void IStatemachine<StateInterface>::gotoState() 
@@ -75,29 +82,52 @@ namespace chestnut::statemachine
             {
                 StateInterface *currentState = m_stackStates.top();
 
-                currentState->onExit( nextStateType );
+				try
+				{
+					currentState->onExit( nextStateType );
+				}
+				catch(const std::exception& e)
+				{
+					delete nextState;
+					throw OnExitException( e.what() );    
+				}
 
-                // we want to always retain the init state on the stack
-                if( m_stackStates.size() > 1 )
-                {
-                    // we transition to next state directly and forget the previous state
-                    delete currentState;
-                    m_stackStates.pop();
-                }
+				if( m_stackStates.size() > 1)
+				{
+					m_stackStates.pop();
+					delete currentState;
+				}
+
 
                 m_stackStates.push( nextState );
 
-                nextState->onEnter( currentStateType );
+                try
+                {
+                    nextState->onEnter( currentStateType );
+                }
+                catch(const std::exception& e)
+                {
+                    throw OnEnterException( e.what() );
+                }
             }
             else
             {
+				// like this we can use this method to initialize the statemachine
+
                 m_stackStates.push( nextState );
-                nextState->onEnter( NULL_STATE );
+
+                try
+                {
+                    nextState->onEnter( NULL_STATE );
+                }
+                catch(const std::exception& e)
+                {
+                    throw OnEnterException( e.what() );
+                }                
             }
         }
     }
 
-    //TODO guard against possible exceptions from onEnter and onExit
     template<typename StateInterface>
     template<class StateType>
     void IStatemachine<StateInterface>::pushState() 
@@ -115,23 +145,46 @@ namespace chestnut::statemachine
             {
                 StateInterface *currentState = m_stackStates.top();
 
-                currentState->onExit( nextStateType );
+                try
+                {
+                    currentState->onExit( nextStateType );
+                }
+                catch(const std::exception& e)
+                {
+                    delete nextState;
+                    throw OnExitException( e.what() );    
+                }
 
-                // with pushState we remember the previous state, so we don't delete it and leave it on state stack
 
                 m_stackStates.push( nextState );
 
-                nextState->onEnter( currentStateType );
+                try
+                {
+                    nextState->onEnter( currentStateType );
+                }
+                catch(const std::exception& e)
+                {   
+                    throw OnEnterException( e.what() );
+                }
             }
             else
             {
+				// like this we can use this method to initialize the statemachine
+
                 m_stackStates.push( nextState );
-                nextState->onEnter( NULL_STATE );
+
+                try
+                {
+                    nextState->onEnter( NULL_STATE );
+                }
+                catch(const std::exception& e)
+                {
+                    throw OnEnterException( e.what() );
+                }    
             }
         }
     }
 
-    //TODO guard against possible exceptions from onEnter and onExit
     template<class StateInterface>
     void IStatemachine<StateInterface>::popState() 
     {
@@ -139,15 +192,35 @@ namespace chestnut::statemachine
         if( m_stackStates.size() > 1 )
         {
             StateInterface *currentState = m_stackStates.top();
+			std::type_index currentStateType = typeid( *currentState );
 
             m_stackStates.pop();
 
             StateInterface *nextState = m_stackStates.top();
+			std::type_index nextStateType = typeid( *nextState );
 
-            currentState->onExit( typeid( *nextState ) );
-            nextState->onEnter( typeid( *currentState ) );
-
+			try
+			{
+				currentState->onExit( nextStateType );
+			}
+			catch(const std::exception& e)
+			{
+				// we're gonna push this state back so that SM goes back to as it was before except now its condition is undefined
+				m_stackStates.push( currentState );
+				throw OnExitException( e.what() );
+			}
+			
             delete currentState;
+
+
+            try
+			{
+            	nextState->onEnter( currentStateType );
+			}
+			catch(const std::exception& e)
+			{
+				throw OnEnterException( e.what() );
+			}
         }
     }
 
