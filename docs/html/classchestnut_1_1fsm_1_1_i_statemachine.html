@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chestnut Statemachine
-   &#160;<span id="projectnumber">v2.1.0</span>
+   &#160;<span id="projectnumber">v2.2.0</span>
    </div>
    <div id="projectbrief">A C++ header-only library for finite statemachine implementation.</div>
   </td>
@@ -110,18 +110,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5bae0a2f3858f38318ad28f82fc63a97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a5bae0a2f3858f38318ad28f82fc63a97">getStateStackSize</a> () const noexcept</td></tr>
 <tr class="memdesc:a5bae0a2f3858f38318ad28f82fc63a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of statemachine's state stack.  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#a5bae0a2f3858f38318ad28f82fc63a97">More...</a><br /></td></tr>
 <tr class="separator:a5bae0a2f3858f38318ad28f82fc63a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b2526c7805e2790495357083e4cc2c5"><td class="memTemplParams" colspan="2">template&lt;class StateType &gt; </td></tr>
-<tr class="memitem:a9b2526c7805e2790495357083e4cc2c5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a9b2526c7805e2790495357083e4cc2c5">init</a> ()</td></tr>
-<tr class="memdesc:a9b2526c7805e2790495357083e4cc2c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicitly initialize the statemachine.  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#a9b2526c7805e2790495357083e4cc2c5">More...</a><br /></td></tr>
-<tr class="separator:a9b2526c7805e2790495357083e4cc2c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30e154e4ae426741002d96dcb99f9f28"><td class="memTemplParams" colspan="2">template&lt;class StateType &gt; </td></tr>
-<tr class="memitem:a30e154e4ae426741002d96dcb99f9f28"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a30e154e4ae426741002d96dcb99f9f28">gotoState</a> ()</td></tr>
-<tr class="memdesc:a30e154e4ae426741002d96dcb99f9f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#a30e154e4ae426741002d96dcb99f9f28">More...</a><br /></td></tr>
-<tr class="separator:a30e154e4ae426741002d96dcb99f9f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a920ed6e3bf7eb08cc1040df954a1ed44"><td class="memTemplParams" colspan="2">template&lt;class StateType &gt; </td></tr>
-<tr class="memitem:a920ed6e3bf7eb08cc1040df954a1ed44"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a920ed6e3bf7eb08cc1040df954a1ed44">pushState</a> ()</td></tr>
-<tr class="memdesc:a920ed6e3bf7eb08cc1040df954a1ed44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions to the specified state and rememebers its previous state afterwards.  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#a920ed6e3bf7eb08cc1040df954a1ed44">More...</a><br /></td></tr>
-<tr class="separator:a920ed6e3bf7eb08cc1040df954a1ed44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f72a855a282178a02f251539f77f928"><td class="memTemplParams" colspan="2">template&lt;class StateType , typename ... Args&gt; </td></tr>
+<tr class="memitem:a7f72a855a282178a02f251539f77f928"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928">init</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a7f72a855a282178a02f251539f77f928"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicitly initialize the statemachine.  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928">More...</a><br /></td></tr>
+<tr class="separator:a7f72a855a282178a02f251539f77f928"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4c97e6bfd6dbb5cc880dd20a3a81623"><td class="memTemplParams" colspan="2">template&lt;class StateType , typename ... Args&gt; </td></tr>
+<tr class="memitem:ab4c97e6bfd6dbb5cc880dd20a3a81623"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#ab4c97e6bfd6dbb5cc880dd20a3a81623">gotoState</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:ab4c97e6bfd6dbb5cc880dd20a3a81623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#ab4c97e6bfd6dbb5cc880dd20a3a81623">More...</a><br /></td></tr>
+<tr class="separator:ab4c97e6bfd6dbb5cc880dd20a3a81623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b4c2350709294f619eac3e92a0aaa2e"><td class="memTemplParams" colspan="2">template&lt;class StateType , typename ... Args&gt; </td></tr>
+<tr class="memitem:a0b4c2350709294f619eac3e92a0aaa2e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a0b4c2350709294f619eac3e92a0aaa2e">pushState</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a0b4c2350709294f619eac3e92a0aaa2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions to the specified state and rememebers its previous state afterwards.  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#a0b4c2350709294f619eac3e92a0aaa2e">More...</a><br /></td></tr>
+<tr class="separator:a0b4c2350709294f619eac3e92a0aaa2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90eab368603749bf1ead65c851c3c50a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a90eab368603749bf1ead65c851c3c50a">popState</a> ()</td></tr>
 <tr class="memdesc:a90eab368603749bf1ead65c851c3c50a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transitions to the previous state.  <a href="classchestnut_1_1fsm_1_1_i_statemachine.html#a90eab368603749bf1ead65c851c3c50a">More...</a><br /></td></tr>
 <tr class="separator:a90eab368603749bf1ead65c851c3c50a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,7 +193,7 @@ template&lt;class StateInterface &gt; </div>
 
 <p>Get the state object on top of the state stack or nullptr if SM was not initialized. </p>
 <dl class="section return"><dt>Returns</dt><dd>upcasted to StateInterface pointer to the state</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a9b2526c7805e2790495357083e4cc2c5" title="Explicitly initialize the statemachine.">init()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928" title="Explicitly initialize the statemachine.">init()</a> </dd></dl>
 
 </div>
 </div>
@@ -221,7 +221,7 @@ template&lt;class StateInterface &gt; </div>
 
 <p>Get the type_index of the state object on top of the state stack or NULL_STATE if SM was not initialized. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::type_index of the state</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a9b2526c7805e2790495357083e4cc2c5" title="Explicitly initialize the statemachine.">init()</a>, NULL_STATE </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928" title="Explicitly initialize the statemachine.">init()</a>, NULL_STATE </dd></dl>
 
 </div>
 </div>
@@ -252,18 +252,22 @@ template&lt;typename StateInterface &gt; </div>
 
 </div>
 </div>
-<a id="a30e154e4ae426741002d96dcb99f9f28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30e154e4ae426741002d96dcb99f9f28">&#9670;&nbsp;</a></span>gotoState()</h2>
+<a id="ab4c97e6bfd6dbb5cc880dd20a3a81623"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4c97e6bfd6dbb5cc880dd20a3a81623">&#9670;&nbsp;</a></span>gotoState()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename StateInterface &gt; </div>
 <div class="memtemplate">
-template&lt;class StateType &gt; </div>
+template&lt;class StateType , typename ... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html">chestnut::fsm::IStatemachine</a>&lt; StateInterface &gt;::gotoState</td>
+          <td class="memname">void <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html">chestnut::fsm::IStatemachine</a>&lt; StateInterface &gt;::gotoState </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -271,7 +275,14 @@ template&lt;class StateType &gt; </div>
 <p>Transitions directly to specified state, forgetting its previous state afterwards (and deleting it) </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">StateType</td><td>type of the state statemachine should transition to</td></tr>
+    <tr><td class="paramname">StateType</td><td>type of the state statemachine should transition to </td></tr>
+    <tr><td class="paramname">Args</td><td>types of StateType constructor parameters </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>arguments that should be forwarded to StateType constructor (other than the statemachine pointer)</td></tr>
   </table>
   </dd>
 </dl>
@@ -282,26 +293,30 @@ template&lt;class StateType &gt; </div>
   </dd>
 </dl>
 <p>If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state. State transition happens directly, without transition through the state below the current one on the stack. After the transition, the previous state object is deleted.</p>
-<p>If statemachine is currently in the same state as specified, method does nothing. If the state stack is empty or has only init state left - then method acts like <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a920ed6e3bf7eb08cc1040df954a1ed44" title="Transitions to the specified state and rememebers its previous state afterwards.">pushState()</a>.</p>
+<p>If statemachine is currently in the same state as specified, method does nothing. If the state stack is empty or has only init state left - then method acts like <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a0b4c2350709294f619eac3e92a0aaa2e" title="Transitions to the specified state and rememebers its previous state afterwards.">pushState()</a>.</p>
 <p>This method can be used to initialize the statemachine.</p>
 <p>StateType is evaluated on compile time to check if it inherits from StateInterface.</p>
 <p>If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state which threw the exception remains undefined. If the next state throws an exception during onEnter, this state is still pushed onto the state stack, but its condition remains undefined.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a920ed6e3bf7eb08cc1040df954a1ed44" title="Transitions to the specified state and rememebers its previous state afterwards.">pushState()</a>, <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a9b2526c7805e2790495357083e4cc2c5" title="Explicitly initialize the statemachine.">init()</a>, <a class="el" href="structchestnut_1_1fsm_1_1_on_enter_exception.html" title="Exception type thrown if onEnter method in a state throws an unhandled exception.">OnEnterException</a>, <a class="el" href="structchestnut_1_1fsm_1_1_on_exit_exception.html" title="Exception type thrown if onExit method in a state throws an unhandled exception.">OnExitException</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a0b4c2350709294f619eac3e92a0aaa2e" title="Transitions to the specified state and rememebers its previous state afterwards.">pushState()</a>, <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928" title="Explicitly initialize the statemachine.">init()</a>, <a class="el" href="structchestnut_1_1fsm_1_1_on_enter_exception.html" title="Exception type thrown if onEnter method in a state throws an unhandled exception.">OnEnterException</a>, <a class="el" href="structchestnut_1_1fsm_1_1_on_exit_exception.html" title="Exception type thrown if onExit method in a state throws an unhandled exception.">OnExitException</a> </dd></dl>
 
 </div>
 </div>
-<a id="a9b2526c7805e2790495357083e4cc2c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b2526c7805e2790495357083e4cc2c5">&#9670;&nbsp;</a></span>init()</h2>
+<a id="a7f72a855a282178a02f251539f77f928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f72a855a282178a02f251539f77f928">&#9670;&nbsp;</a></span>init()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename StateInterface &gt; </div>
 <div class="memtemplate">
-template&lt;class StateType &gt; </div>
+template&lt;class StateType , typename ... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html">chestnut::fsm::IStatemachine</a>&lt; StateInterface &gt;::init</td>
+          <td class="memname">void <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html">chestnut::fsm::IStatemachine</a>&lt; StateInterface &gt;::init </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -309,7 +324,14 @@ template&lt;class StateType &gt; </div>
 <p>Explicitly initialize the statemachine. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">StateType</td><td>type of the initial state</td></tr>
+    <tr><td class="paramname">StateType</td><td>type of the initial state </td></tr>
+    <tr><td class="paramname">Args</td><td>types of StateType constructor parameters </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>arguments that should be forwarded to StateType constructor (other than the statemachine pointer)</td></tr>
   </table>
   </dd>
 </dl>
@@ -352,18 +374,22 @@ template&lt;class StateInterface &gt; </div>
 
 </div>
 </div>
-<a id="a920ed6e3bf7eb08cc1040df954a1ed44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a920ed6e3bf7eb08cc1040df954a1ed44">&#9670;&nbsp;</a></span>pushState()</h2>
+<a id="a0b4c2350709294f619eac3e92a0aaa2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b4c2350709294f619eac3e92a0aaa2e">&#9670;&nbsp;</a></span>pushState()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename StateInterface &gt; </div>
 <div class="memtemplate">
-template&lt;class StateType &gt; </div>
+template&lt;class StateType , typename ... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html">chestnut::fsm::IStatemachine</a>&lt; StateInterface &gt;::pushState</td>
+          <td class="memname">void <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html">chestnut::fsm::IStatemachine</a>&lt; StateInterface &gt;::pushState </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -371,7 +397,14 @@ template&lt;class StateType &gt; </div>
 <p>Transitions to the specified state and rememebers its previous state afterwards. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">StateType</td><td>type of the state statemachine should transition to</td></tr>
+    <tr><td class="paramname">StateType</td><td>type of the state statemachine should transition to </td></tr>
+    <tr><td class="paramname">Args</td><td>types of StateType constructor parameters </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>arguments that should be forwarded to StateType constructor (other than the statemachine pointer)</td></tr>
   </table>
   </dd>
 </dl>
@@ -385,7 +418,7 @@ template&lt;class StateType &gt; </div>
 <p>This method can be used to initialize the statemachine.</p>
 <p>StateType is evaluated on compile time to check if it inherits from StateInterface.</p>
 <p>If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state which threw the exception remains undefined. If the next state throws an exception during onEnter, this state is still pushed onto the state stack, but its condition remains undefined.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a9b2526c7805e2790495357083e4cc2c5" title="Explicitly initialize the statemachine.">init()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928" title="Explicitly initialize the statemachine.">init()</a> </dd></dl>
 
 </div>
 </div>

@@ -5,8 +5,8 @@ var classchestnut_1_1fsm_1_1_i_statemachine =
     [ "getCurrentState", "classchestnut_1_1fsm_1_1_i_statemachine.html#a2e8a173c1e46ebe4b539cb1bbc7cb77f", null ],
     [ "getCurrentStateType", "classchestnut_1_1fsm_1_1_i_statemachine.html#aa8e417b0dbf00826e594d84a5037c029", null ],
     [ "getStateStackSize", "classchestnut_1_1fsm_1_1_i_statemachine.html#a5bae0a2f3858f38318ad28f82fc63a97", null ],
-    [ "gotoState", "classchestnut_1_1fsm_1_1_i_statemachine.html#a30e154e4ae426741002d96dcb99f9f28", null ],
-    [ "init", "classchestnut_1_1fsm_1_1_i_statemachine.html#a9b2526c7805e2790495357083e4cc2c5", null ],
+    [ "gotoState", "classchestnut_1_1fsm_1_1_i_statemachine.html#ab4c97e6bfd6dbb5cc880dd20a3a81623", null ],
+    [ "init", "classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928", null ],
     [ "popState", "classchestnut_1_1fsm_1_1_i_statemachine.html#a90eab368603749bf1ead65c851c3c50a", null ],
-    [ "pushState", "classchestnut_1_1fsm_1_1_i_statemachine.html#a920ed6e3bf7eb08cc1040df954a1ed44", null ]
+    [ "pushState", "classchestnut_1_1fsm_1_1_i_statemachine.html#a0b4c2350709294f619eac3e92a0aaa2e", null ]
 ];
