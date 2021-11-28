@@ -86,6 +86,11 @@ namespace chestnut::statemachine
             {
                 currentState->onExit( nextStateType );
             
+                // we want to always retain at least one state on the stack - the default one
+                if( m_stackStates.size() > 1 )
+                {
+                    m_stackStates.pop();
+                }
                 currentState = it->second; // here it becomes a next state
                 m_stackStates.push( currentState );
 
