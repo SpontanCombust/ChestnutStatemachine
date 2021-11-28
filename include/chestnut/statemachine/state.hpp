@@ -17,7 +17,8 @@ namespace chestnut::statemachine
     class IState
     {
     protected:
-        ParentStatemachine *parent; /*Pointer to the statemachine that houses the state*/
+        /** @brief Pointer to the statemachine that houses the state */
+        ParentStatemachine *parent;
 
     public:
         typedef ParentStatemachine* ParentStatemachinePtrType;

@@ -70,9 +70,12 @@ namespace chestnut::statemachine
         return std::type_index( typeid( *m_stackStates.top() ) );
     }
 
-    template<class StateInterface>
-    void IStatemachine<StateInterface>::gotoState( std::type_index nextStateType ) 
+    template<typename StateInterface>
+    template<class StateType>
+    void IStatemachine<StateInterface>::gotoState() 
     {
+        std::type_index nextStateType = typeid(StateType);
+
         auto it = m_mapStateTypeToState.find( nextStateType );
         if( it != m_mapStateTypeToState.end() )
         {
@@ -84,11 +87,6 @@ namespace chestnut::statemachine
                 currentState->onExit( nextStateType );
             
                 currentState = it->second; // here it becomes a next state
-                // we want to always retain at least one state on the stack - the default one
-                if( m_stackStates.size() > 1 )
-                {
-                    m_stackStates.pop();
-                }
                 m_stackStates.push( currentState );
 
                 currentState->onEnter( currentStateType );
@@ -96,9 +94,12 @@ namespace chestnut::statemachine
         }
     }
 
-    template<class StateInterface>
-    void IStatemachine<StateInterface>::pushState( std::type_index nextStateType ) 
+    template<typename StateInterface>
+    template<class StateType>
+    void IStatemachine<StateInterface>::pushState() 
     {
+        std::type_index nextStateType = typeid(StateType);
+
         auto it = m_mapStateTypeToState.find( nextStateType );
         if( it != m_mapStateTypeToState.end() )
         {

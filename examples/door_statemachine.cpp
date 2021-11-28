@@ -43,34 +43,6 @@ public:
     mutable std::recursive_mutex doorMutex;
 
 
-    // We'll override methods from IStatemachine to account for the mutex
-    IDoorState *getCurrentState() const override
-    {
-        std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        IDoorState *state = super::getCurrentState();
-
-        return state;
-    }
-
-    void gotoState( std::type_index nextStateType ) override
-    {
-        std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        super::gotoState( nextStateType );
-    }
-
-    void pushState( std::type_index nextStateType ) override
-    {
-        std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        super::pushState( nextStateType );
-    }
-
-    void popState() override
-    {
-        std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        super::popState();
-    }
-
-
     // Define methods that will call appropriate method in the current state
 
     bool tryOpen()
@@ -173,7 +145,8 @@ void CDoorStateClosed::onExit( std::type_index nextState )
 
 bool CDoorStateClosed::tryOpen()
 {
-    parent->gotoState( typeid(CDoorStateOpening) );   
+    std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
+    parent->gotoState<CDoorStateOpening>();
     return true;  
 }
 
@@ -197,7 +170,8 @@ void CDoorStateOpening::onEnter( std::type_index prevState )
     // spawn a thread that'll wait 2 seconds and then transition to next state
     std::thread( [this] {
         std::this_thread::sleep_for( std::chrono::seconds(2) );
-        parent->gotoState( typeid(CDoorStateOpen) );
+        std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
+        parent->gotoState<CDoorStateOpen>();
     }).detach();
 }
 
@@ -247,7 +221,8 @@ bool CDoorStateOpen::tryOpen()
 
 bool CDoorStateOpen::tryClose()
 {
-    parent->gotoState( typeid(CDoorStateClosing) );
+    std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
+    parent->gotoState<CDoorStateClosing>();
     return true;
 }
 
@@ -264,7 +239,8 @@ void CDoorStateClosing::onEnter( std::type_index prevState )
 
     std::thread( [this] {
         std::this_thread::sleep_for( std::chrono::seconds(2) );
-        parent->gotoState( typeid(CDoorStateClosed) );
+        std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
+        parent->gotoState<CDoorStateClosed>();
     }).detach();
 }
 
@@ -323,19 +299,31 @@ int main(int argc, char const *argv[])
     if( door.tryOpen() )
     {
         printDoorState();
-        while( door.getCurrentStateType() == typeid(CDoorStateOpening) )
+
+        std::type_index state = door.getCurrentStateType();
+        while( state == typeid(CDoorStateOpening) )
         {
             std::this_thread::sleep_for( std::chrono::milliseconds(100) ); // we'll keep waiting small intervals until the door fully opens
+
+            std::lock_guard< std::recursive_mutex > lock( door.doorMutex );
+            state = door.getCurrentStateType();
         }
+
         printDoorState();
 
         if( door.tryClose() )
         {
             printDoorState();
-            while( door.getCurrentStateType() == typeid(CDoorStateClosing) )
+
+            state = door.getCurrentStateType();
+            while( state == typeid(CDoorStateClosing) )
             {
                 std::this_thread::sleep_for( std::chrono::milliseconds(100) );
+
+                std::lock_guard< std::recursive_mutex > lock( door.doorMutex );
+                state = door.getCurrentStateType();
             }
+
             printDoorState();
         }
     }

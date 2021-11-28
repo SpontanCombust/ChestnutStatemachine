@@ -47,19 +47,20 @@ namespace chestnut::statemachine
         template< class DefaultState, class ...States >
         void setupStates();
 
+
         /**
          * @brief Get the state object on top of the state stack
          * 
          * @return StateInterface* upcasted pointer to the state
          */
-        virtual StateInterface *getCurrentState() const;
+        StateInterface *getCurrentState() const;
 
         /**
          * @brief Get the type_index of the state object on top of the state stack
          * 
          * @return std::type_index of the state
          */
-        virtual std::type_index getCurrentStateType() const;
+        std::type_index getCurrentStateType() const;
 
 
         /**
@@ -71,9 +72,10 @@ namespace chestnut::statemachine
          * If state stack has only 1 element (the default state) the method acts like pushState().
          * If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.
          * 
-         * @param nextState type of the state statemachine should transition to
+         * @tparam StateType type of the state statemachine should transition to
          */
-        virtual void gotoState( std::type_index nextState );
+        template< class StateType >
+        void gotoState();
 
         /**
          * @brief Transitions to the specified state and rememebers its previous state afterwards
@@ -83,17 +85,19 @@ namespace chestnut::statemachine
          * State transition goes from state previously on top of the stack to the specified state.
          * If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.
          * 
-         * @param nextState type of the state statemachine should transition to
+         * @tparam StateType type of the state statemachine should transition to
          */
-        virtual void pushState( std::type_index nextState );
+        template< class StateType >
+        void pushState();
 
         /**
-         * @brief Transitions to the previous state
+         * @brief Transitions to the previous state.
          * 
          * @details 
          * Pops the state on top of the state stack unless there's only one state left (the default state).
          */
-        virtual void popState();
+        void popState();
+
 
 
     private:
