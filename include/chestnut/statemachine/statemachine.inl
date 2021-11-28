@@ -36,6 +36,12 @@ namespace chestnut::statemachine
         return NULL_STATE;
     }
 
+    template<typename StateInterface>
+    int IStatemachine<StateInterface>::getStateStackSize() const
+    {
+        return (int)m_stackStates.size();
+    }
+
     //TODO guard against possible exceptions from onEnter and onExit
     template<typename StateInterface>
     template<class StateType>

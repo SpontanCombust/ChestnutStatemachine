@@ -296,7 +296,7 @@ int main(int argc, char const *argv[])
     CDoorStatemachine door;
 
     auto printDoorState = [&door] {
-        std::cout << "Door state: " << doorStateTypeToString( door.getCurrentStateType() ) << "\n";
+        std::cout << "Door state: " << doorStateTypeToString( door.getCurrentStateType() ) << "; state stack size: " << door.getStateStackSize() << "\n";
     };
 
     door.init<CDoorStateClosed>();

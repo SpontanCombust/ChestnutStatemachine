@@ -1,6 +1,8 @@
 #ifndef __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
 #define __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
 
+#include "state.hpp"
+
 #include <stack>
 #include <typeindex>
 #include <unordered_map>
@@ -55,6 +57,13 @@ namespace chestnut::statemachine
          * @return std::type_index of the state
          */
         std::type_index getCurrentStateType() const;
+
+        /**
+         * @brief Return the size of statemachine's state stack
+         * 
+         * @return state stack size
+         */
+        int getStateStackSize() const;
 
 
         /**
