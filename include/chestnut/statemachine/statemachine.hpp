@@ -1,115 +1,188 @@
+/**
+ * @file statemachine.hpp
+ * @author SpontanCombust
+ * @brief Header file with base template statemachine type
+ * @version 2.1.0
+ * @date 2021-11-28
+ * 
+ * @copyright MIT License (c) 2021
+ * 
+ */
+
+
 #ifndef __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
 #define __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
+
+#include "state.hpp"
+#include "exceptions.hpp"
 
 #include <stack>
 #include <typeindex>
 #include <unordered_map>
 
-namespace chestnut::statemachine
+namespace chestnut::fsm
 {
     /**
      * @brief Base generic class for creating a statemachine
      * 
      * @tparam StateInterface a base (interface) class from which all states inherit
      * 
+     * 
      * @details
      * StateInterface type must inherit from IState to work properly.
-     * It can have any number of virtual methods that proper states should implement in some form
+     * It can have any number of virtual methods that proper states should implement in some form.
      * 
      * @see IState
      */
     template< typename StateInterface >
     class IStatemachine
     {
-    protected:
-        std::unordered_map< std::type_index, StateInterface* > m_mapStateTypeToState;
+    private:
         std::stack< StateInterface* > m_stackStates;
 
     public:
         IStatemachine() = default;
 
-        virtual ~IStatemachine();
-
-
         /**
-         * @brief Adds states of given types to the statemachine and initialize the default state
+         * @brief Statemachine destructor, cleans up states on the stack
+         * 
          * 
          * @details
-         * States must inherit from StateInterface type.
-         * DefaultState type is the state type the statemachine is initialized with and will always stay on the bottom of state stack.
-         * When finished, method calls onEnter for the default state with its own name
-         * It is possible to pass in only default state type.
-         * This method should be called only once and always before calling any other method.
+         * Deletes all states that are on the state stack, but before that calls their onExit with NULL_STATE as type argument.
          * 
-         * @tparam DefaultState type of the default state for the statemachine
-         * @tparam States rest of the states
+         * @see NULL_STATE
          */
-        template< class DefaultState, class ...States >
-        void setupStates();
+        virtual ~IStatemachine() noexcept;
+
 
         /**
-         * @brief Get the state object on top of the state stack
+         * @brief Get the state object on top of the state stack or nullptr if SM was not initialized
          * 
-         * @return StateInterface* upcasted pointer to the state
+         * @return upcasted to StateInterface pointer to the state
+         * 
+         * 
+         * @see init()
          */
-        virtual StateInterface *getCurrentState() const;
+        StateInterface *getCurrentState() const noexcept;
 
         /**
-         * @brief Get the type_index of the state object on top of the state stack
+         * @brief Get the type_index of the state object on top of the state stack or NULL_STATE if SM was not initialized
          * 
          * @return std::type_index of the state
+         * 
+         * 
+         * @see init(), NULL_STATE
          */
-        virtual std::type_index getCurrentStateType() const;
+        std::type_index getCurrentStateType() const noexcept;
+
+        /**
+         * @brief Return the size of statemachine's state stack
+         * 
+         * @return state stack size
+         */
+        int getStateStackSize() const noexcept;
 
 
         /**
-         * @brief Transitions directly to specified state, forgetting its previous state afterwards
+         * @brief Explicitly initialize the statemachine
+         * 
+         * @tparam StateType type of the initial state
+         * 
+         * @throw OnEnterException if a state throws exception in a transition method
+         * 
+         * 
+         * @details
+         * Use this method to explicitly state that you want to setup the initial state of the statemachine.
+         * This initial state will always stay on the bottom of the state stack and won't be able to be popped.
+         * If the state stack is already not empty, it won't do anything.
+         * onEnter for the init state is called with NULL_STATE.
+         * 
+         * StateType is evaluated on compile time to check if it inherits from StateInterface.
+         * 
+         * If a state throws an exception during onEnter, the state is still pushed onto the state stack, 
+         * but its condition remains undefined.
+         * 
+         * @see NULL_STATE, OnEnterException
+         */
+        template< class StateType >
+        void init();
+
+        /**
+         * @brief Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)
+         * 
+         * @tparam StateType type of the state statemachine should transition to
+         * 
+         * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+         * 
          * 
          * @details
          * If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state.
-         * State transition happens directly, without consideration of a state below the top.
-         * If state stack has only 1 element (the default state) the method acts like pushState().
-         * If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.
+         * State transition happens directly, without transition through the state below the current one on the stack.
+         * After the transition, the previous state object is deleted.
          * 
-         * @param nextState type of the state statemachine should transition to
+         * If statemachine is currently in the same state as specified, method does nothing.
+         * If the state stack is empty or has only init state left - then method acts like pushState().
+         * 
+         * This method can be used to initialize the statemachine.
+         * 
+         * StateType is evaluated on compile time to check if it inherits from StateInterface.
+         * 
+         * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+         * which threw the exception remains undefined.
+         * If the next state throws an exception during onEnter, this state is still pushed onto the state stack, 
+         * but its condition remains undefined.
+         * 
+         * @see pushState(), init(), OnEnterException, OnExitException
          */
-        virtual void gotoState( std::type_index nextState );
+        template< class StateType >
+        void gotoState();
 
         /**
          * @brief Transitions to the specified state and rememebers its previous state afterwards
          * 
+         * @tparam StateType type of the state statemachine should transition to
+         * 
+         * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+         * 
+         * 
          * @details 
          * Pushes next state onto the state stack.
          * State transition goes from state previously on top of the stack to the specified state.
-         * If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.
+         * If statemachine is currently in the same state as specified, method does nothing.
          * 
-         * @param nextState type of the state statemachine should transition to
+         * This method can be used to initialize the statemachine.
+         * 
+         * StateType is evaluated on compile time to check if it inherits from StateInterface.
+         * 
+         * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+         * which threw the exception remains undefined.
+         * If the next state throws an exception during onEnter, this state is still pushed onto the state stack, 
+         * but its condition remains undefined.
+         * 
+         * @see init()
          */
-        virtual void pushState( std::type_index nextState );
+        template< class StateType >
+        void pushState();
 
         /**
-         * @brief Transitions to the previous state
+         * @brief Transitions to the previous state.
+         * 
+         * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+         * 
          * 
          * @details 
-         * Pops the state on top of the state stack unless there's only one state left (the default state).
+         * Pops the state on top of the state stack unless there's only one state (the init state) left or none.
+         * After the transition, the previous state object is deleted.
+         * 
+         * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+         * which threw the exception remains undefined.
+         * If the next state throws an exception during onEnter, this state still stays on the state stack, 
+         * but its condition remains undefined.
          */
-        virtual void popState();
-
-
-    private:
-        void destroy();
-
-
-        template< class ...SystemTypes >
-        struct SystemTypeList {};
-
-        void addStates( SystemTypeList<> );
-
-        template< class State, class ...OtherStates >
-        void addStates( SystemTypeList<State, OtherStates...> );
+        void popState();
     };
     
-} // namespace chestnut::statemachine
+} // namespace chestnut::fsm
 
 
 #include "statemachine.inl"

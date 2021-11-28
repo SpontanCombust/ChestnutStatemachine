@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['popstate_7',['popState',['../classchestnut_1_1statemachine_1_1_i_statemachine.html#a1e8bf5b9473e133774d4d41fd8dcdb90',1,'chestnut::statemachine::IStatemachine']]],
-  ['pushstate_8',['pushState',['../classchestnut_1_1statemachine_1_1_i_statemachine.html#ae0c37bd9bc929bb0bafbe2ce37677b29',1,'chestnut::statemachine::IStatemachine']]]
+  ['null_5fstate_8',['NULL_STATE',['../state_8hpp.html#a8ca4888ee93a132642f4a514ea8bf3ef',1,'chestnut::fsm']]]
 ];

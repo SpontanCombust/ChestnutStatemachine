@@ -1,0 +1,5 @@
+<map id="chestnut::fsm::OnExitException" name="chestnut::fsm::OnExitException">
+<area shape="rect" id="node1" title="Exception type thrown if onExit method in a state throws an unhandled exception." alt="" coords="5,169,212,196"/>
+<area shape="rect" id="node2" href="$structchestnut_1_1fsm_1_1_state_change_exception.html" title="Base exception class for OnEnterException and OnExitException." alt="" coords="15,80,202,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="57,5,160,32"/>
+</map>

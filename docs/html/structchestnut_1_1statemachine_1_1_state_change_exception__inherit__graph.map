@@ -1,0 +1,6 @@
+<map id="chestnut::statemachine::StateChangeException" name="chestnut::statemachine::StateChangeException">
+<area shape="rect" id="node1" title="Base exception class for OnEnterException and OnExitException." alt="" coords="94,80,257,121"/>
+<area shape="rect" id="node3" href="$structchestnut_1_1statemachine_1_1_on_enter_exception.html" title="Exception type thrown if onEnter method in a state throws an unhandled exception." alt="" coords="5,169,164,211"/>
+<area shape="rect" id="node4" href="$structchestnut_1_1statemachine_1_1_on_exit_exception.html" title="Exception type thrown if onExit method in a state throws an unhandled exception." alt="" coords="188,169,347,211"/>
+<area shape="rect" id="node2" title=" " alt="" coords="124,5,227,32"/>
+</map>

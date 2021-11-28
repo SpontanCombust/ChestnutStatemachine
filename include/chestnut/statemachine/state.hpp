@@ -1,9 +1,21 @@
+/**
+ * @file state.hpp
+ * @author SpontanCombust
+ * @brief Header file with base template state class and NULL_STATE constant
+ * @version 2.1.0
+ * @date 2021-11-28
+ * 
+ * @copyright MIT License (c) 2021
+ * 
+ */
+
+
 #ifndef __CHESTNUT_STATEMACHINE_STATE_H__
 #define __CHESTNUT_STATEMACHINE_STATE_H__
 
 #include <typeindex>
 
-namespace chestnut::statemachine
+namespace chestnut::fsm
 {
     /**
      * @brief Base generic abstract class used for creating state interface
@@ -17,7 +29,10 @@ namespace chestnut::statemachine
     class IState
     {
     protected:
-        ParentStatemachine *parent; /*Pointer to the statemachine that houses the state*/
+        /**
+         * @brief Pointer to the statemachine that houses the state
+         */
+        ParentStatemachine *parent;
 
     public:
         typedef ParentStatemachine* ParentStatemachinePtrType;
@@ -36,12 +51,28 @@ namespace chestnut::statemachine
         /**
          * @brief A method called whenever statemachine exits this state
          * 
+         * @details
+         * This method should under no circumstances call any state changing method on its parent!
+         * Doing it will lead to undefined behaviour.
+         * 
          * @param nextState type of the state statemachine is swithing to
          */
         virtual void onExit( std::type_index nextState ) = 0;
     };
+
+
+    /**
+     * @brief A constant type index meant to represent a lack of state
+     * 
+     * @details
+     * There are currently 2 situations when NULL_STATE is used: \n 
+     * 1. When statemachine is being initialized with its init state, then NULL_STATE is passed to onEnter of that state \n
+     * 2. When statemachine is being deleted, then NULL_STATE is passed to onExit of every state on the state stack before deleting them
+     */
+    const std::type_index NULL_STATE = std::type_index( typeid(nullptr) );
     
-} // namespace chestnut::statemachine
+
+} // namespace chestnut::fsm
 
 
 #include "state.inl"
