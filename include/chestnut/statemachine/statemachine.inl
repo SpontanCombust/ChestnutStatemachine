@@ -1,132 +1,135 @@
+#include <type_traits>
+
 namespace chestnut::statemachine
 {  
     template<class StateInterface>
-    template<class DefaultState, class ...States>
-    void IStatemachine<StateInterface>::setupStates() 
+    IStatemachine<StateInterface>::~IStatemachine() 
     {
-        destroy();
-
-        DefaultState *defaultState = new DefaultState( dynamic_cast<typename DefaultState::ParentStatemachinePtrType>( this ) );
-
-        m_mapStateTypeToState[ typeid(DefaultState) ] = defaultState;
-        m_stackStates.push( defaultState );
-
-        addStates( SystemTypeList<States...>() );
-
-        defaultState->onEnter( typeid(DefaultState) );
-    }
-
-    template<class StateInterface>
-    void IStatemachine<StateInterface>::addStates( SystemTypeList<> ) 
-    {
-        // NOP
-    }
-
-    template<class StateInterface>
-    template<class State, class ...OtherStates>
-    void IStatemachine<StateInterface>::addStates( SystemTypeList<State, OtherStates...> ) 
-    {
-        auto it = m_mapStateTypeToState.find( typeid(State) );
-        // add the state only if it's not a duplicate
-        if( it == m_mapStateTypeToState.end() )
-        {
-            m_mapStateTypeToState[ typeid(State) ] = new State( dynamic_cast<typename State::ParentStatemachinePtrType>( this ) );
-        }
-
-        addStates( SystemTypeList<OtherStates...>() );
-    }
-
-    template<class StateInterface>
-    void IStatemachine<StateInterface>::destroy() 
-    {
-        for( auto it = m_mapStateTypeToState.begin(); it != m_mapStateTypeToState.end(); ++it )
-        {
-            delete it->second;
-        }
-
-        m_mapStateTypeToState.clear();
-
         while( !m_stackStates.empty() )
         {
+            StateInterface *state = m_stackStates.top();
+            state->onExit( NULL_STATE );
+            delete state;
             m_stackStates.pop();
         }
     }
 
     template<class StateInterface>
-    IStatemachine<StateInterface>::~IStatemachine() 
-    {
-        destroy();
-    }
-
-    template<class StateInterface>
     StateInterface* IStatemachine<StateInterface>::getCurrentState() const
     {
-        return m_stackStates.top();
+        if( m_stackStates.size() >= 1 )
+        {
+            return m_stackStates.top();
+        }
+
+        return nullptr;
     }
 
     template<class StateInterface>
     std::type_index IStatemachine<StateInterface>::getCurrentStateType() const
     {
-        return std::type_index( typeid( *m_stackStates.top() ) );
+        if( m_stackStates.size() >= 1 )
+        {
+            return std::type_index( typeid( *m_stackStates.top() ) );
+        }
+
+        return NULL_STATE;
     }
 
+    //TODO guard against possible exceptions from onEnter and onExit
+    template<typename StateInterface>
+    template<class StateType>
+    void IStatemachine<StateInterface>::init() 
+    {
+        static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
+
+        if( m_stackStates.empty() )
+        {
+            StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
+            m_stackStates.push( initState );
+            initState->onEnter( NULL_STATE );
+        }
+    }
+
+    //TODO guard against possible exceptions from onEnter and onExit
     template<typename StateInterface>
     template<class StateType>
     void IStatemachine<StateInterface>::gotoState() 
     {
+        static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
+
+        std::type_index currentStateType = getCurrentStateType();
         std::type_index nextStateType = typeid(StateType);
 
-        auto it = m_mapStateTypeToState.find( nextStateType );
-        if( it != m_mapStateTypeToState.end() )
+        if( nextStateType != currentStateType )
         {
-            StateInterface *currentState = m_stackStates.top();
-            std::type_index currentStateType = typeid(*currentState);
+            StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
 
-            if( currentStateType != nextStateType )
+            if( m_stackStates.size() >= 1 )
             {
+                StateInterface *currentState = m_stackStates.top();
+
                 currentState->onExit( nextStateType );
-            
-                // we want to always retain at least one state on the stack - the default one
+
+                // we want to always retain the init state on the stack
                 if( m_stackStates.size() > 1 )
                 {
+                    // we transition to next state directly and forget the previous state
+                    delete currentState;
                     m_stackStates.pop();
                 }
-                currentState = it->second; // here it becomes a next state
-                m_stackStates.push( currentState );
 
-                currentState->onEnter( currentStateType );
+                m_stackStates.push( nextState );
+
+                nextState->onEnter( currentStateType );
+            }
+            else
+            {
+                m_stackStates.push( nextState );
+                nextState->onEnter( NULL_STATE );
             }
         }
     }
 
+    //TODO guard against possible exceptions from onEnter and onExit
     template<typename StateInterface>
     template<class StateType>
     void IStatemachine<StateInterface>::pushState() 
     {
+        static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
+
+        std::type_index currentStateType = getCurrentStateType();
         std::type_index nextStateType = typeid(StateType);
 
-        auto it = m_mapStateTypeToState.find( nextStateType );
-        if( it != m_mapStateTypeToState.end() )
+        if( nextStateType != currentStateType )
         {
-            StateInterface *currentState = m_stackStates.top();
-            std::type_index currentStateType = typeid(*currentState);
+            StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
 
-            if( currentStateType != nextStateType )
+            if( m_stackStates.size() >= 1 )
             {
-                currentState->onExit( nextStateType );
-            
-                currentState = it->second; // here it becomes a next state
-                m_stackStates.push( currentState );
+                StateInterface *currentState = m_stackStates.top();
 
-                currentState->onEnter( currentStateType );
+                currentState->onExit( nextStateType );
+
+                // with pushState we remember the previous state, so we don't delete it and leave it on state stack
+
+                m_stackStates.push( nextState );
+
+                nextState->onEnter( currentStateType );
+            }
+            else
+            {
+                m_stackStates.push( nextState );
+                nextState->onEnter( NULL_STATE );
             }
         }
     }
 
+    //TODO guard against possible exceptions from onEnter and onExit
     template<class StateInterface>
     void IStatemachine<StateInterface>::popState() 
     {
-        // we want to always retain at least one state on the stack - the default one
+        // we want to always retain the init state on the stack
         if( m_stackStates.size() > 1 )
         {
             StateInterface *currentState = m_stackStates.top();
@@ -135,8 +138,10 @@ namespace chestnut::statemachine
 
             StateInterface *nextState = m_stackStates.top();
 
-            currentState->onExit( typeid(*nextState) );
-            nextState->onEnter( typeid(*currentState) );
+            currentState->onExit( typeid( *nextState ) );
+            nextState->onEnter( typeid( *currentState ) );
+
+            delete currentState;
         }
     }
 

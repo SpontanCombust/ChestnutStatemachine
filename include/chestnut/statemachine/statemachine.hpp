@@ -22,41 +22,35 @@ namespace chestnut::statemachine
     class IStatemachine
     {
     protected:
-        std::unordered_map< std::type_index, StateInterface* > m_mapStateTypeToState;
         std::stack< StateInterface* > m_stackStates;
 
     public:
         IStatemachine() = default;
 
+        /**
+         * @brief Statemachine destroyer, cleans up states on the stack
+         * 
+         * @details
+         * Deletes all states that are on the state stack, but before that calls their onExit with NULL_STATE as type argument.
+         * @see NULL_STATE
+         */
         virtual ~IStatemachine();
 
 
         /**
-         * @brief Adds states of given types to the statemachine and initialize the default state
+         * @brief Get the state object on top of the state stack or nullptr if SM was not initialized
          * 
-         * @details
-         * States must inherit from StateInterface type.
-         * DefaultState type is the state type the statemachine is initialized with and will always stay on the bottom of state stack.
-         * When finished, method calls onEnter for the default state with its own name
-         * It is possible to pass in only default state type.
-         * This method should be called only once and always before calling any other method.
-         * 
-         * @tparam DefaultState type of the default state for the statemachine
-         * @tparam States rest of the states
-         */
-        template< class DefaultState, class ...States >
-        void setupStates();
-
-
-        /**
-         * @brief Get the state object on top of the state stack
+         * @see init()
          * 
          * @return StateInterface* upcasted pointer to the state
          */
         StateInterface *getCurrentState() const;
 
         /**
-         * @brief Get the type_index of the state object on top of the state stack
+         * @brief Get the type_index of the state object on top of the state stack or NULL_STATE if SM was not initialized
+         * 
+         * @see init()
+         * @see NULL_STATE
          * 
          * @return std::type_index of the state
          */
@@ -64,13 +58,38 @@ namespace chestnut::statemachine
 
 
         /**
-         * @brief Transitions directly to specified state, forgetting its previous state afterwards
+         * @brief Explicitly initialize the statemachine
+         * 
+         * @details
+         * Use this method to explicitly state that you want to setup the initial state of the statemachine.
+         * This initial state will always stay on the bottom of the state stack and won't be able to be popped.
+         * If the state stack is already not empty, it won't do anything.
+         * onEnter for the init state is called with NULL_STATE
+         * @see NULL_STATE
+         * 
+         * StateType is evaluated on compile time to check if it inherits from StateInterface
+         * 
+         * @tparam StateType type of the initial state
+         */
+        template< class StateType >
+        void init();
+
+        /**
+         * @brief Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)
          * 
          * @details
          * If state stack size is greater than 1, pops the state on the top of state stack and immediately pushes the specified state.
-         * State transition happens directly, without consideration of a state below the top.
-         * If state stack has only 1 element (the default state) the method acts like pushState().
-         * If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.
+         * State transition happens directly, without transition through the state below the current one on the stack.
+         * After the transition, the previous state object is deleted.
+         * 
+         * If statemachine is currently in the same state as specified, method does nothing.
+         * If the state stack is empty or has only init state left - then method acts like pushState().
+         * @see pushState()
+         * 
+         * This method can be used to initialize the statemachine.
+         * @see init()
+         * 
+         * StateType is evaluated on compile time to check if it inherits from StateInterface.
          * 
          * @tparam StateType type of the state statemachine should transition to
          */
@@ -83,7 +102,12 @@ namespace chestnut::statemachine
          * @details 
          * Pushes next state onto the state stack.
          * State transition goes from state previously on top of the stack to the specified state.
-         * If state of that type was not supplied in the constructor or the same state is on top of the stack, method does nothing.
+         * If statemachine is currently in the same state as specified, method does nothing.
+         * 
+         * This method can be used to initialize the statemachine.
+         * @see init()
+         * 
+         * StateType is evaluated on compile time to check if it inherits from StateInterface.
          * 
          * @tparam StateType type of the state statemachine should transition to
          */
@@ -94,23 +118,10 @@ namespace chestnut::statemachine
          * @brief Transitions to the previous state.
          * 
          * @details 
-         * Pops the state on top of the state stack unless there's only one state left (the default state).
+         * Pops the state on top of the state stack unless there's only one state (the init state) left or none.
+         * After the transition, the previous state object is deleted.
          */
         void popState();
-
-
-
-    private:
-        void destroy();
-
-
-        template< class ...SystemTypes >
-        struct SystemTypeList {};
-
-        void addStates( SystemTypeList<> );
-
-        template< class State, class ...OtherStates >
-        void addStates( SystemTypeList<State, OtherStates...> );
     };
     
 } // namespace chestnut::statemachine

@@ -18,7 +18,7 @@ class IDoorState : public chestnut::statemachine::IState<CDoorStatemachine>
 public:
     typedef chestnut::statemachine::IState<CDoorStatemachine> super;
 
-    // 2.1 You have to define the special constructor that takes in statemachine pointer, you can pass the pointer to parent class constructor
+    // 1.1 You have to define the special constructor that takes in statemachine pointer, you can pass the pointer to parent class constructor
     // At the moment this library doesn't support custom state constructors
     IDoorState( CDoorStatemachine *sm ) : super( sm ) {}
 
@@ -124,6 +124,8 @@ public:
 
 
 
+using chestnut::statemachine::NULL_STATE;
+
 CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm ) 
 {
 
@@ -131,8 +133,8 @@ CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm )
 
 void CDoorStateClosed::onEnter( std::type_index prevState )
 {
-    // guard in case this is the default state
-    if( prevState != typeid(CDoorStateClosed) )
+    // message won't show if this is the init state
+    if( prevState != NULL_STATE )
     {
         std::cout << "The door is now closed!\n";
     }
@@ -140,7 +142,11 @@ void CDoorStateClosed::onEnter( std::type_index prevState )
 
 void CDoorStateClosed::onExit( std::type_index nextState )
 {
-    std::cout << "The door is no longer closed!\n";
+    // message won't show if statemachine is being deleted
+    if( nextState != NULL_STATE )
+    {
+        std::cout << "The door is no longer closed!\n";
+    }
 }
 
 bool CDoorStateClosed::tryOpen()
@@ -201,8 +207,8 @@ CDoorStateOpen::CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm )
 
 void CDoorStateOpen::onEnter( std::type_index prevState ) 
 {
-    // guard in case this is the default state
-    if( prevState != typeid(CDoorStateOpen) )
+    // message won't show if this is the init state
+    if( prevState != NULL_STATE )
     {
         std::cout << "The door is now open!\n";
     }
@@ -210,7 +216,11 @@ void CDoorStateOpen::onEnter( std::type_index prevState )
 
 void CDoorStateOpen::onExit( std::type_index nextState ) 
 {
-    std::cout << "The door is no longer open!\n";
+    // message won't show if statemachine is being deleted
+    if( nextState != NULL_STATE )
+    {
+        std::cout << "The door is no longer open!\n";
+    }
 }
 
 bool CDoorStateOpen::tryOpen() 
@@ -284,12 +294,12 @@ int main(int argc, char const *argv[])
 {
 
     CDoorStatemachine door;
-    door.setupStates< CDoorStateClosed, CDoorStateOpen, CDoorStateClosing, CDoorStateOpening >();
 
     auto printDoorState = [&door] {
         std::cout << "Door state: " << doorStateTypeToString( door.getCurrentStateType() ) << "\n";
     };
 
+    door.init<CDoorStateClosed>();
 
     printDoorState();
     if( door.tryClose() )

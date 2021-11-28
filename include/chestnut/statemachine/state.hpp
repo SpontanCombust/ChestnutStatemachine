@@ -41,7 +41,19 @@ namespace chestnut::statemachine
          */
         virtual void onExit( std::type_index nextState ) = 0;
     };
+
+
+    /**
+     * @brief A constant type index meant to represent a lack of state
+     * 
+     * @details
+     * There are currently 2 situations when NULL_STATE is used: \n 
+     * 1. When statemachine is being initialized with its init state, then NULL_STATE is passed to onEnter of that state \n
+     * 2. When statemachine is being deleted, then NULL_STATE is passed to onExit of every state on the state stack before deleting them
+     */
+    const std::type_index NULL_STATE = std::type_index( typeid(nullptr) );
     
+
 } // namespace chestnut::statemachine
 
 
