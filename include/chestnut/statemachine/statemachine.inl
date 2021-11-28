@@ -1,7 +1,7 @@
 #include <type_traits>
 #include <cstdio>
 
-namespace chestnut::statemachine
+namespace chestnut::fsm
 {  
     template<class StateInterface>
     IStatemachine<StateInterface>::~IStatemachine() noexcept
@@ -234,4 +234,4 @@ namespace chestnut::statemachine
         }
     }
 
-} // namespace chestnut::statemachine
+} // namespace chestnut::fsm

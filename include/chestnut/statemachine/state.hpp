@@ -1,9 +1,21 @@
+/**
+ * @file state.hpp
+ * @author SpontanCombust
+ * @brief Header file with base template state class and NULL_STATE constant
+ * @version 2.1.0
+ * @date 2021-11-28
+ * 
+ * @copyright MIT License (c) 2021
+ * 
+ */
+
+
 #ifndef __CHESTNUT_STATEMACHINE_STATE_H__
 #define __CHESTNUT_STATEMACHINE_STATE_H__
 
 #include <typeindex>
 
-namespace chestnut::statemachine
+namespace chestnut::fsm
 {
     /**
      * @brief Base generic abstract class used for creating state interface
@@ -60,7 +72,7 @@ namespace chestnut::statemachine
     const std::type_index NULL_STATE = std::type_index( typeid(nullptr) );
     
 
-} // namespace chestnut::statemachine
+} // namespace chestnut::fsm
 
 
 #include "state.inl"

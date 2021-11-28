@@ -13,10 +13,10 @@
 
 class CDoorStatemachine;
 
-class IDoorState : public chestnut::statemachine::IState<CDoorStatemachine>
+class IDoorState : public chestnut::fsm::IState<CDoorStatemachine>
 {
 public:
-    typedef chestnut::statemachine::IState<CDoorStatemachine> super;
+    typedef chestnut::fsm::IState<CDoorStatemachine> super;
 
     // 1.1 You have to define the special constructor that takes in statemachine pointer, you can pass the pointer to parent class constructor
     // At the moment this library doesn't support custom state constructors
@@ -31,11 +31,11 @@ public:
 
 
 // ====================================== 2. Define your statemachine type ======================================
-class CDoorStatemachine : public chestnut::statemachine::IStatemachine<IDoorState>
+class CDoorStatemachine : public chestnut::fsm::IStatemachine<IDoorState>
 {
 public:
     // utility parent class typedef
-    typedef chestnut::statemachine::IStatemachine<IDoorState> super;
+    typedef chestnut::fsm::IStatemachine<IDoorState> super;
 
     // You can make your statemachine able to be used across threads in an async manner
     // You have to be very careful with this however, like with any other scenario that involves race conditions
@@ -124,7 +124,7 @@ public:
 
 
 
-using chestnut::statemachine::NULL_STATE;
+using chestnut::fsm::NULL_STATE;
 
 CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm ) : IDoorState( sm ) 
 {
