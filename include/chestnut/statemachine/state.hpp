@@ -2,10 +2,10 @@
  * @file state.hpp
  * @author SpontanCombust
  * @brief Header file with base template state class and NULL_STATE constant
- * @version 2.1.0
- * @date 2021-11-28
+ * @version 2.3.0
+ * @date 2022-01-10
  * 
- * @copyright MIT License (c) 2021
+ * @copyright MIT License (c) 2021-2022
  * 
  */
 
@@ -18,7 +18,7 @@
 namespace chestnut::fsm
 {
     /**
-     * @brief Base generic abstract class used for creating state interface
+     * @brief Base generic class used for creating state interface
      * 
      * @tparam ParentStatemachine type of the statemachine that will house the state
      * 
@@ -46,7 +46,7 @@ namespace chestnut::fsm
          * 
          * @param prevState type of the state statemachine swithed from
          */
-        virtual void onEnter( std::type_index prevState ) = 0;
+        virtual void onEnter( std::type_index prevState ) {}
 
         /**
          * @brief A method called whenever statemachine exits this state
@@ -57,7 +57,7 @@ namespace chestnut::fsm
          * 
          * @param nextState type of the state statemachine is swithing to
          */
-        virtual void onExit( std::type_index nextState ) = 0;
+        virtual void onExit( std::type_index nextState ) {}
     };
 
 
