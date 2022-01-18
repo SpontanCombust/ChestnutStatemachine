@@ -37,10 +37,17 @@ namespace chestnut::fsm
     class IStatemachine
     {
     private:
+        /**
+         * @brief A stack of state pointers
+         */
         std::stack< StateInterface* > m_stackStates;
+        /**
+         * @brief A flag set to prevent onExit from calling state change methods
+         */
+        bool m_isCurrentlyLeavingAState;
 
     public:
-        IStatemachine() = default;
+        IStatemachine();
 
         /**
          * @brief Statemachine destructor, cleans up states on the stack

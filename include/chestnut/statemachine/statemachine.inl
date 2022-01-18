@@ -3,9 +3,18 @@
 
 namespace chestnut::fsm
 {  
+
+    template<typename StateInterface>
+    IStatemachine<StateInterface>::IStatemachine() 
+    {
+        m_isCurrentlyLeavingAState = false;
+    }
+
     template<class StateInterface>
     IStatemachine<StateInterface>::~IStatemachine() noexcept
     {
+        m_isCurrentlyLeavingAState = true;
+
         while( !m_stackStates.empty() )
         {
             StateInterface *state = m_stackStates.top();
@@ -81,6 +90,11 @@ namespace chestnut::fsm
     {
         static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
+        if( m_isCurrentlyLeavingAState )
+        {
+            return;
+        }
+
         std::type_index currentStateType = getCurrentStateType();
         std::type_index nextStateType = typeid(StateType);
 
@@ -92,21 +106,27 @@ namespace chestnut::fsm
             {
                 StateInterface *currentState = m_stackStates.top();
 
-				try
-				{
-					currentState->onExit( nextStateType );
-				}
-				catch(const std::exception& e)
-				{
-					delete nextState;
-					throw OnExitException( e.what() );    
-				}
 
-				if( m_stackStates.size() > 1)
-				{
-					m_stackStates.pop();
-					delete currentState;
-				}
+                m_isCurrentlyLeavingAState = true;
+
+                try
+                {
+                    currentState->onExit( nextStateType );
+                }
+                catch(const std::exception& e)
+                {
+                    m_isCurrentlyLeavingAState = false;
+                    delete nextState;
+                    throw OnExitException( e.what() );    
+                }
+
+                if( m_stackStates.size() > 1)
+                {
+                    m_stackStates.pop();
+                    delete currentState;
+                }
+
+                m_isCurrentlyLeavingAState = false;
 
 
                 m_stackStates.push( nextState );
@@ -122,7 +142,7 @@ namespace chestnut::fsm
             }
             else
             {
-				// like this we can use this method to initialize the statemachine
+                // like this we can use this method to initialize the statemachine
 
                 m_stackStates.push( nextState );
 
@@ -144,6 +164,11 @@ namespace chestnut::fsm
     {
         static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
+        if( m_isCurrentlyLeavingAState )
+        {
+            return;
+        }
+
         std::type_index currentStateType = getCurrentStateType();
         std::type_index nextStateType = typeid(StateType);
 
@@ -155,15 +180,21 @@ namespace chestnut::fsm
             {
                 StateInterface *currentState = m_stackStates.top();
 
+
+                m_isCurrentlyLeavingAState = true;
+
                 try
                 {
                     currentState->onExit( nextStateType );
                 }
                 catch(const std::exception& e)
                 {
+                    m_isCurrentlyLeavingAState = false;
                     delete nextState;
                     throw OnExitException( e.what() );    
                 }
+
+                m_isCurrentlyLeavingAState = false;
 
 
                 m_stackStates.push( nextState );
@@ -179,7 +210,7 @@ namespace chestnut::fsm
             }
             else
             {
-				// like this we can use this method to initialize the statemachine
+                // like this we can use this method to initialize the statemachine
 
                 m_stackStates.push( nextState );
 
@@ -198,39 +229,50 @@ namespace chestnut::fsm
     template<class StateInterface>
     void IStatemachine<StateInterface>::popState() 
     {
+        if( m_isCurrentlyLeavingAState )
+        {
+            return;
+        }
+
         // we want to always retain the init state on the stack
         if( m_stackStates.size() > 1 )
         {
             StateInterface *currentState = m_stackStates.top();
-			std::type_index currentStateType = typeid( *currentState );
+            std::type_index currentStateType = typeid( *currentState );
 
             m_stackStates.pop();
 
             StateInterface *nextState = m_stackStates.top();
-			std::type_index nextStateType = typeid( *nextState );
+            std::type_index nextStateType = typeid( *nextState );
 
-			try
-			{
-				currentState->onExit( nextStateType );
-			}
-			catch(const std::exception& e)
-			{
-				// we're gonna push this state back so that SM goes back to as it was before except now its condition is undefined
-				m_stackStates.push( currentState );
-				throw OnExitException( e.what() );
-			}
-			
+
+            m_isCurrentlyLeavingAState = true;
+
+            try
+            {
+                currentState->onExit( nextStateType );
+            }
+            catch(const std::exception& e)
+            {
+                m_isCurrentlyLeavingAState = false;
+                // we're gonna push this state back so that SM goes back to as it was before except now its condition is undefined
+                m_stackStates.push( currentState );
+                throw OnExitException( e.what() );
+            }
+            
             delete currentState;
+
+            m_isCurrentlyLeavingAState = false;
 
 
             try
-			{
-            	nextState->onEnter( currentStateType );
-			}
-			catch(const std::exception& e)
-			{
-				throw OnEnterException( e.what() );
-			}
+            {
+                nextState->onEnter( currentStateType );
+            }
+            catch(const std::exception& e)
+            {
+                throw OnEnterException( e.what() );
+            }
         }
     }
 
