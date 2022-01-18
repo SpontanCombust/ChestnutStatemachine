@@ -20,10 +20,10 @@ namespace chestnut::fsm
 {
 
 /**
- * @brief Base exception class for OnEnterException and OnExitException
+ * @brief Base exception class for OnEnterStateException and OnLeaveStateException
  * 
- * @see OnEnterException
- * @see OnExitException
+ * @see OnEnterStateException
+ * @see OnLeaveStateException
  */
 struct StateChangeException : std::exception
 {
@@ -34,19 +34,19 @@ struct StateChangeException : std::exception
 };
 
 /**
- * @brief Exception type thrown if onEnter method in a state throws an unhandled exception
+ * @brief Exception type thrown if onEnterState method in a state throws an unhandled exception
  */
-struct OnEnterException : StateChangeException
+struct OnEnterStateException : StateChangeException
 {
-    OnEnterException( const char *msg ) throw();
+    OnEnterStateException( const char *msg ) throw();
 };
 
 /**
- * @brief Exception type thrown if onExit method in a state throws an unhandled exception
+ * @brief Exception type thrown if onLeaveState method in a state throws an unhandled exception
  */
-struct OnExitException : StateChangeException
+struct OnLeaveStateException : StateChangeException
 {
-    OnExitException( const char *msg ) throw();
+    OnLeaveStateException( const char *msg ) throw();
 };
 
 } // namespace chestnut::fsm

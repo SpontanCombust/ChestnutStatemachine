@@ -47,18 +47,17 @@ public:
      * 
      * @param prevState type of the state statemachine swithed from
      */
-    virtual void onEnter( std::type_index prevState ) {}
+    virtual void onEnterState( std::type_index prevState ) {}
 
     /**
-     * @brief A method called whenever statemachine exits this state
+     * @brief A method called whenever statemachine leaves this state
      * 
      * @details
-     * This method should under no circumstances call any state changing method on its parent!
-     * Doing it will lead to undefined behaviour.
+     * gotoState, pushState and popState calls coming from this methods are ignored to prevent undefined behaviour. 
      * 
      * @param nextState type of the state statemachine is swithing to
      */
-    virtual void onExit( std::type_index nextState ) {}
+    virtual void onLeaveState( std::type_index nextState ) {}
 };
 
 
@@ -67,8 +66,8 @@ public:
  * 
  * @details
  * There are currently 2 situations when NULL_STATE is used: \n 
- * 1. When statemachine is being initialized with its init state, then NULL_STATE is passed to onEnter of that state \n
- * 2. When statemachine is being deleted, then NULL_STATE is passed to onExit of every state on the state stack before deleting them
+ * 1. When statemachine is being initialized with its init state, then NULL_STATE is passed to onEnterState of that state \n
+ * 2. When statemachine is being deleted, then NULL_STATE is passed to onLeaveState of every state on the state stack before deleting them
  */
 const std::type_index NULL_STATE = std::type_index( typeid(nullptr) );
 

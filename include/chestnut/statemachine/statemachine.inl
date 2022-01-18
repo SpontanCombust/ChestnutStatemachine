@@ -22,7 +22,7 @@ IStatemachine<StateInterface>::~IStatemachine() noexcept
 
         try
         {
-            state->onExit( NULL_STATE );
+            state->onLeaveState( NULL_STATE );
         }
         catch(const std::exception& e)
         {
@@ -87,11 +87,11 @@ void IStatemachine<StateInterface>::init( Args&& ...args )
 
         try
         {
-            initState->onEnter( NULL_STATE );
+            initState->onEnterState( NULL_STATE );
         }
         catch(const std::exception& e)
         {
-            throw OnEnterException( e.what() );   
+            throw OnEnterStateException( e.what() );   
         }
     }
 }
@@ -123,13 +123,13 @@ void IStatemachine<StateInterface>::gotoState( Args&& ...args )
 
             try
             {
-                currentState->onExit( nextStateType );
+                currentState->onLeaveState( nextStateType );
             }
             catch(const std::exception& e)
             {
                 m_isCurrentlyLeavingAState = false;
                 delete nextState;
-                throw OnExitException( e.what() );    
+                throw OnLeaveStateException( e.what() );    
             }
 
             if( m_stackStates.size() > 1)
@@ -145,11 +145,11 @@ void IStatemachine<StateInterface>::gotoState( Args&& ...args )
 
             try
             {
-                nextState->onEnter( currentStateType );
+                nextState->onEnterState( currentStateType );
             }
             catch(const std::exception& e)
             {
-                throw OnEnterException( e.what() );
+                throw OnEnterStateException( e.what() );
             }
         }
         else
@@ -160,11 +160,11 @@ void IStatemachine<StateInterface>::gotoState( Args&& ...args )
 
             try
             {
-                nextState->onEnter( NULL_STATE );
+                nextState->onEnterState( NULL_STATE );
             }
             catch(const std::exception& e)
             {
-                throw OnEnterException( e.what() );
+                throw OnEnterStateException( e.what() );
             }                
         }
     }
@@ -197,13 +197,13 @@ void IStatemachine<StateInterface>::pushState( Args&& ...args )
 
             try
             {
-                currentState->onExit( nextStateType );
+                currentState->onLeaveState( nextStateType );
             }
             catch(const std::exception& e)
             {
                 m_isCurrentlyLeavingAState = false;
                 delete nextState;
-                throw OnExitException( e.what() );    
+                throw OnLeaveStateException( e.what() );    
             }
 
             m_isCurrentlyLeavingAState = false;
@@ -213,11 +213,11 @@ void IStatemachine<StateInterface>::pushState( Args&& ...args )
 
             try
             {
-                nextState->onEnter( currentStateType );
+                nextState->onEnterState( currentStateType );
             }
             catch(const std::exception& e)
             {   
-                throw OnEnterException( e.what() );
+                throw OnEnterStateException( e.what() );
             }
         }
         else
@@ -228,11 +228,11 @@ void IStatemachine<StateInterface>::pushState( Args&& ...args )
 
             try
             {
-                nextState->onEnter( NULL_STATE );
+                nextState->onEnterState( NULL_STATE );
             }
             catch(const std::exception& e)
             {
-                throw OnEnterException( e.what() );
+                throw OnEnterStateException( e.what() );
             }    
         }
     }
@@ -262,14 +262,14 @@ void IStatemachine<StateInterface>::popState()
 
         try
         {
-            currentState->onExit( nextStateType );
+            currentState->onLeaveState( nextStateType );
         }
         catch(const std::exception& e)
         {
             m_isCurrentlyLeavingAState = false;
             // we're gonna push this state back so that SM goes back to as it was before except now its condition is undefined
             m_stackStates.push( currentState );
-            throw OnExitException( e.what() );
+            throw OnLeaveStateException( e.what() );
         }
         
         delete currentState;
@@ -279,11 +279,11 @@ void IStatemachine<StateInterface>::popState()
 
         try
         {
-            nextState->onEnter( currentStateType );
+            nextState->onEnterState( currentStateType );
         }
         catch(const std::exception& e)
         {
-            throw OnEnterException( e.what() );
+            throw OnEnterStateException( e.what() );
         }
     }
 }

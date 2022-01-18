@@ -43,7 +43,7 @@ private:
      */
     std::stack< StateInterface* > m_stackStates;
     /**
-     * @brief A flag set to prevent onExit from calling state change methods
+     * @brief A flag set to prevent onLeaveState from calling state change methods
      */
     bool m_isCurrentlyLeavingAState;
 
@@ -55,7 +55,7 @@ public:
      * 
      * 
      * @details
-     * Deletes all states that are on the state stack, but before that calls their onExit with NULL_STATE as type argument.
+     * Deletes all states that are on the state stack, but before that calls their onLeaveState with NULL_STATE as type argument.
      * 
      * @see NULL_STATE
      */
@@ -106,21 +106,21 @@ public:
      * @tparam Args types of StateType constructor parameters
      * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
      * 
-     * @throw OnEnterException if a state throws exception in a transition method
+     * @throw OnEnterStateException if a state throws exception in a transition method
      * 
      * 
      * @details
      * Use this method to explicitly state that you want to setup the initial state of the statemachine.
      * This initial state will always stay on the bottom of the state stack and won't be able to be popped.
      * If the state stack is already not empty, it won't do anything.
-     * onEnter for the init state is called with NULL_STATE.
+     * onEnterState for the init state is called with NULL_STATE.
      * 
      * StateType is evaluated on compile time to check if it inherits from StateInterface.
      * 
-     * If a state throws an exception during onEnter, the state is still pushed onto the state stack, 
+     * If a state throws an exception during onEnterState, the state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
-     * @see NULL_STATE, OnEnterException
+     * @see NULL_STATE, OnEnterStateException
      */
     template< class StateType, typename ...Args >
     void init( Args&& ...args );
@@ -132,7 +132,7 @@ public:
      * @tparam Args types of StateType constructor parameters
      * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
      * 
-     * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+     * @throw OnEnterStateException or OnLeaveStateException if a state throws exception in a transition method
      * 
      * 
      * @details
@@ -147,12 +147,12 @@ public:
      * 
      * StateType is evaluated on compile time to check if it inherits from StateInterface.
      * 
-     * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+     * If the previous state throws an exception during onLeaveState, the state stack is not updated and the condition of the state
      * which threw the exception remains undefined.
-     * If the next state throws an exception during onEnter, this state is still pushed onto the state stack, 
+     * If the next state throws an exception during onEnterState, this state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
-     * @see pushState(), init(), OnEnterException, OnExitException
+     * @see pushState(), init(), OnEnterStateException, OnLeaveStateException
      */
     template< class StateType, typename ...Args >
     void gotoState( Args&& ...args );
@@ -164,7 +164,7 @@ public:
      * @tparam Args types of StateType constructor parameters
      * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
      * 
-     * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+     * @throw OnEnterStateException or OnLeaveStateException if a state throws exception in a transition method
      * 
      * 
      * @details 
@@ -176,9 +176,9 @@ public:
      * 
      * StateType is evaluated on compile time to check if it inherits from StateInterface.
      * 
-     * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+     * If the previous state throws an exception during onLeaveState, the state stack is not updated and the condition of the state
      * which threw the exception remains undefined.
-     * If the next state throws an exception during onEnter, this state is still pushed onto the state stack, 
+     * If the next state throws an exception during onEnterState, this state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
      * @see init()
@@ -189,16 +189,16 @@ public:
     /**
      * @brief Transitions to the previous state.
      * 
-     * @throw OnEnterException or OnExitException if a state throws exception in a transition method
+     * @throw OnEnterStateException or OnLeaveStateException if a state throws exception in a transition method
      * 
      * 
      * @details 
      * Pops the state on top of the state stack unless there's only one state (the init state) left or none.
      * After the transition, the previous state object is deleted.
      * 
-     * If the previous state throws an exception during onExit, the state stack is not updated and the condition of the state
+     * If the previous state throws an exception during onLeaveState, the state stack is not updated and the condition of the state
      * which threw the exception remains undefined.
-     * If the next state throws an exception during onEnter, this state still stays on the state stack, 
+     * If the next state throws an exception during onEnterState, this state still stays on the state stack, 
      * but its condition remains undefined.
      */
     void popState();

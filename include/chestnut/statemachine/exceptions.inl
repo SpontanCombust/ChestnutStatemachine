@@ -11,14 +11,14 @@ inline const char* StateChangeException::what() const throw()
     return message.c_str();
 }
 
-inline OnEnterException::OnEnterException( const char *msg ) throw() : StateChangeException( msg )
+inline OnEnterStateException::OnEnterStateException( const char *msg ) throw() : StateChangeException( msg )
 {
     message = "Exception was thrown when entering a state: " + message;
 }
 
-inline OnExitException::OnExitException( const char *msg ) throw() : StateChangeException( msg )
+inline OnLeaveStateException::OnLeaveStateException( const char *msg ) throw() : StateChangeException( msg )
 {
-    message = "Exception was thrown when exiting a state: " + message;
+    message = "Exception was thrown when leaving a state: " + message;
 }
 
 } // namespace chestnut::fsm

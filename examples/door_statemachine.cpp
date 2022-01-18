@@ -76,8 +76,8 @@ public:
     // Here we're also adding an additional custom parameter
     CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState = false );
 
-    void onEnter( std::type_index prevState ) override;
-    void onExit( std::type_index nextState ) override;
+    void onEnterState( std::type_index prevState ) override;
+    void onLeaveState( std::type_index nextState ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -92,8 +92,8 @@ public:
     // Again we have to define a special constructor
     CDoorStateOpening( CDoorStatemachine *sm );
 
-    void onEnter( std::type_index prevState ) override;
-    void onExit( std::type_index nextState ) override;
+    void onEnterState( std::type_index prevState ) override;
+    void onLeaveState( std::type_index nextState ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -105,8 +105,8 @@ public:
     // Again we have to define a special constructor
     CDoorStateOpen( CDoorStatemachine *sm );
 
-    void onEnter( std::type_index prevState ) override;
-    void onExit( std::type_index nextState ) override;
+    void onEnterState( std::type_index prevState ) override;
+    void onLeaveState( std::type_index nextState ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -118,8 +118,8 @@ public:
     // Again we have to define a special constructor
     CDoorStateClosing( CDoorStatemachine *sm );
 
-    void onEnter( std::type_index prevState ) override;
-    void onExit( std::type_index nextState ) override;
+    void onEnterState( std::type_index prevState ) override;
+    void onLeaveState( std::type_index nextState ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -134,7 +134,7 @@ CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState
     this->printOnNullState = printOnNullState;
 }
 
-void CDoorStateClosed::onEnter( std::type_index prevState )
+void CDoorStateClosed::onEnterState( std::type_index prevState )
 {
     // message won't show if this is the init state
     if( prevState != NULL_STATE )
@@ -147,7 +147,7 @@ void CDoorStateClosed::onEnter( std::type_index prevState )
     }
 }
 
-void CDoorStateClosed::onExit( std::type_index nextState )
+void CDoorStateClosed::onLeaveState( std::type_index nextState )
 {
     // message won't show if statemachine is being deleted
     if( nextState != NULL_STATE )
@@ -180,7 +180,7 @@ CDoorStateOpening::CDoorStateOpening( CDoorStatemachine *sm ) : IDoorState( sm )
 
 }
 
-void CDoorStateOpening::onEnter( std::type_index prevState ) 
+void CDoorStateOpening::onEnterState( std::type_index prevState ) 
 {
     std::cout << "The door is openning...\n";
 
@@ -192,7 +192,7 @@ void CDoorStateOpening::onEnter( std::type_index prevState )
     }).detach();
 }
 
-void CDoorStateOpening::onExit( std::type_index nextState ) 
+void CDoorStateOpening::onLeaveState( std::type_index nextState ) 
 {
     std::cout << "The door has finished openning!\n";
 }
@@ -216,7 +216,7 @@ CDoorStateOpen::CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm )
 
 }
 
-void CDoorStateOpen::onEnter( std::type_index prevState ) 
+void CDoorStateOpen::onEnterState( std::type_index prevState ) 
 {
     // message won't show if this is the init state
     if( prevState != NULL_STATE )
@@ -225,7 +225,7 @@ void CDoorStateOpen::onEnter( std::type_index prevState )
     }
 }
 
-void CDoorStateOpen::onExit( std::type_index nextState ) 
+void CDoorStateOpen::onLeaveState( std::type_index nextState ) 
 {
     // message won't show if statemachine is being deleted
     if( nextState != NULL_STATE )
@@ -254,7 +254,7 @@ CDoorStateClosing::CDoorStateClosing( CDoorStatemachine *sm ) : IDoorState( sm )
 
 }
 
-void CDoorStateClosing::onEnter( std::type_index prevState ) 
+void CDoorStateClosing::onEnterState( std::type_index prevState ) 
 {
     std::cout << "The door is closing...\n";
 
@@ -265,7 +265,7 @@ void CDoorStateClosing::onEnter( std::type_index prevState )
     }).detach();
 }
 
-void CDoorStateClosing::onExit( std::type_index nextState )
+void CDoorStateClosing::onLeaveState( std::type_index nextState )
 {
     std::cout << "The door has finished closing!\n";
 }
