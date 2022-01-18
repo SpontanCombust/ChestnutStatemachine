@@ -45,6 +45,28 @@ public:
     virtual ~IState() = default;
     
     /**
+     * @brief A method used to evaluate if a state is able to transition from other specified state
+     * 
+     * @param transition state transition data
+     * @return if can transition to some state
+     * 
+     * @details
+     * By default this always returns true
+     */
+    virtual bool canEnterState( StateTransition transition ) const noexcept;
+
+    /**
+     * @brief A method used to evaluate if a state is able to transition to other specified state
+     * 
+     * @param transition state transition data
+     * @return if can transition from some state
+     * 
+     * @details
+     * By default this always returns true
+     */
+    virtual bool canLeaveState( StateTransition transition ) const noexcept;
+    
+    /**
      * @brief A method called whenever statemachine enters this state
      * 
      * @param transition state transition data
