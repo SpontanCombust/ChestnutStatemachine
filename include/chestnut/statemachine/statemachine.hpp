@@ -82,6 +82,15 @@ namespace chestnut::fsm
         std::type_index getCurrentStateType() const noexcept;
 
         /**
+         * @brief Return whether the statemachine is currently in the given state
+         * 
+         * @tparam StateType type of the state
+         * @return if StateType is the type of the current state
+         */
+        template< class StateType >
+        bool isCurrentlyInState() const;
+
+        /**
          * @brief Return the size of statemachine's state stack
          * 
          * @return state stack size

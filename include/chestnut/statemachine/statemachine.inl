@@ -55,6 +55,18 @@ namespace chestnut::fsm
         return NULL_STATE;
     }
 
+	template<typename StateInterface>
+	template<class StateType>
+	bool IStatemachine<StateInterface>::isCurrentlyInState() const
+	{
+		if( m_stackStates.size() >= 1 )
+		{
+			return std::type_index( typeid( *m_stackStates.top() ) ) == std::type_index( typeid( StateType ) );
+		}
+
+		return false;
+	}
+
     template<typename StateInterface>
     int IStatemachine<StateInterface>::getStateStackSize() const noexcept
     {
