@@ -11,12 +11,15 @@
 
 // ===================== 1. Forward declare statemachine type and define the state interface =====================
 
+using namespace chestnut; // use the chestnut root namespace name for convenience
+
+
 class CDoorStatemachine;
 
-class IDoorState : public chestnut::fsm::IState<CDoorStatemachine>
+class IDoorState : public fsm::IState<CDoorStatemachine>
 {
 public:
-    typedef chestnut::fsm::IState<CDoorStatemachine> super;
+    typedef fsm::IState<CDoorStatemachine> super;
 
     // 1.1 You have to define a constructor that at least takes in parent statemachine pointer (this pointer has to always be first constructor argument)
     IDoorState( CDoorStatemachine *sm ) : super( sm ) {}
@@ -34,7 +37,7 @@ class CDoorStatemachine : public chestnut::fsm::IStatemachine<IDoorState>
 {
 public:
     // utility parent class typedef
-    typedef chestnut::fsm::IStatemachine<IDoorState> super;
+    typedef fsm::IStatemachine<IDoorState> super;
 
     // You can make your statemachine able to be used across threads in an async manner
     // You have to be very careful with this however, like with any other scenario that involves race conditions
@@ -76,8 +79,8 @@ public:
     // Here we're also adding an additional custom parameter
     CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState = false );
 
-    void onEnterState( std::type_index prevState ) override;
-    void onLeaveState( std::type_index nextState ) override;
+    void onEnterState( fsm::StateTransition transition ) override;
+    void onLeaveState( fsm::StateTransition transition ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -92,8 +95,8 @@ public:
     // Again we have to define a special constructor
     CDoorStateOpening( CDoorStatemachine *sm );
 
-    void onEnterState( std::type_index prevState ) override;
-    void onLeaveState( std::type_index nextState ) override;
+    void onEnterState( fsm::StateTransition transition ) override;
+    void onLeaveState( fsm::StateTransition transition ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -105,8 +108,8 @@ public:
     // Again we have to define a special constructor
     CDoorStateOpen( CDoorStatemachine *sm );
 
-    void onEnterState( std::type_index prevState ) override;
-    void onLeaveState( std::type_index nextState ) override;
+    void onEnterState( fsm::StateTransition transition ) override;
+    void onLeaveState( fsm::StateTransition transition ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -118,8 +121,8 @@ public:
     // Again we have to define a special constructor
     CDoorStateClosing( CDoorStatemachine *sm );
 
-    void onEnterState( std::type_index prevState ) override;
-    void onLeaveState( std::type_index nextState ) override;
+    void onEnterState( fsm::StateTransition transition ) override;
+    void onLeaveState( fsm::StateTransition transition ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -134,10 +137,10 @@ CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState
     this->printOnNullState = printOnNullState;
 }
 
-void CDoorStateClosed::onEnterState( std::type_index prevState )
+void CDoorStateClosed::onEnterState( fsm::StateTransition transition )
 {
     // message won't show if this is the init state
-    if( prevState != NULL_STATE )
+    if( transition.type != fsm::STATE_TRANSITION_INIT )
     {
         std::cout << "The door is now closed!\n";
     }
@@ -147,10 +150,10 @@ void CDoorStateClosed::onEnterState( std::type_index prevState )
     }
 }
 
-void CDoorStateClosed::onLeaveState( std::type_index nextState )
+void CDoorStateClosed::onLeaveState( fsm::StateTransition transition )
 {
     // message won't show if statemachine is being deleted
-    if( nextState != NULL_STATE )
+    if( transition.type != fsm::STATE_TRANSITION_DESTROY )
     {
         std::cout << "The door is no longer closed!\n";
     }
@@ -180,7 +183,7 @@ CDoorStateOpening::CDoorStateOpening( CDoorStatemachine *sm ) : IDoorState( sm )
 
 }
 
-void CDoorStateOpening::onEnterState( std::type_index prevState ) 
+void CDoorStateOpening::onEnterState( fsm::StateTransition transition ) 
 {
     std::cout << "The door is openning...\n";
 
@@ -192,7 +195,7 @@ void CDoorStateOpening::onEnterState( std::type_index prevState )
     }).detach();
 }
 
-void CDoorStateOpening::onLeaveState( std::type_index nextState ) 
+void CDoorStateOpening::onLeaveState( fsm::StateTransition transition ) 
 {
     std::cout << "The door has finished openning!\n";
 }
@@ -216,19 +219,19 @@ CDoorStateOpen::CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm )
 
 }
 
-void CDoorStateOpen::onEnterState( std::type_index prevState ) 
+void CDoorStateOpen::onEnterState( fsm::StateTransition transition ) 
 {
     // message won't show if this is the init state
-    if( prevState != NULL_STATE )
+    if( transition.type != fsm::STATE_TRANSITION_INIT )
     {
         std::cout << "The door is now open!\n";
     }
 }
 
-void CDoorStateOpen::onLeaveState( std::type_index nextState ) 
+void CDoorStateOpen::onLeaveState( fsm::StateTransition transition ) 
 {
     // message won't show if statemachine is being deleted
-    if( nextState != NULL_STATE )
+    if( transition.type != fsm::STATE_TRANSITION_DESTROY )
     {
         std::cout << "The door is no longer open!\n";
     }
@@ -254,7 +257,7 @@ CDoorStateClosing::CDoorStateClosing( CDoorStatemachine *sm ) : IDoorState( sm )
 
 }
 
-void CDoorStateClosing::onEnterState( std::type_index prevState ) 
+void CDoorStateClosing::onEnterState( fsm::StateTransition transition ) 
 {
     std::cout << "The door is closing...\n";
 
@@ -265,7 +268,7 @@ void CDoorStateClosing::onEnterState( std::type_index prevState )
     }).detach();
 }
 
-void CDoorStateClosing::onLeaveState( std::type_index nextState )
+void CDoorStateClosing::onLeaveState( fsm::StateTransition transition )
 {
     std::cout << "The door has finished closing!\n";
 }

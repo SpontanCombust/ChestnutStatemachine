@@ -55,7 +55,7 @@ public:
      * 
      * 
      * @details
-     * Deletes all states that are on the state stack, but before that calls their onLeaveState with NULL_STATE as type argument.
+     * Deletes all states that are on the state stack, but before that calls their onLeaveState with NULL_STATE as nextState in transition.
      * 
      * @see NULL_STATE
      */
@@ -113,7 +113,7 @@ public:
      * Use this method to explicitly state that you want to setup the initial state of the statemachine.
      * This initial state will always stay on the bottom of the state stack and won't be able to be popped.
      * If the state stack is already not empty, it won't do anything.
-     * onEnterState for the init state is called with NULL_STATE.
+     * onEnterState for the init state is called with NULL_STATE as prevState in transition.
      * 
      * StateType is evaluated on compile time to check if it inherits from StateInterface.
      * 

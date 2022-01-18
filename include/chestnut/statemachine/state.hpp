@@ -1,7 +1,7 @@
 /**
  * @file state.hpp
  * @author SpontanCombust
- * @brief Header file with base template state class and NULL_STATE constant
+ * @brief Header file with base template state class
  * @version 2.3.0
  * @date 2022-01-10
  * 
@@ -12,6 +12,8 @@
 
 #ifndef __CHESTNUT_STATEMACHINE_STATE_H__
 #define __CHESTNUT_STATEMACHINE_STATE_H__
+
+#include "state_transition.hpp"
 
 #include <typeindex>
 
@@ -45,9 +47,9 @@ public:
     /**
      * @brief A method called whenever statemachine enters this state
      * 
-     * @param prevState type of the state statemachine swithed from
+     * @param transition state transition data
      */
-    virtual void onEnterState( std::type_index prevState ) {}
+    virtual void onEnterState( StateTransition transition ) {}
 
     /**
      * @brief A method called whenever statemachine leaves this state
@@ -55,22 +57,10 @@ public:
      * @details
      * gotoState, pushState and popState calls coming from this methods are ignored to prevent undefined behaviour. 
      * 
-     * @param nextState type of the state statemachine is swithing to
+     * @param transition state transition data
      */
-    virtual void onLeaveState( std::type_index nextState ) {}
+    virtual void onLeaveState( StateTransition transition ) {}
 };
-
-
-/**
- * @brief A constant type index meant to represent a lack of state
- * 
- * @details
- * There are currently 2 situations when NULL_STATE is used: \n 
- * 1. When statemachine is being initialized with its init state, then NULL_STATE is passed to onEnterState of that state \n
- * 2. When statemachine is being deleted, then NULL_STATE is passed to onLeaveState of every state on the state stack before deleting them
- */
-const std::type_index NULL_STATE = std::type_index( typeid(nullptr) );
-
 
 } // namespace chestnut::fsm
 

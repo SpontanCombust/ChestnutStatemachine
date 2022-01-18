@@ -15,14 +15,20 @@ IStatemachine<StateInterface>::~IStatemachine() noexcept
 {
     m_isCurrentlyLeavingAState = true;
 
+    StateTransition transition;
+    transition.type = STATE_TRANSITION_DESTROY;
+    transition.nextState = NULL_STATE;
+
     while( !m_stackStates.empty() )
     {
         StateInterface *state = m_stackStates.top();
         m_stackStates.pop();
 
+        transition.prevState = typeid( *state );
+
         try
         {
-            state->onLeaveState( NULL_STATE );
+            state->onLeaveState( transition );
         }
         catch(const std::exception& e)
         {
@@ -82,12 +88,16 @@ void IStatemachine<StateInterface>::init( Args&& ...args )
     if( m_stackStates.empty() )
     {
         StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
-
         m_stackStates.push( initState );
+
+        StateTransition transition;
+        transition.type = STATE_TRANSITION_INIT;
+        transition.prevState = NULL_STATE;
+        transition.nextState = typeid( *initState );
 
         try
         {
-            initState->onEnterState( NULL_STATE );
+            initState->onEnterState( transition );
         }
         catch(const std::exception& e)
         {
@@ -114,16 +124,20 @@ void IStatemachine<StateInterface>::gotoState( Args&& ...args )
     {
         StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
 
+        StateTransition transition;
+        transition.prevState = currentStateType;
+        transition.nextState = nextStateType;
+
         if( m_stackStates.size() >= 1 )
         {
             StateInterface *currentState = m_stackStates.top();
-
+            transition.type = STATE_TRANSITION_GOTO;
 
             m_isCurrentlyLeavingAState = true;
 
             try
             {
-                currentState->onLeaveState( nextStateType );
+                currentState->onLeaveState( transition );
             }
             catch(const std::exception& e)
             {
@@ -145,7 +159,7 @@ void IStatemachine<StateInterface>::gotoState( Args&& ...args )
 
             try
             {
-                nextState->onEnterState( currentStateType );
+                nextState->onEnterState( transition );
             }
             catch(const std::exception& e)
             {
@@ -155,12 +169,13 @@ void IStatemachine<StateInterface>::gotoState( Args&& ...args )
         else
         {
             // like this we can use this method to initialize the statemachine
+            transition.type = STATE_TRANSITION_INIT;
 
             m_stackStates.push( nextState );
 
             try
             {
-                nextState->onEnterState( NULL_STATE );
+                nextState->onEnterState( transition );
             }
             catch(const std::exception& e)
             {
@@ -188,16 +203,20 @@ void IStatemachine<StateInterface>::pushState( Args&& ...args )
     {
         StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
 
+        StateTransition transition;
+        transition.prevState = currentStateType;
+        transition.nextState = nextStateType;
+
         if( m_stackStates.size() >= 1 )
         {
             StateInterface *currentState = m_stackStates.top();
-
+            transition.type = STATE_TRANSITION_PUSH;
 
             m_isCurrentlyLeavingAState = true;
 
             try
             {
-                currentState->onLeaveState( nextStateType );
+                currentState->onLeaveState( transition );
             }
             catch(const std::exception& e)
             {
@@ -213,7 +232,7 @@ void IStatemachine<StateInterface>::pushState( Args&& ...args )
 
             try
             {
-                nextState->onEnterState( currentStateType );
+                nextState->onEnterState( transition );
             }
             catch(const std::exception& e)
             {   
@@ -223,12 +242,13 @@ void IStatemachine<StateInterface>::pushState( Args&& ...args )
         else
         {
             // like this we can use this method to initialize the statemachine
+            transition.type = STATE_TRANSITION_INIT;
 
             m_stackStates.push( nextState );
 
             try
             {
-                nextState->onEnterState( NULL_STATE );
+                nextState->onEnterState( transition );
             }
             catch(const std::exception& e)
             {
@@ -257,12 +277,16 @@ void IStatemachine<StateInterface>::popState()
         StateInterface *nextState = m_stackStates.top();
         std::type_index nextStateType = typeid( *nextState );
 
+        StateTransition transition;
+        transition.type = STATE_TRANSITION_POP;
+        transition.prevState = currentStateType;
+        transition.nextState = nextStateType;
 
         m_isCurrentlyLeavingAState = true;
 
         try
         {
-            currentState->onLeaveState( nextStateType );
+            currentState->onLeaveState( transition );
         }
         catch(const std::exception& e)
         {
@@ -279,7 +303,7 @@ void IStatemachine<StateInterface>::popState()
 
         try
         {
-            nextState->onEnterState( currentStateType );
+            nextState->onEnterState( transition );
         }
         catch(const std::exception& e)
         {
