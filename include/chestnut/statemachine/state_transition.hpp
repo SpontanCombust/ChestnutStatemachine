@@ -25,11 +25,11 @@ enum EStateTransitionType
 {
     /** When statemachine is being initialized*/
     STATE_TRANSITION_INIT,
-    /** When pushState is callled */
+    /** When pushState was callled */
     STATE_TRANSITION_PUSH,
-    /** When gotoState is callled */
+    /** When gotoState was callled */
     STATE_TRANSITION_GOTO,
-    /** When popState is callled */
+    /** When popState was callled */
     STATE_TRANSITION_POP,
     /** When statemachine is being destroyed */
     STATE_TRANSITION_DESTROY

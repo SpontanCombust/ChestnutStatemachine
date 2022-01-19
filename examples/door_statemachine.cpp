@@ -1,4 +1,4 @@
-#include "../include/chestnut/statemachine/state.hpp"
+// =============================== 0. Include the statemachine.hpp header file =================================
 #include "../include/chestnut/statemachine/statemachine.hpp"
 
 #include <iostream>
@@ -9,22 +9,19 @@
 
 
 
-// ===================== 1. Forward declare statemachine type and define the state interface =====================
+// ===================== 1. Forward declare statemachine type and define the base state type =====================
 
 using namespace chestnut; // use the chestnut root namespace name for convenience
 
-
+// 1.1. Forward declare statemachine type, because we need it for the base state type
 class CDoorStatemachine;
 
+// 1.2. Create a type that will derive from IState generic class, for the template parameter give it the statemachine type from point 1.1
 class IDoorState : public fsm::IState<CDoorStatemachine>
 {
 public:
-    typedef fsm::IState<CDoorStatemachine> super;
-
-    // 1.1 You have to define a constructor that at least takes in parent statemachine pointer (this pointer has to always be first constructor argument)
-    IDoorState( CDoorStatemachine *sm ) : super( sm ) {}
-
-    // Declare any number of virtual methods that your state classes should implement
+// 1.3. (Optional) If you want to call methods on current states from the statemachine 
+// and you want them to be overridable you can define some public virtual methods here
     virtual bool tryOpen() = 0;
     virtual bool tryClose() = 0;
 };
@@ -33,24 +30,28 @@ public:
 
 
 // ====================================== 2. Define your statemachine type ======================================
-class CDoorStatemachine : public chestnut::fsm::IStatemachine<IDoorState>
+
+
+// 2.1. Create a type that will derive from IStatemachine generic class, for the template parameter give it the base state type from point 1.2
+class CDoorStatemachine : public fsm::IStatemachine<IDoorState>
 {
 public:
-    // utility parent class typedef
-    typedef fsm::IStatemachine<IDoorState> super;
-
-    // You can make your statemachine able to be used across threads in an async manner
-    // You have to be very careful with this however, like with any other scenario that involves race conditions
-    // The base IStatemachine type does not automatically support multithreading
+    // 2.2. (Optional) You can make your statemachine able to be used across threads in an async manner
+    // The base IStatemachine type does not support multithreading, so you'll have to set up the necessary precautions yourself
     mutable std::recursive_mutex doorMutex;
 
 
-    // Define methods that will call appropriate method in the current state
+    CDoorStatemachine();
+
+
+    // 2.3. (Optional) If you want you can create methods in the statemachine with the same signatures that you gave in point 1.3
+    // This will make them look as a sort of "state-virtual" methods, 
+    // i.e. methods which behaviour depends almost solely on the current state of the statemachine
 
     bool tryOpen()
     {
         std::lock_guard< std::recursive_mutex > lock( doorMutex );
-        return super::getCurrentState()->tryOpen();
+        return getCurrentState()->tryOpen();
     }
 
     bool tryClose()
@@ -58,7 +59,6 @@ public:
         std::lock_guard< std::recursive_mutex > lock( doorMutex );
         return getCurrentState()->tryClose();
     }
-
 };
 
 
@@ -66,22 +66,32 @@ public:
 
 // ====================================== 3. Define your states ======================================
 
-// If you put state interface and statemachine definition in seperate headers 
-// you'll want to include them both in states' headers if you want to use the parent pointer
+// 3.1. Be aware of the order of your includes!
 //
-// Be aware of the include order - if you need a mutual state dependency (e.g. state A goes to state B and vice versa)
-// it's best to properly devide state class body and its methods' definitions
-// You can't make state transition to forward declared, uncomplete classes
+// Calls to init(), gotoState() and pushState() require that the state type given to them in the template parameter
+// is a *complete* type.
+// If you need a mutual state dependency (e.g. state A goes to state B and vice versa)
+// it's best to properly divide state class body and its methods' definitions.
+// You can't make state transition to a forward declared state!
+// If you decide to write a statemachine it'd be a lot better to keep each state (and the statemachine itself) in seperate .h and .cpp files 
+//
+// More on incomplete types: https://en.cppreference.com/w/cpp/language/type#Incomplete_type
 class CDoorStateClosed : public IDoorState
 {
 public:
-    // Again we have to define a special constructor
-    // Here we're also adding an additional custom parameter
-    CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState = false );
+    // 3.2. (Optional) States can have a custom constructor or just a default one
+    // You pass these custom parameters when you call init(), gotoState() or pushState()
+    CDoorStateClosed( bool printOnNullState = false );
 
+    // 3.3. (Optional) Override methods that will be called when a statemachine enter or leaves the state
+    // The data about the transition (whether it was done with popState() method for example) is in StateTransition struct in the parameter
+    //
+    // As the statemachine requires that at least one state stays on the state stack throughout statemachine's lifetime after init()
+    // you could as well create a completely empty state with no overrides!
     void onEnterState( fsm::StateTransition transition ) override;
     void onLeaveState( fsm::StateTransition transition ) override;
     
+    // 3.4. (Optional) Override the virtual methods you specified in point 1.3
     bool tryOpen() override;
     bool tryClose() override;
 
@@ -92,8 +102,7 @@ private:
 class CDoorStateOpening : public IDoorState
 {
 public:
-    // Again we have to define a special constructor
-    CDoorStateOpening( CDoorStatemachine *sm );
+    // 3.5. You don't even need to define a constructor at all!
 
     void onEnterState( fsm::StateTransition transition ) override;
     void onLeaveState( fsm::StateTransition transition ) override;
@@ -105,9 +114,6 @@ public:
 class CDoorStateOpen : public IDoorState
 {
 public:
-    // Again we have to define a special constructor
-    CDoorStateOpen( CDoorStatemachine *sm );
-
     void onEnterState( fsm::StateTransition transition ) override;
     void onLeaveState( fsm::StateTransition transition ) override;
     
@@ -118,9 +124,6 @@ public:
 class CDoorStateClosing : public IDoorState
 {
 public:
-    // Again we have to define a special constructor
-    CDoorStateClosing( CDoorStatemachine *sm );
-
     void onEnterState( fsm::StateTransition transition ) override;
     void onLeaveState( fsm::StateTransition transition ) override;
     
@@ -129,10 +132,23 @@ public:
 };
 
 
+CDoorStatemachine::CDoorStatemachine() 
+{
+    // 3.6. A statemachine has to be initialized with some entry state
+    // This state will stay on the state stack throughout the lifetime of the statemachine and won't be possible to get poppped
+    // If you don't have a state that could be good candidate for a state that the machine should always eventually transition back to
+    // you can simply create an empty state! Just inherit from the base state type and that's it. 
+    // IState does not force you to override any pure virtual methods or create any special constructors.
+    //
+    // Based on point 3.1 if we wanted to use a state transition method on CDoorStateClosed we have to use it AFTER its complete type body.
+    // Hence why CDoorStatemachine() constructor definition is all the way here, but it's only because we're working in a single .cpp file.
 
-using chestnut::fsm::NULL_STATE;
+    // 3.7. (Optional) We can call state transition method with custom parameters. These parameters will be forwarded to state's constructor. See point 3.2.
+    // init() can be called on the statemachine object itself, but this way we can hide away its statemachine nature.
+    init<CDoorStateClosed>( true );
+}
 
-CDoorStateClosed::CDoorStateClosed( CDoorStatemachine *sm, bool printOnNullState ) : IDoorState( sm ) 
+CDoorStateClosed::CDoorStateClosed( bool printOnNullState )
 {
     this->printOnNullState = printOnNullState;
 }
@@ -178,11 +194,6 @@ bool CDoorStateClosed::tryClose()
 
 
 
-CDoorStateOpening::CDoorStateOpening( CDoorStatemachine *sm ) : IDoorState( sm ) 
-{
-
-}
-
 void CDoorStateOpening::onEnterState( fsm::StateTransition transition ) 
 {
     std::cout << "The door is openning...\n";
@@ -213,11 +224,6 @@ bool CDoorStateOpening::tryClose()
 }
 
 
-
-CDoorStateOpen::CDoorStateOpen( CDoorStatemachine *sm ) : IDoorState( sm ) 
-{
-
-}
 
 void CDoorStateOpen::onEnterState( fsm::StateTransition transition ) 
 {
@@ -251,11 +257,6 @@ bool CDoorStateOpen::tryClose()
 }
 
 
-
-CDoorStateClosing::CDoorStateClosing( CDoorStatemachine *sm ) : IDoorState( sm ) 
-{
-
-}
 
 void CDoorStateClosing::onEnterState( fsm::StateTransition transition ) 
 {
@@ -313,8 +314,6 @@ int main(int argc, char const *argv[])
         std::cout << "Door state: " << doorStateTypeToString( door.getCurrentStateType() ) << "; state stack size: " << door.getStateStackSize() << "\n";
     };
 
-    door.init<CDoorStateClosed>( true ); // using custom state constructor parameter
-
     printDoorState();
     if( door.tryClose() )
     {
@@ -324,13 +323,11 @@ int main(int argc, char const *argv[])
     {
         printDoorState();
 
-        std::type_index state = door.getCurrentStateType();
-        while( state == typeid(CDoorStateOpening) )
+        while( door.isCurrentlyInState<CDoorStateOpening>() )
         {
             std::this_thread::sleep_for( std::chrono::milliseconds(100) ); // we'll keep waiting small intervals until the door fully opens
 
             std::lock_guard< std::recursive_mutex > lock( door.doorMutex );
-            state = door.getCurrentStateType();
         }
 
         printDoorState();
@@ -339,13 +336,11 @@ int main(int argc, char const *argv[])
         {
             printDoorState();
 
-            state = door.getCurrentStateType();
-            while( state == typeid(CDoorStateClosing) )
+            while( door.isCurrentlyInState<CDoorStateClosing>() )
             {
                 std::this_thread::sleep_for( std::chrono::milliseconds(100) );
 
                 std::lock_guard< std::recursive_mutex > lock( door.doorMutex );
-                state = door.getCurrentStateType();
             }
 
             printDoorState();
