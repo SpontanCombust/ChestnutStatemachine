@@ -106,6 +106,8 @@ public:
      * @tparam Args types of StateType constructor parameters
      * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
      * 
+     * @return whether SM was able to change the state
+     * 
      * @throw OnEnterStateException if a state throws exception in a transition method
      * 
      * 
@@ -114,16 +116,17 @@ public:
      * This initial state will always stay on the bottom of the state stack and won't be able to be popped.
      * If the state stack is already not empty, it won't do anything.
      * onEnterState for the init state is called with NULL_STATE as prevState in transition.
+     * canEnterState() is checked in subject state to test if the transition is possible. If it's not then the return value is false.
      * 
      * StateType is evaluated on compile time to check if it inherits from StateInterface.
      * 
      * If a state throws an exception during onEnterState, the state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
-     * @see NULL_STATE, OnEnterStateException
+     * @see NULL_STATE, canEnterState(), OnEnterStateException
      */
     template< class StateType, typename ...Args >
-    void init( Args&& ...args );
+    bool init( Args&& ...args );
 
     /**
      * @brief Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)
@@ -131,6 +134,8 @@ public:
      * @tparam StateType type of the state statemachine should transition to
      * @tparam Args types of StateType constructor parameters
      * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
+     * 
+     * @return whether SM was able to change the state
      * 
      * @throw OnEnterStateException or OnLeaveStateException if a state throws exception in a transition method
      * 
@@ -142,6 +147,7 @@ public:
      * 
      * If statemachine is currently in the same state as specified, method does nothing.
      * If the state stack is empty or has only init state left - then method acts like pushState().
+     * canLeaveState() and canEnterState() are checked in subject states to test if the transition is possible. If it's not then the return value is false.
      * 
      * This method can be used to initialize the statemachine.
      * 
@@ -152,10 +158,10 @@ public:
      * If the next state throws an exception during onEnterState, this state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
-     * @see pushState(), init(), OnEnterStateException, OnLeaveStateException
+     * @see pushState(), canLeaveState(), canEnterState(), init(), OnLeaveStateException, OnEnterStateException
      */
     template< class StateType, typename ...Args >
-    void gotoState( Args&& ...args );
+    bool gotoState( Args&& ...args );
 
     /**
      * @brief Transitions to the specified state and rememebers its previous state afterwards
@@ -164,6 +170,8 @@ public:
      * @tparam Args types of StateType constructor parameters
      * @param args arguments that should be forwarded to StateType constructor (other than the statemachine pointer)
      * 
+     * @return whether SM was able to change the state
+     * 
      * @throw OnEnterStateException or OnLeaveStateException if a state throws exception in a transition method
      * 
      * 
@@ -171,6 +179,7 @@ public:
      * Pushes next state onto the state stack.
      * State transition goes from state previously on top of the stack to the specified state.
      * If statemachine is currently in the same state as specified, method does nothing.
+     * canLeaveState() and canEnterState() are checked in subject states to test if the transition is possible. If it's not then the return value is false.
      * 
      * This method can be used to initialize the statemachine.
      * 
@@ -181,13 +190,15 @@ public:
      * If the next state throws an exception during onEnterState, this state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
-     * @see init()
+     * @see canLeaveState(), canEnterState(), init(), OnLeaveStateException, OnEnterStateException
      */
     template< class StateType, typename ...Args >
-    void pushState( Args&& ...args );
+    bool pushState( Args&& ...args );
 
     /**
      * @brief Transitions to the previous state.
+     * 
+     * @return whether SM was able to change the state
      * 
      * @throw OnEnterStateException or OnLeaveStateException if a state throws exception in a transition method
      * 
@@ -195,13 +206,16 @@ public:
      * @details 
      * Pops the state on top of the state stack unless there's only one state (the init state) left or none.
      * After the transition, the previous state object is deleted.
+     * canLeaveState() and canEnterState() are checked in subject states to test if the transition is possible. If it's not then the return value is false.
      * 
      * If the previous state throws an exception during onLeaveState, the state stack is not updated and the condition of the state
      * which threw the exception remains undefined.
      * If the next state throws an exception during onEnterState, this state still stays on the state stack, 
      * but its condition remains undefined.
+     * 
+     * @see canLeaveState(), canEnterState(), OnLeaveStateException, OnEnterStateException
      */
-    void popState();
+    bool popState();
 };
 
 } // namespace chestnut::fsm

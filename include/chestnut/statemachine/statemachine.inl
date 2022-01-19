@@ -81,57 +81,82 @@ int IStatemachine<StateInterface>::getStateStackSize() const noexcept
 
 template<typename StateInterface>
 template<class StateType, typename ...Args>
-void IStatemachine<StateInterface>::init( Args&& ...args ) 
+bool IStatemachine<StateInterface>::init( Args&& ...args ) 
 {
     static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
-    if( m_stackStates.empty() )
+    if( !m_stackStates.empty() )
     {
-        StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
-        m_stackStates.push( initState );
-
-        StateTransition transition;
-        transition.type = STATE_TRANSITION_INIT;
-        transition.prevState = NULL_STATE;
-        transition.nextState = typeid( *initState );
-
-        try
-        {
-            initState->onEnterState( transition );
-        }
-        catch(const std::exception& e)
-        {
-            throw OnEnterStateException( e.what() );   
-        }
+		return false;
     }
+
+	StateTransition transition;
+	transition.type = STATE_TRANSITION_INIT;
+	transition.prevState = NULL_STATE;
+	transition.nextState = typeid( StateType );
+
+	StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
+
+	if( initState->canEnterState( transition ) )
+	{
+		m_stackStates.push( initState );
+
+		try
+		{
+			initState->onEnterState( transition );
+		}
+		catch(const std::exception& e)
+		{
+			throw OnEnterStateException( e.what() );   
+		}
+
+		return true;
+	}
+	else
+	{
+		// polymorphism is needed to check the condition, so this akward immediate deletion after failure is necessary unfortunatelly
+		delete initState;
+		return false;
+	}
 }
 
 template<typename StateInterface>
 template<class StateType, typename ...Args>
-void IStatemachine<StateInterface>::gotoState( Args&& ...args ) 
+bool IStatemachine<StateInterface>::gotoState( Args&& ...args ) 
 {
     static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
     if( m_isCurrentlyLeavingAState )
     {
-        return;
+        return false;
     }
 
-    std::type_index currentStateType = getCurrentStateType();
-    std::type_index nextStateType = typeid(StateType);
-
-    if( nextStateType != currentStateType )
+	StateTransition transition;
+	transition.prevState = getCurrentStateType();
+	transition.nextState = typeid( StateType );
+	
+    if( transition.prevState != transition.nextState )
     {
         StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
 
-        StateTransition transition;
-        transition.prevState = currentStateType;
-        transition.nextState = nextStateType;
+		transition.type = ( m_stackStates.size() >= 1 ) ? STATE_TRANSITION_GOTO : STATE_TRANSITION_INIT;
 
-        if( m_stackStates.size() >= 1 )
+		if( !nextState->canEnterState( transition ) )
+		{
+			delete nextState;
+			return false;
+		}
+
+        if( transition.type == STATE_TRANSITION_GOTO )
         {
             StateInterface *currentState = m_stackStates.top();
-            transition.type = STATE_TRANSITION_GOTO;
+
+			if( !currentState->canLeaveState( transition ) )
+			{
+				delete nextState;
+				return false;
+			}
+
 
             m_isCurrentlyLeavingAState = true;
 
@@ -146,71 +171,70 @@ void IStatemachine<StateInterface>::gotoState( Args&& ...args )
                 throw OnLeaveStateException( e.what() );    
             }
 
-            if( m_stackStates.size() > 1)
+			// if not only the init state is on the stack
+            if( m_stackStates.size() > 1 ) 
             {
                 m_stackStates.pop();
                 delete currentState;
             }
 
             m_isCurrentlyLeavingAState = false;
-
-
-            m_stackStates.push( nextState );
-
-            try
-            {
-                nextState->onEnterState( transition );
-            }
-            catch(const std::exception& e)
-            {
-                throw OnEnterStateException( e.what() );
-            }
         }
-        else
-        {
-            // like this we can use this method to initialize the statemachine
-            transition.type = STATE_TRANSITION_INIT;
 
-            m_stackStates.push( nextState );
+		m_stackStates.push( nextState );
 
-            try
-            {
-                nextState->onEnterState( transition );
-            }
-            catch(const std::exception& e)
-            {
-                throw OnEnterStateException( e.what() );
-            }                
-        }
+		try
+		{
+			nextState->onEnterState( transition );
+		}
+		catch(const std::exception& e)
+		{
+			throw OnEnterStateException( e.what() );
+		}
+
+		return true;
     }
+
+    return false;
 }
 
 template<typename StateInterface>
 template<class StateType, typename ...Args>
-void IStatemachine<StateInterface>::pushState( Args&& ...args ) 
+bool IStatemachine<StateInterface>::pushState( Args&& ...args ) 
 {
     static_assert( std::is_base_of<StateInterface, StateType>::value, "StateType must have StateInterface as its parent class!" );
 
     if( m_isCurrentlyLeavingAState )
     {
-        return;
+        return false;
     }
 
-    std::type_index currentStateType = getCurrentStateType();
-    std::type_index nextStateType = typeid(StateType);
-
-    if( nextStateType != currentStateType )
+    StateTransition transition;
+	transition.prevState = getCurrentStateType();
+	transition.nextState = typeid( StateType );
+	
+    if( transition.prevState != transition.nextState )
     {
         StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
 
-        StateTransition transition;
-        transition.prevState = currentStateType;
-        transition.nextState = nextStateType;
+		transition.type = ( m_stackStates.size() >= 1 ) ? STATE_TRANSITION_PUSH : STATE_TRANSITION_INIT;
 
-        if( m_stackStates.size() >= 1 )
+		if( !nextState->canEnterState( transition ) )
+		{
+			delete nextState;
+			return false;
+		}
+
+        if( transition.type == STATE_TRANSITION_PUSH )
         {
             StateInterface *currentState = m_stackStates.top();
-            transition.type = STATE_TRANSITION_PUSH;
+
+			if( !currentState->canLeaveState( transition ) )
+			{
+				delete nextState;
+				return false;
+			}
+
 
             m_isCurrentlyLeavingAState = true;
 
@@ -226,44 +250,31 @@ void IStatemachine<StateInterface>::pushState( Args&& ...args )
             }
 
             m_isCurrentlyLeavingAState = false;
-
-
-            m_stackStates.push( nextState );
-
-            try
-            {
-                nextState->onEnterState( transition );
-            }
-            catch(const std::exception& e)
-            {   
-                throw OnEnterStateException( e.what() );
-            }
         }
-        else
-        {
-            // like this we can use this method to initialize the statemachine
-            transition.type = STATE_TRANSITION_INIT;
 
-            m_stackStates.push( nextState );
+		m_stackStates.push( nextState );
 
-            try
-            {
-                nextState->onEnterState( transition );
-            }
-            catch(const std::exception& e)
-            {
-                throw OnEnterStateException( e.what() );
-            }    
-        }
+		try
+		{
+			nextState->onEnterState( transition );
+		}
+		catch(const std::exception& e)
+		{
+			throw OnEnterStateException( e.what() );
+		}
+
+		return true;
     }
+
+    return false;
 }
 
 template<class StateInterface>
-void IStatemachine<StateInterface>::popState() 
+bool IStatemachine<StateInterface>::popState() 
 {
     if( m_isCurrentlyLeavingAState )
     {
-        return;
+        return false;
     }
 
     // we want to always retain the init state on the stack
@@ -282,6 +293,14 @@ void IStatemachine<StateInterface>::popState()
         transition.prevState = currentStateType;
         transition.nextState = nextStateType;
 
+		if( !currentState->canLeaveState( transition ) || !nextState->canEnterState( transition ) )
+		{
+			// recover state
+			m_stackStates.push( currentState );
+			return false;
+		}
+		
+		
         m_isCurrentlyLeavingAState = true;
 
         try
@@ -291,7 +310,7 @@ void IStatemachine<StateInterface>::popState()
         catch(const std::exception& e)
         {
             m_isCurrentlyLeavingAState = false;
-            // we're gonna push this state back so that SM goes back to as it was before except now its condition is undefined
+            // push this state back so that SM goes back to as it was before except now its condition is undefined
             m_stackStates.push( currentState );
             throw OnLeaveStateException( e.what() );
         }
@@ -310,6 +329,8 @@ void IStatemachine<StateInterface>::popState()
             throw OnEnterStateException( e.what() );
         }
     }
+
+	return false;
 }
 
 } // namespace chestnut::fsm

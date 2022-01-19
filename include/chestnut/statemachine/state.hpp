@@ -38,7 +38,6 @@ public:
 
 public:
     IState( ParentStatemachine *parent_ );
-    virtual ~IState() = default;
 };
 
 } // namespace chestnut::fsm
