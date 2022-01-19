@@ -7,6 +7,9 @@ namespace chestnut::fsm
 template<typename StateInterface>
 IStatemachine<StateInterface>::IStatemachine() 
 {
+    // basically check on compile time if the StateInterface can be a valid state type for this machine
+    static_assert( std::is_base_of< IStatemachine<StateInterface>, typename StateInterface::ParentStatemachineType >::value, "StateInterface is not a valid state class for this statemachine!" );
+
     m_isCurrentlyLeavingAState = false;
 }
 
@@ -95,7 +98,8 @@ bool IStatemachine<StateInterface>::init( Args&& ...args )
 	transition.prevState = NULL_STATE;
 	transition.nextState = typeid( StateType );
 
-	StateInterface *initState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
+	StateInterface *initState = new StateType( std::forward<Args>(args)... );
+    initState->setParent( static_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
 
 	if( initState->canEnterState( transition ) )
 	{
@@ -137,7 +141,8 @@ bool IStatemachine<StateInterface>::gotoState( Args&& ...args )
 	
     if( transition.prevState != transition.nextState )
     {
-        StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
+        StateInterface *nextState = new StateType( std::forward<Args>(args)... );
+        nextState->setParent( static_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
 
 		transition.type = ( m_stackStates.size() >= 1 ) ? STATE_TRANSITION_GOTO : STATE_TRANSITION_INIT;
 
@@ -215,7 +220,8 @@ bool IStatemachine<StateInterface>::pushState( Args&& ...args )
 	
     if( transition.prevState != transition.nextState )
     {
-        StateInterface *nextState = new StateType( dynamic_cast<typename StateInterface::ParentStatemachinePtrType>( this ), std::forward<Args>(args)... );
+        StateInterface *nextState = new StateType( std::forward<Args>(args)... );
+        nextState->setParent( static_cast<typename StateInterface::ParentStatemachinePtrType>( this ) );
 
 		transition.type = ( m_stackStates.size() >= 1 ) ? STATE_TRANSITION_PUSH : STATE_TRANSITION_INIT;
 

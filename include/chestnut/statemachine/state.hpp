@@ -33,11 +33,27 @@ protected:
      */
     ParentStatemachine *parent;
 
-public:
-    typedef ParentStatemachine* ParentStatemachinePtrType;
 
 public:
-    IState( ParentStatemachine *parent_ );
+    /**
+     * @brief Typedef of parent statemachine class
+     */
+    typedef ParentStatemachine ParentStatemachineType;
+    /**
+     * @brief Typedef of parent statemachine class pointer
+     */
+    typedef ParentStatemachine* ParentStatemachinePtrType;
+
+
+public:
+    IState() noexcept;
+
+    // @brief Sets the pointer to the parent statemachine object.
+    //
+    // THIS METHOD IS USED INTERNALLY AND SHOULD NOT BE CALLED BY THE USER!
+    //
+    // @param parent pointer to parent statemachine
+    void setParent( ParentStatemachinePtrType parent ) noexcept;
 };
 
 } // namespace chestnut::fsm
