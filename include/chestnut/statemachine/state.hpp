@@ -1,9 +1,9 @@
 /**
  * @file state.hpp
- * @author SpontanCombust
- * @brief Header file with base template state class
- * @version 2.3.0
- * @date 2022-01-10
+ * @author Przemysław Cedro (SpontanCombust)
+ * @brief Header file with the state interface template used to create a base state class
+ * @version 3.0.0
+ * @date 2022-01-20
  * 
  * @copyright MIT License (c) 2021-2022
  * 
@@ -17,35 +17,38 @@
 namespace chestnut::fsm
 {
 /**
- * @brief Base generic class used for creating state interface
+ * @brief State interface template used for creating a base state class
  * 
- * @tparam ParentStatemachine type of the statemachine that will house the state
+ * @tparam ParentStatemachineClass type of the statemachine that will house the state
  * 
  * @details
- * ParentStatemachine type should be forward declared before the state interface.
+ * ParentStatemachineClass should be forward declared before the state interface.
  */
-template< class ParentStatemachine >
-class IState : public IStateBase
+template< class ParentStatemachineClass >
+class IState : public IState_Base
 {
 protected:
     /**
-     * @brief Pointer to the statemachine that houses the state
+     * @brief Pointer to the statemachine object that houses the state
      */
-    ParentStatemachine *parent;
+    ParentStatemachineClass *parent;
 
 
 public:
     /**
-     * @brief Typedef of parent statemachine class
+     * @brief Typedef of parent statemachine class to be used as class member type
      */
-    typedef ParentStatemachine ParentStatemachineType;
+    typedef ParentStatemachineClass StatemachineType;
     /**
-     * @brief Typedef of parent statemachine class pointer
+     * @brief Typedef of parent statemachine class pointer be used as class member type
      */
-    typedef ParentStatemachine* ParentStatemachinePtrType;
+    typedef ParentStatemachineClass* StatemachinePtrType;
 
 
 public:
+    /**
+     * @brief IState constructor
+     */
     IState() noexcept;
 
     // @brief Sets the pointer to the parent statemachine object.
@@ -53,7 +56,7 @@ public:
     // THIS METHOD IS USED INTERNALLY AND SHOULD NOT BE CALLED BY THE USER!
     //
     // @param parent pointer to parent statemachine
-    void setParent( ParentStatemachinePtrType parent ) noexcept;
+    void setParent( StatemachinePtrType parent ) noexcept;
 };
 
 } // namespace chestnut::fsm

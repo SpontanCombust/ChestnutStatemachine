@@ -2,10 +2,10 @@
  * @file exceptions.hpp
  * @author SpontanCombust
  * @brief Header file with exception types.
- * @version 2.1.0
- * @date 2021-11-28
+ * @version 3.0.0
+ * @date 2022-01-20
  * 
- * @copyright MIT License (c) 2021
+ * @copyright MIT License (c) 2021-2022
  * 
  */
 

@@ -1,11 +1,11 @@
 /**
  * @file statemachine.hpp
  * @author SpontanCombust
- * @brief Header file with base template statemachine type
- * @version 2.2.0
- * @date 2021-11-28
+ * @brief Header file with the statemachine interface template
+ * @version 3.0.0
+ * @date 2022-01-20
  * 
- * @copyright MIT License (c) 2021
+ * @copyright MIT License (c) 2021-2022
  * 
  */
 
@@ -23,31 +23,34 @@ namespace chestnut::fsm
 {
     
 /**
- * @brief Base generic class for creating a statemachine
+ * @brief Statemachine interface template used for creating a statemachine class
  * 
- * @tparam StateInterface a base (interface) class from which all states inherit
+ * @tparam BaseStateClass a base class of all statemachine's states
  * 
  * 
  * @details
- * StateInterface type must inherit from IState to work properly.
+ * BaseStateClass type must inherit from IState to work properly.
  * It can have any number of virtual methods that proper states should implement in some form.
  * 
  * @see IState
  */
-template< typename StateInterface >
+template< typename BaseStateClass >
 class IStatemachine
 {
 private:
     /**
      * @brief A stack of state pointers
      */
-    std::stack< StateInterface* > m_stackStates;
+    std::stack< BaseStateClass* > m_stackStates;
     /**
      * @brief A flag set to prevent onLeaveState from calling state change methods
      */
     bool m_isCurrentlyLeavingAState;
 
 public:
+    /**
+     * @brief IStatemachine constructor
+     */
     IStatemachine();
 
     /**
@@ -65,12 +68,12 @@ public:
     /**
      * @brief Get the state object on top of the state stack or nullptr if SM was not initialized
      * 
-     * @return upcasted to StateInterface pointer to the state
+     * @return upcasted to BaseStateClass pointer to the state
      * 
      * 
      * @see init()
      */
-    StateInterface *getCurrentState() const noexcept;
+    BaseStateClass *getCurrentState() const noexcept;
 
     /**
      * @brief Get the type_index of the state object on top of the state stack or NULL_STATE if SM was not initialized
@@ -118,7 +121,7 @@ public:
      * onEnterState for the init state is called with NULL_STATE as prevState in transition.
      * canEnterState() is checked in subject state to test if the transition is possible. If it's not then the return value is false.
      * 
-     * StateType is evaluated on compile time to check if it inherits from StateInterface.
+     * StateType is evaluated on compile time to check if it inherits from BaseStateClass.
      * 
      * If a state throws an exception during onEnterState, the state is still pushed onto the state stack, 
      * but its condition remains undefined.
@@ -151,7 +154,7 @@ public:
      * 
      * This method can be used to initialize the statemachine.
      * 
-     * StateType is evaluated on compile time to check if it inherits from StateInterface.
+     * StateType is evaluated on compile time to check if it inherits from BaseStateClass.
      * 
      * If the previous state throws an exception during onLeaveState, the state stack is not updated and the condition of the state
      * which threw the exception remains undefined.
@@ -183,7 +186,7 @@ public:
      * 
      * This method can be used to initialize the statemachine.
      * 
-     * StateType is evaluated on compile time to check if it inherits from StateInterface.
+     * StateType is evaluated on compile time to check if it inherits from BaseStateClass.
      * 
      * If the previous state throws an exception during onLeaveState, the state stack is not updated and the condition of the state
      * which threw the exception remains undefined.

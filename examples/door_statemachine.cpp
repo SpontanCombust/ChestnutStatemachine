@@ -1,3 +1,14 @@
+/**
+ * @example door_statemachine.cpp
+ * @author Przemysław Cedro (SpontanCombust)
+ * @brief A source file with door statemachine example
+ * @version 3.0.0
+ * @date 2022-01-20
+ * 
+ * @copyright MIT License (c) 2021-2022
+ * 
+ */
+
 // =============================== 0. Include the statemachine.hpp header file =================================
 #include "../include/chestnut/statemachine/statemachine.hpp"
 
@@ -13,14 +24,18 @@
 
 using namespace chestnut; // use the chestnut root namespace name for convenience
 
-// 1.1. Forward declare statemachine type, because we need it for the base state type
+// 1.1. 
+// Forward declare statemachine type, because we need it for the base state type
 class CDoorStatemachine;
 
-// 1.2. Create a type that will derive from IState generic class, for the template parameter give it the statemachine type from point 1.1
+// 1.2. 
+// Create a type that will derive from IState generic class, 
+// for the template parameter give it the statemachine type from point 1.1
 class IDoorState : public fsm::IState<CDoorStatemachine>
 {
 public:
-// 1.3. (Optional) If you want to call methods on current states from the statemachine 
+// 1.3. (Optional) 
+// If you want to call methods on current states from the statemachine 
 // and you want them to be overridable you can define some public virtual methods here
     virtual bool tryOpen() = 0;
     virtual bool tryClose() = 0;
@@ -32,11 +47,14 @@ public:
 // ====================================== 2. Define your statemachine type ======================================
 
 
-// 2.1. Create a type that will derive from IStatemachine generic class, for the template parameter give it the base state type from point 1.2
+// 2.1. 
+// Create a type that will derive from IStatemachine generic class, 
+// for the template parameter give it the base state type from point 1.2
 class CDoorStatemachine : public fsm::IStatemachine<IDoorState>
 {
 public:
-    // 2.2. (Optional) You can make your statemachine able to be used across threads in an async manner
+    // 2.2. (Optional) 
+    // You can make your statemachine able to be used across threads in an async manner
     // The base IStatemachine type does not support multithreading, so you'll have to set up the necessary precautions yourself
     mutable std::recursive_mutex doorMutex;
 
@@ -132,6 +150,9 @@ public:
 };
 
 
+
+
+
 CDoorStatemachine::CDoorStatemachine() 
 {
     // 3.6. A statemachine has to be initialized with some entry state
@@ -148,8 +169,14 @@ CDoorStatemachine::CDoorStatemachine()
     init<CDoorStateClosed>( true );
 }
 
+
+
+
+
 CDoorStateClosed::CDoorStateClosed( bool printOnNullState )
 {
+    // 3.7. Inside a state constructor you cannot use the `parent` pointer as it has not been bound to the state object by the point of state object creattion
+    // If you want to use the `parent` pointer do it in onEnterState and onLeaveState methods instead
     this->printOnNullState = printOnNullState;
 }
 

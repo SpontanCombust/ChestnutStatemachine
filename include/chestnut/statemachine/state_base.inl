@@ -1,22 +1,22 @@
 namespace chestnut::fsm
 {
 
-inline bool IStateBase::canEnterState( StateTransition transition ) const noexcept
+inline bool IState_Base::canEnterState( StateTransition transition ) const noexcept
 {
     return true;
 }
 
-inline bool IStateBase::canLeaveState( StateTransition transition ) const noexcept
+inline bool IState_Base::canLeaveState( StateTransition transition ) const noexcept
 {
     return true;
 }
 
-inline void IStateBase::onEnterState( StateTransition transition ) 
+inline void IState_Base::onEnterState( StateTransition transition ) 
 {
     /*NOP*/
 }
 
-inline void IStateBase::onLeaveState( StateTransition transition ) 
+inline void IState_Base::onLeaveState( StateTransition transition ) 
 {
     /*NOP*/
 }
