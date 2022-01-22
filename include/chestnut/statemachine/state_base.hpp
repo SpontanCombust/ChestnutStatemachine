@@ -1,7 +1,7 @@
 /**
  * @file state_base.hpp
  * @author Przemysław Cedro (SpontanCombust)
- * @brief Header file with the base class of IState
+ * @brief Header file with fsm::StateBase - the most base class to create a state class
  * @version 3.0.0
  * @date 2022-01-20
  * 
@@ -18,16 +18,16 @@ namespace chestnut::fsm
 {
 
 /**
- * @brief Base class of IState, housing the methods that were not template type-specific to IState
+ * @brief Base class of State, housing the methods that don't depend on state's parent statemachine type
  * 
  */
-class IState_Base
+class StateBase
 {
 public:
     /**
-     * @brief Virtual IState destructor, it's marked as default
+     * @brief Virtual State destructor, it's marked as default
      */
-    virtual ~IState_Base() = default;
+    virtual ~StateBase() = default;
 
     /**
      * @brief A method used to evaluate if a state is able to transition from other specified state

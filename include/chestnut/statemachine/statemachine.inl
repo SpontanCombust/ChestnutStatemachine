@@ -84,7 +84,7 @@ int IStatemachine<BaseStateClass>::getStateStackSize() const noexcept
 
 template<typename BaseStateClass>
 template<class StateType, typename ...Args>
-bool IStatemachine<BaseStateClass>::init( Args&& ...args ) 
+bool IStatemachine<BaseStateClass>::initState( Args&& ...args ) 
 {
     static_assert( std::is_base_of<BaseStateClass, StateType>::value, "This StateType can't be used with this statemachine!" );
 
@@ -98,16 +98,16 @@ bool IStatemachine<BaseStateClass>::init( Args&& ...args )
 	transition.prevState = NULL_STATE;
 	transition.nextState = typeid( StateType );
 
-	BaseStateClass *initState = new StateType( std::forward<Args>(args)... );
-    initState->setParent( static_cast<typename BaseStateClass::StatemachinePtrType>( this ) );
+	BaseStateClass *initialState = new StateType( std::forward<Args>(args)... );
+    initialState->setParent( static_cast<typename BaseStateClass::StatemachinePtrType>( this ) );
 
-	if( initState->canEnterState( transition ) )
+	if( initialState->canEnterState( transition ) )
 	{
-		m_stackStates.push( initState );
+		m_stackStates.push( initialState );
 
 		try
 		{
-			initState->onEnterState( transition );
+			initialState->onEnterState( transition );
 		}
 		catch(const std::exception& e)
 		{
@@ -119,7 +119,7 @@ bool IStatemachine<BaseStateClass>::init( Args&& ...args )
 	else
 	{
 		// polymorphism is needed to check the condition, so this akward immediate deletion after failure is necessary unfortunatelly
-		delete initState;
+		delete initialState;
 		return false;
 	}
 }

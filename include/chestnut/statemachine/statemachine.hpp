@@ -29,10 +29,10 @@ namespace chestnut::fsm
  * 
  * 
  * @details
- * BaseStateClass type must inherit from IState to work properly.
+ * BaseStateClass type must inherit from State to work properly.
  * It can have any number of virtual methods that proper states should implement in some form.
  * 
- * @see IState
+ * @see State
  */
 template< typename BaseStateClass >
 class IStatemachine
@@ -71,7 +71,7 @@ public:
      * @return upcasted to BaseStateClass pointer to the state
      * 
      * 
-     * @see init()
+     * @see initState()
      */
     BaseStateClass *getCurrentState() const noexcept;
 
@@ -81,7 +81,7 @@ public:
      * @return std::type_index of the state
      * 
      * 
-     * @see init(), NULL_STATE
+     * @see initState(), NULL_STATE
      */
     std::type_index getCurrentStateType() const noexcept;
 
@@ -129,7 +129,7 @@ public:
      * @see NULL_STATE, canEnterState(), OnEnterStateException
      */
     template< class StateType, typename ...Args >
-    bool init( Args&& ...args );
+    bool initState( Args&& ...args );
 
     /**
      * @brief Transitions directly to specified state, forgetting its previous state afterwards (and deleting it)
@@ -161,7 +161,7 @@ public:
      * If the next state throws an exception during onEnterState, this state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
-     * @see pushState(), canLeaveState(), canEnterState(), init(), OnLeaveStateException, OnEnterStateException
+     * @see pushState(), canLeaveState(), canEnterState(), initState(), OnLeaveStateException, OnEnterStateException
      */
     template< class StateType, typename ...Args >
     bool gotoState( Args&& ...args );
@@ -193,7 +193,7 @@ public:
      * If the next state throws an exception during onEnterState, this state is still pushed onto the state stack, 
      * but its condition remains undefined.
      * 
-     * @see canLeaveState(), canEnterState(), init(), OnLeaveStateException, OnEnterStateException
+     * @see canLeaveState(), canEnterState(), initState(), OnLeaveStateException, OnEnterStateException
      */
     template< class StateType, typename ...Args >
     bool pushState( Args&& ...args );

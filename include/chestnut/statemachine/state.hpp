@@ -1,7 +1,7 @@
 /**
  * @file state.hpp
  * @author Przemysław Cedro (SpontanCombust)
- * @brief Header file with the state interface template used to create a base state class
+ * @brief Header file with the template state type used to create a state class with an access to the parent statemachine
  * @version 3.0.0
  * @date 2022-01-20
  * 
@@ -16,16 +16,17 @@
 
 namespace chestnut::fsm
 {
+
 /**
- * @brief State interface template used for creating a base state class
+ * @brief Template state type used to create a state class with an access to the parent statemachine; it derives from fsm::StateBase
  * 
- * @tparam ParentStatemachineClass type of the statemachine that will house the state
+ * @tparam ParentStatemachineClass type of the statemachine that will be this state's parent
  * 
  * @details
  * ParentStatemachineClass should be forward declared before the state interface.
  */
 template< class ParentStatemachineClass >
-class IState : public IState_Base
+class State : public StateBase
 {
 protected:
     /**
@@ -47,9 +48,9 @@ public:
 
 public:
     /**
-     * @brief IState constructor
+     * @brief State constructor
      */
-    IState() noexcept;
+    State() noexcept;
 
     // @brief Sets the pointer to the parent statemachine object.
     //

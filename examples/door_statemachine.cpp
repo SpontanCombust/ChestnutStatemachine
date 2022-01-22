@@ -29,9 +29,9 @@ using namespace chestnut; // use the chestnut root namespace name for convenienc
 class CDoorStatemachine;
 
 // 1.2. 
-// Create a type that will derive from IState generic class, 
+// Create a type that will derive from State generic class, 
 // for the template parameter give it the statemachine type from point 1.1
-class IDoorState : public fsm::IState<CDoorStatemachine>
+class IDoorState : public fsm::State<CDoorStatemachine>
 {
 public:
 // 1.3. (Optional) 
@@ -159,14 +159,14 @@ CDoorStatemachine::CDoorStatemachine()
     // This state will stay on the state stack throughout the lifetime of the statemachine and won't be possible to get poppped
     // If you don't have a state that could be good candidate for a state that the machine should always eventually transition back to
     // you can simply create an empty state! Just inherit from the base state type and that's it. 
-    // IState does not force you to override any pure virtual methods or create any special constructors.
+    // State does not force you to override any pure virtual methods or create any special constructors.
     //
     // Based on point 3.1 if we wanted to use a state transition method on CDoorStateClosed we have to use it AFTER its complete type body.
     // Hence why CDoorStatemachine() constructor definition is all the way here, but it's only because we're working in a single .cpp file.
 
     // 3.7. (Optional) We can call state transition method with custom parameters. These parameters will be forwarded to state's constructor. See point 3.2.
     // init() can be called on the statemachine object itself, but this way we can hide away its statemachine nature.
-    init<CDoorStateClosed>( true );
+    initState<CDoorStateClosed>( true );
 }
 
 
