@@ -13,7 +13,7 @@
 #ifndef __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
 #define __CHESTNUT_STATEMACHINE_STATEMACHINE_H__
 
-#include "state.hpp"
+#include "state_base.hpp"
 #include "exceptions.hpp"
 
 #include <stack>
@@ -21,21 +21,22 @@
 
 namespace chestnut::fsm
 {
-    
+
 /**
- * @brief Statemachine interface template used for creating a statemachine class
+ * @brief Statemachine template class
  * 
  * @tparam BaseStateClass a base class of all statemachine's states
  * 
  * 
  * @details
- * BaseStateClass type must inherit from State to work properly.
- * It can have any number of virtual methods that proper states should implement in some form.
+ * BaseStateClass type must inherit from fsm::StateBase to work properly.
+ * The default class for BaseStateClass is exactly fsm::StateBase.
+ * BaseStateClass can also have any number of virtual methods that could be used as a way to communicate between the statemachine and its states.
  * 
- * @see State
+ * @see StateBase
  */
-template< typename BaseStateClass >
-class IStatemachine
+template< class BaseStateClass = chestnut::fsm::StateBase >
+class Statemachine
 {
 private:
     /**
@@ -49,9 +50,9 @@ private:
 
 public:
     /**
-     * @brief IStatemachine constructor
+     * @brief Statemachine constructor
      */
-    IStatemachine();
+    Statemachine();
 
     /**
      * @brief Statemachine destructor, cleans up states on the stack
@@ -62,7 +63,7 @@ public:
      * 
      * @see NULL_STATE
      */
-    virtual ~IStatemachine() noexcept;
+    virtual ~Statemachine() noexcept;
 
 
     /**

@@ -22,11 +22,9 @@ namespace chestnut::fsm
  * 
  * @tparam ParentStatemachineClass type of the statemachine that will be this state's parent
  * 
- * @details
- * ParentStatemachineClass should be forward declared before the state interface.
  */
-template< class ParentStatemachineClass >
-class State : public StateBase
+template< class ParentStatemachineClass, class BaseStateClass = fsm::StateBase >
+class State : public BaseStateClass
 {
 protected:
     /**

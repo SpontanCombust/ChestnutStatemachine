@@ -4,17 +4,16 @@
 namespace chestnut::fsm
 {  
 
-template<typename BaseStateClass>
-IStatemachine<BaseStateClass>::IStatemachine() 
+template<class BaseStateClass>
+Statemachine<BaseStateClass>::Statemachine() 
 {
-    // basically check on compile time if the BaseStateClass can be a valid state type for this machine
-    static_assert( std::is_base_of< IStatemachine<BaseStateClass>, typename BaseStateClass::StatemachineType >::value, "BaseStateClass is not a valid state class for this statemachine!" );
+    static_assert( std::is_base_of< fsm::StateBase, BaseStateClass >::value, "BaseStateClass is not a valid class for this statemachine! It does not iherit from fsm::StateBase!" );
 
     m_isCurrentlyLeavingAState = false;
 }
 
 template<class BaseStateClass>
-IStatemachine<BaseStateClass>::~IStatemachine() noexcept
+Statemachine<BaseStateClass>::~Statemachine() noexcept
 {
     m_isCurrentlyLeavingAState = true;
 
@@ -43,7 +42,7 @@ IStatemachine<BaseStateClass>::~IStatemachine() noexcept
 }
 
 template<class BaseStateClass>
-BaseStateClass* IStatemachine<BaseStateClass>::getCurrentState() const noexcept
+BaseStateClass* Statemachine<BaseStateClass>::getCurrentState() const noexcept
 {
     if( m_stackStates.size() >= 1 )
     {
@@ -54,7 +53,7 @@ BaseStateClass* IStatemachine<BaseStateClass>::getCurrentState() const noexcept
 }
 
 template<class BaseStateClass>
-std::type_index IStatemachine<BaseStateClass>::getCurrentStateType() const noexcept
+std::type_index Statemachine<BaseStateClass>::getCurrentStateType() const noexcept
 {
     if( m_stackStates.size() >= 1 )
     {
@@ -64,9 +63,9 @@ std::type_index IStatemachine<BaseStateClass>::getCurrentStateType() const noexc
     return NULL_STATE;
 }
 
-template<typename BaseStateClass>
+template<class BaseStateClass>
 template<class StateType>
-bool IStatemachine<BaseStateClass>::isCurrentlyInState() const
+bool Statemachine<BaseStateClass>::isCurrentlyInState() const
 {
     if( m_stackStates.size() >= 1 )
     {
@@ -76,17 +75,21 @@ bool IStatemachine<BaseStateClass>::isCurrentlyInState() const
     return false;
 }
 
-template<typename BaseStateClass>
-int IStatemachine<BaseStateClass>::getStateStackSize() const noexcept
+template<class BaseStateClass>
+int Statemachine<BaseStateClass>::getStateStackSize() const noexcept
 {
     return (int)m_stackStates.size();
 }
 
-template<typename BaseStateClass>
+template<class BaseStateClass>
 template<class StateType, typename ...Args>
-bool IStatemachine<BaseStateClass>::initState( Args&& ...args ) 
+bool Statemachine<BaseStateClass>::initState( Args&& ...args ) 
 {
-    static_assert( std::is_base_of<BaseStateClass, StateType>::value, "This StateType can't be used with this statemachine!" );
+    static_assert( std::is_base_of<BaseStateClass, StateType>::value, 
+                   "This StateType can't be used with this statemachine! It inherits from a different base state class than that of statemachine's!" );
+    static_assert( std::is_base_of< Statemachine<BaseStateClass>, class StateType::StatemachineType>::value, 
+                   "This StateType can't be used with this statemachine! It expects a different statemachine class!" );
+
 
     if( !m_stackStates.empty() )
     {
@@ -98,8 +101,8 @@ bool IStatemachine<BaseStateClass>::initState( Args&& ...args )
 	transition.prevState = NULL_STATE;
 	transition.nextState = typeid( StateType );
 
-	BaseStateClass *initialState = new StateType( std::forward<Args>(args)... );
-    initialState->setParent( static_cast<typename BaseStateClass::StatemachinePtrType>( this ) );
+	StateType *initialState = new StateType( std::forward<Args>(args)... );
+    initialState->setParent( static_cast<typename StateType::StatemachinePtrType>( this ) );
 
 	if( initialState->canEnterState( transition ) )
 	{
@@ -124,11 +127,15 @@ bool IStatemachine<BaseStateClass>::initState( Args&& ...args )
 	}
 }
 
-template<typename BaseStateClass>
+template<class BaseStateClass>
 template<class StateType, typename ...Args>
-bool IStatemachine<BaseStateClass>::gotoState( Args&& ...args ) 
+bool Statemachine<BaseStateClass>::gotoState( Args&& ...args ) 
 {
-    static_assert( std::is_base_of<BaseStateClass, StateType>::value, "This StateType can't be used with this statemachine!" );
+    static_assert( std::is_base_of<BaseStateClass, StateType>::value, 
+                   "This StateType can't be used with this statemachine! It inherits from a different base state class than that of statemachine's!" );
+    static_assert( std::is_base_of< Statemachine<BaseStateClass>, class StateType::StatemachineType>::value, 
+                   "This StateType can't be used with this statemachine! It expects a different statemachine class!" );
+
 
     if( m_isCurrentlyLeavingAState )
     {
@@ -141,8 +148,8 @@ bool IStatemachine<BaseStateClass>::gotoState( Args&& ...args )
 	
     if( transition.prevState != transition.nextState )
     {
-        BaseStateClass *nextState = new StateType( std::forward<Args>(args)... );
-        nextState->setParent( static_cast<typename BaseStateClass::StatemachinePtrType>( this ) );
+        StateType *nextState = new StateType( std::forward<Args>(args)... );
+        nextState->setParent( static_cast<typename StateType::StatemachinePtrType>( this ) );
 
 		transition.type = ( m_stackStates.size() >= 1 ) ? STATE_TRANSITION_GOTO : STATE_TRANSITION_INIT;
 
@@ -203,11 +210,15 @@ bool IStatemachine<BaseStateClass>::gotoState( Args&& ...args )
     return false;
 }
 
-template<typename BaseStateClass>
+template<class BaseStateClass>
 template<class StateType, typename ...Args>
-bool IStatemachine<BaseStateClass>::pushState( Args&& ...args ) 
+bool Statemachine<BaseStateClass>::pushState( Args&& ...args ) 
 {
-    static_assert( std::is_base_of<BaseStateClass, StateType>::value, "This StateType can't be used with this statemachine!" );
+    static_assert( std::is_base_of<BaseStateClass, StateType>::value, 
+                   "This StateType can't be used with this statemachine! It inherits from a different base state class than that of statemachine's!" );
+    static_assert( std::is_base_of< Statemachine<BaseStateClass>, class StateType::StatemachineType>::value, 
+                   "This StateType can't be used with this statemachine! It expects a different statemachine class!" );
+
 
     if( m_isCurrentlyLeavingAState )
     {
@@ -220,8 +231,8 @@ bool IStatemachine<BaseStateClass>::pushState( Args&& ...args )
 	
     if( transition.prevState != transition.nextState )
     {
-        BaseStateClass *nextState = new StateType( std::forward<Args>(args)... );
-        nextState->setParent( static_cast<typename BaseStateClass::StatemachinePtrType>( this ) );
+        StateType *nextState = new StateType( std::forward<Args>(args)... );
+        nextState->setParent( static_cast<typename StateType::StatemachinePtrType>( this ) );
 
 		transition.type = ( m_stackStates.size() >= 1 ) ? STATE_TRANSITION_PUSH : STATE_TRANSITION_INIT;
 
@@ -276,7 +287,7 @@ bool IStatemachine<BaseStateClass>::pushState( Args&& ...args )
 }
 
 template<class BaseStateClass>
-bool IStatemachine<BaseStateClass>::popState() 
+bool Statemachine<BaseStateClass>::popState() 
 {
     if( m_isCurrentlyLeavingAState )
     {
@@ -334,6 +345,8 @@ bool IStatemachine<BaseStateClass>::popState()
         {
             throw OnEnterStateException( e.what() );
         }
+
+        return true;
     }
 
 	return false;
