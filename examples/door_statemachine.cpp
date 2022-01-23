@@ -14,8 +14,7 @@
 #include <shared_mutex>
 #include <thread>
 
-//FIXME typo
-// ============ 0. (Optional) For convenience include fsm.hpp and do a 'using' on namespace for convenience ============
+// ================= 0. (Optional) For convenience include fsm.hpp and do a 'using' on namespace ====================
 
 // 0.1
 // fsm.hpp includes all other headers mentioned below
