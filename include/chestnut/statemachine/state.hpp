@@ -23,8 +23,8 @@ namespace chestnut::fsm
  * @tparam ParentStatemachineClass type of the statemachine that will be this state's parent
  * 
  */
-template< class ParentStatemachineClass, class BaseStateClass = fsm::StateBase >
-class State : public BaseStateClass
+template< class ParentStatemachineClass >
+class State : public ParentStatemachineClass::BaseStateType
 {
 protected:
     /**

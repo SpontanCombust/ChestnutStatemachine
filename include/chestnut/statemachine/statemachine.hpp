@@ -38,6 +38,12 @@ namespace chestnut::fsm
 template< class BaseStateClass = chestnut::fsm::StateBase >
 class Statemachine
 {
+public:
+    /**
+     * @brief Typedef for the state classes to deduce the class they should inherit from
+     */
+    typedef BaseStateClass BaseStateType;
+
 private:
     /**
      * @brief A stack of state pointers

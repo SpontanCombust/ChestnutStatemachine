@@ -16,7 +16,9 @@
 #include <shared_mutex>
 #include <thread>
 
-using namespace chestnut; // 0.1 (Optional) use the chestnut root namespace name for convenience
+// 0. 
+// (Optional) use the chestnut root namespace name for convenience
+using namespace chestnut; 
 
 
 // ===================== 1. Decide on the base state class you'll use =====================
@@ -25,7 +27,7 @@ using namespace chestnut; // 0.1 (Optional) use the chestnut root namespace name
 // The default template type for the fsm::Statemachine class is fsm::StateBase
 // fsm::StateBase has all the necessary methods for the statemachine to work
 // You can use the default StateBase class or make an extension for it and that's what we're going to do now
-// This way we will be able to use more than the basic methods fsm::StateBase provides
+// This way we will be able to call custom methods on current states
 //
 // To create an extension first include state_base.hpp header
 
@@ -111,7 +113,7 @@ public:
 // for the second template parameter give it the base state class, this time it's our extension
 // By default it's fsm::StateBase, but since we created an extension in point 1. we will use that
 // The type you give in the second template parameter must comply with the type statemachine uses as its BaseStateClass
-class CDoorStateClosed : public fsm::State<CDoorStatemachine, IDoorState> // analogous to WitcherScript's `state Closed in CDoorStatemachine extends IDoorState`
+class CDoorStateClosed : public fsm::State<CDoorStatemachine> // analogous to WitcherScript's `state Closed in CDoorStatemachine`
 {
 public:
     // 3.3. (Optional) States can have a custom constructor or just a default one
@@ -134,7 +136,7 @@ private:
     bool printOnNullState;
 };
 
-class CDoorStateOpening : public fsm::State<CDoorStatemachine, IDoorState>
+class CDoorStateOpening : public fsm::State<CDoorStatemachine>
 {
 public:
     // 3.6. You don't even need to define a constructor at all!
@@ -146,7 +148,7 @@ public:
     bool tryClose() override;
 };
 
-class CDoorStateOpen : public fsm::State<CDoorStatemachine, IDoorState>
+class CDoorStateOpen : public fsm::State<CDoorStatemachine>
 {
 public:
     void onEnterState( fsm::StateTransition transition ) override;
@@ -156,7 +158,7 @@ public:
     bool tryClose() override;
 };
 
-class CDoorStateClosing : public fsm::State<CDoorStatemachine, IDoorState>
+class CDoorStateClosing : public fsm::State<CDoorStatemachine>
 {
 public:
     void onEnterState( fsm::StateTransition transition ) override;
