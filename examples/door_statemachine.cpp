@@ -9,38 +9,43 @@
  * 
  */
 
-#include "../include/chestnut/statemachine/statemachine.hpp"
-
 #include <iostream>
 #include <mutex>
 #include <shared_mutex>
 #include <thread>
 
-// 0. 
-// (Optional) use the chestnut root namespace name for convenience
-using namespace chestnut; 
+
+// ============ 0. (Optional) For convenience include fsm.hpp and do a 'using' on namespace for convenience ============
+
+// 0.1
+// fsm.hpp includes all other headers mentioned below
+#include <chestnut/fsm/fsm.hpp>
+// 0.2
+// Writing this long two-part namespace every time can be annoying :) 
+using namespace chestnut::fsm; 
 
 
-// ===================== 1. Decide on the base state class you'll use =====================
+
+
+// ================================= 1. Decide on the base state class you'll use ====================================
 
 // 1.1. 
-// The default template type for the fsm::Statemachine class is fsm::StateBase
-// fsm::StateBase has all the necessary methods for the statemachine to work
-// You can use the default StateBase class or make an extension for it and that's what we're going to do now
+// The default template type for the chestnut::fsm::Statemachine class is chestnut::fsm::StateBase
+// chestnut::fsm::StateBase has all the necessary methods for the statemachine to work
+// You can use the default chestnut::fsm::StateBase class or extend it and that's what we're going to do now
 // This way we will be able to call custom methods on current states
 //
-// To create an extension first include state_base.hpp header
+// To create a base state extension first include state_base.hpp header
 
-#include <chestnut/statemachine/state_base.hpp>
+#include <chestnut/fsm/state_base.hpp>
 
 // 1.2 
-// Make sure to inherit from fsm::StateBase
-class IDoorState : public fsm::StateBase
+// Inherit from chestnut::fsm::StateBase
+class IDoorState : public StateBase
 {
 public:
 // 1.3. 
-// If you want to call methods on current states from the statemachine 
-// and you want them to be overridable you can define some public virtual methods here
+// Define virtual methods you'll want to call on your states
     virtual bool tryOpen() = 0;
     virtual bool tryClose() = 0;
 };
@@ -48,17 +53,17 @@ public:
 
 
 
-// ====================================== 2. Define your statemachine type ======================================
+// ====================================== 2. Define your statemachine type ============================================
 
 
 // 2.1. 
-// To create a custom statemachine class first include statemachine.hpp header
+// To create a custom statemachine class include statemachine.hpp header
 
-#include <chestnut/statemachine/statemachine.hpp>
+#include <chestnut/fsm/statemachine.hpp>
 
-// ...If you decided to use a custom base state class setup create a type that will derive from Statemachine generic class, 
-// for the template parameter give it the base state type from point 1.2 
-class CDoorStatemachine : public fsm::Statemachine<IDoorState>
+// ...If you decided to use a custom base state class before, in the template parameter of chestnut::fsm::Statemachine
+// input this type. Otherwise you can just write chestnut::fsm::Statemachine<> and the base state class will be the default one.
+class CDoorStatemachine : public Statemachine<IDoorState>
 {
 public:
     // 2.2. (Optional) 
@@ -94,10 +99,9 @@ public:
 
 // 3.1. Be aware of the order of your includes!
 //
-// Calls to init(), gotoState() and pushState() require that the state type given to them in the template parameter
-// is a *complete* type.
-// If you need a mutual state dependency (e.g. state A goes to state B and vice versa)
-// it's best to properly divide state class body and its methods' definitions.
+// Calls to initState(), gotoState() and pushState() require that the state type given to them in the template parameter is a *complete* type.
+// If you need a mutual state dependency (e.g. state A goes to state B and vice versa) it's best to properly divide
+// state class body and its methods' definitions.
 // You can't make state transition to a forward declared state!
 // If you decide to write a statemachine it'd be a lot better to keep each state (and the statemachine itself) in seperate .h and .cpp files 
 //
@@ -106,18 +110,16 @@ public:
 // 3.2
 // To create a state class first include state.hpp header
 
-#include <chestnut/statemachine/state.hpp>
+#include <chestnut/fsm/state.hpp>
 
-// ...then inherit from fsm::State 
-// for the first template parameter give it the type of the statemachine
-// for the second template parameter give it the base state class, this time it's our extension
-// By default it's fsm::StateBase, but since we created an extension in point 1. we will use that
-// The type you give in the second template parameter must comply with the type statemachine uses as its BaseStateClass
-class CDoorStateClosed : public fsm::State<CDoorStatemachine> // analogous to WitcherScript's `state Closed in CDoorStatemachine`
+// ...then inherit from chestnut::fsm::State 
+// for the template parameter give it the type of the statemachine you created
+// The base state type will be deduced from a typedef inside the statemachine class
+class CDoorStateClosed : public State<CDoorStatemachine>
 {
 public:
     // 3.3. (Optional) States can have a custom constructor or just a default one
-    // You pass these custom parameters when you call init(), gotoState() or pushState()
+    // You pass these custom parameters when you call initState(), gotoState() or pushState()
     CDoorStateClosed( bool printOnNullState = false );
 
     // 3.4. (Optional) Override methods that will be called when a statemachine enter or leaves the state
@@ -125,8 +127,8 @@ public:
     //
     // As the statemachine requires that at least one state stays on the state stack throughout statemachine's lifetime after init()
     // you could as well create a completely empty state with no overrides!
-    void onEnterState( fsm::StateTransition transition ) override;
-    void onLeaveState( fsm::StateTransition transition ) override;
+    void onEnterState( StateTransition transition ) override;
+    void onLeaveState( StateTransition transition ) override;
     
     // 3.5. (Optional) Override the virtual methods you specified in point 1.3
     bool tryOpen() override;
@@ -136,33 +138,33 @@ private:
     bool printOnNullState;
 };
 
-class CDoorStateOpening : public fsm::State<CDoorStatemachine>
+class CDoorStateOpening : public State<CDoorStatemachine>
 {
 public:
-    // 3.6. You don't even need to define a constructor at all!
+    // 3.6. You don't even need to define a constructor at all if you don't need to!
 
-    void onEnterState( fsm::StateTransition transition ) override;
-    void onLeaveState( fsm::StateTransition transition ) override;
+    void onEnterState( StateTransition transition ) override;
+    void onLeaveState( StateTransition transition ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
 };
 
-class CDoorStateOpen : public fsm::State<CDoorStatemachine>
+class CDoorStateOpen : public State<CDoorStatemachine>
 {
 public:
-    void onEnterState( fsm::StateTransition transition ) override;
-    void onLeaveState( fsm::StateTransition transition ) override;
+    void onEnterState( StateTransition transition ) override;
+    void onLeaveState( StateTransition transition ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
 };
 
-class CDoorStateClosing : public fsm::State<CDoorStatemachine>
+class CDoorStateClosing : public State<CDoorStatemachine>
 {
 public:
-    void onEnterState( fsm::StateTransition transition ) override;
-    void onLeaveState( fsm::StateTransition transition ) override;
+    void onEnterState( StateTransition transition ) override;
+    void onLeaveState( StateTransition transition ) override;
     
     bool tryOpen() override;
     bool tryClose() override;
@@ -183,8 +185,8 @@ CDoorStatemachine::CDoorStatemachine()
     // Based on point 3.1 if we wanted to use a state transition method on CDoorStateClosed we have to use it AFTER its complete type body.
     // Hence why CDoorStatemachine() constructor definition is all the way here, but it's only because we're working in a single .cpp file.
 
-    // 3.8. (Optional) We can call state transition method with custom parameters. These parameters will be forwarded to state's constructor. See point 3.2.
-    // init() can be called on the statemachine object itself, but this way we can hide away its statemachine nature.
+    // 3.8. (Optional) We can call state transition method with custom parameters. These parameters will be forwarded to state's constructor. See point 3.3.
+    // Calling initState() inside a constructor ensures it will always be initialised with this state
     initState<CDoorStateClosed>( true );
 }
 
@@ -199,10 +201,10 @@ CDoorStateClosed::CDoorStateClosed( bool printOnNullState )
     this->printOnNullState = printOnNullState;
 }
 
-void CDoorStateClosed::onEnterState( fsm::StateTransition transition )
+void CDoorStateClosed::onEnterState( StateTransition transition )
 {
     // message won't show if this is the init state
-    if( transition.type != fsm::STATE_TRANSITION_INIT )
+    if( transition.type != STATE_TRANSITION_INIT )
     {
         std::cout << "The door is now closed!\n";
     }
@@ -212,10 +214,10 @@ void CDoorStateClosed::onEnterState( fsm::StateTransition transition )
     }
 }
 
-void CDoorStateClosed::onLeaveState( fsm::StateTransition transition )
+void CDoorStateClosed::onLeaveState( StateTransition transition )
 {
     // message won't show if statemachine is being deleted
-    if( transition.type != fsm::STATE_TRANSITION_DESTROY )
+    if( transition.type != STATE_TRANSITION_DESTROY )
     {
         std::cout << "The door is no longer closed!\n";
     }
@@ -240,7 +242,7 @@ bool CDoorStateClosed::tryClose()
 
 
 
-void CDoorStateOpening::onEnterState( fsm::StateTransition transition ) 
+void CDoorStateOpening::onEnterState( StateTransition transition ) 
 {
     std::cout << "The door is openning...\n";
 
@@ -252,7 +254,7 @@ void CDoorStateOpening::onEnterState( fsm::StateTransition transition )
     }).detach();
 }
 
-void CDoorStateOpening::onLeaveState( fsm::StateTransition transition ) 
+void CDoorStateOpening::onLeaveState( StateTransition transition ) 
 {
     std::cout << "The door has finished openning!\n";
 }
@@ -271,19 +273,19 @@ bool CDoorStateOpening::tryClose()
 
 
 
-void CDoorStateOpen::onEnterState( fsm::StateTransition transition ) 
+void CDoorStateOpen::onEnterState( StateTransition transition ) 
 {
     // message won't show if this is the init state
-    if( transition.type != fsm::STATE_TRANSITION_INIT )
+    if( transition.type != STATE_TRANSITION_INIT )
     {
         std::cout << "The door is now open!\n";
     }
 }
 
-void CDoorStateOpen::onLeaveState( fsm::StateTransition transition ) 
+void CDoorStateOpen::onLeaveState( StateTransition transition ) 
 {
     // message won't show if statemachine is being deleted
-    if( transition.type != fsm::STATE_TRANSITION_DESTROY )
+    if( transition.type != STATE_TRANSITION_DESTROY )
     {
         std::cout << "The door is no longer open!\n";
     }
@@ -304,7 +306,7 @@ bool CDoorStateOpen::tryClose()
 
 
 
-void CDoorStateClosing::onEnterState( fsm::StateTransition transition ) 
+void CDoorStateClosing::onEnterState( StateTransition transition ) 
 {
     std::cout << "The door is closing...\n";
 
@@ -315,7 +317,7 @@ void CDoorStateClosing::onEnterState( fsm::StateTransition transition )
     }).detach();
 }
 
-void CDoorStateClosing::onLeaveState( fsm::StateTransition transition )
+void CDoorStateClosing::onLeaveState( StateTransition transition )
 {
     std::cout << "The door has finished closing!\n";
 }
