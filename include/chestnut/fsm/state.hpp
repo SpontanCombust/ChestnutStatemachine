@@ -13,6 +13,7 @@
 #define __CHESTNUT_STATEMACHINE_STATE_H__
 
 #include "state_base.hpp"
+#include "statemachine.hpp"
 
 namespace chestnut::fsm
 {
@@ -26,13 +27,6 @@ namespace chestnut::fsm
 template< class ParentStatemachineClass >
 class State : public ParentStatemachineClass::BaseStateType
 {
-protected:
-    /**
-     * @brief Pointer to the statemachine object that houses the state
-     */
-    ParentStatemachineClass *parent;
-
-
 public:
     /**
      * @brief Typedef of parent statemachine class to be used as class member type
@@ -43,6 +37,18 @@ public:
      */
     typedef ParentStatemachineClass* StatemachinePtrType;
 
+    /**
+     * @brief Make the template Statemachine a friend of this template class
+     */
+    friend Statemachine<typename ParentStatemachineClass::BaseStateType>;
+
+
+protected:
+    /**
+     * @brief Pointer to the statemachine object that houses the state
+     */
+    ParentStatemachineClass *parent;
+
 
 public:
     /**
@@ -50,11 +56,14 @@ public:
      */
     State() noexcept;
 
-    // @brief Sets the pointer to the parent statemachine object.
-    //
-    // THIS METHOD IS USED INTERNALLY AND SHOULD NOT BE CALLED BY THE USER!
-    //
-    // @param parent pointer to parent statemachine
+
+private:
+    /**
+     * @brief Sets the pointer to the parent statemachine object.
+     * Thanks to the friendship with Statemachine template it can be called from that and only that type.
+     * 
+     * @param parent pointer to parent statemachine 
+     */
     void setParent( StatemachinePtrType parent ) noexcept;
 };
 
