@@ -1,3 +1,5 @@
+#include "exceptions.hpp"
+
 namespace chestnut::fsm
 {
 
@@ -16,12 +18,26 @@ bool StateBase::setParent( StatemachineBase *parent_ ) noexcept
 
 inline StatemachineBase& StateBase::getParent()
 {
-    return *parent;
+    if( parent )
+    {
+        return *parent;
+    }
+    else
+    {
+        throw BadParentAccessException( "State parent access violation!");
+    }
 }
 
 inline const StatemachineBase& StateBase::getParent() const
 {
-    return *parent;
+    if( parent )
+    {
+        return *parent;
+    }
+    else
+    {
+        throw BadParentAccessException( "State parent access violation!");
+    }
 }
 
 inline bool StateBase::canEnterState( StateTransition transition ) const noexcept

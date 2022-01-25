@@ -1,18 +1,34 @@
+#include "exceptions.hpp"
+
 namespace chestnut::fsm
 {
 
 template<class ParentStatemachineClass, class BaseStateClass>
 typename State<ParentStatemachineClass, BaseStateClass>::StatemachineType& State<ParentStatemachineClass, BaseStateClass>::getParent() 
 {
-    // setParent ensures to the statemachine the parent pointer is valid 
+    // setParent ensures to the statemachine the parent pointer is of valid type 
     // so this will either be null or valid StatemachineType
-    return *static_cast<StatemachineType*>( this->parent );
+    if( this->parent )
+    {
+        return *static_cast<StatemachineType*>( this->parent );
+    }
+    else
+    {
+        throw BadParentAccessException( "State parent access violation!");
+    }
 }
 
 template<class ParentStatemachineClass, class BaseStateClass>
 const typename State<ParentStatemachineClass, BaseStateClass>::StatemachineType& State<ParentStatemachineClass, BaseStateClass>::getParent() const 
 {
-    return *static_cast<StatemachineType*>( this->parent );
+    if( this->parent )
+    {
+        return *static_cast<StatemachineType*>( this->parent );
+    }
+    else
+    {
+        throw BadParentAccessException( "State parent access violation!");
+    }
 }
 
 template<class ParentStatemachineClass, class BaseStateClass>

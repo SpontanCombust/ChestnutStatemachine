@@ -89,6 +89,7 @@ inline bool StatemachineBase::initState( Args&& ...args )
 	transition.prevState = NULL_STATE;
 	transition.nextState = typeid( StateType );
 
+    // this can throw BadParentAccessException, but the memory for pointer won't leak
 	BaseStateType *initialState = new StateType( std::forward<Args>(args)... );
     if( !initialState->setParent( this ) )
     {
@@ -107,7 +108,7 @@ inline bool StatemachineBase::initState( Args&& ...args )
 		}
 		catch(const std::exception& e)
 		{
-			throw OnEnterStateException( e.what() );   
+			throw OnEnterStateException( transition, e.what() );   
 		}
 
 		return true;
@@ -136,6 +137,7 @@ inline bool StatemachineBase::gotoState( Args&& ...args )
 	
     if( transition.prevState != transition.nextState )
     {
+        // this can throw BadParentAccessException, but the memory for pointer won't leak
         BaseStateType *nextState = new StateType( std::forward<Args>(args)... );
         if( !nextState->setParent( this ) )
         {
@@ -172,7 +174,7 @@ inline bool StatemachineBase::gotoState( Args&& ...args )
             {
                 m_isCurrentlyLeavingAState = false;
                 delete nextState;
-                throw OnLeaveStateException( e.what() );    
+                throw OnLeaveStateException( transition, e.what() );    
             }
 
 			// if not only the init state is on the stack
@@ -193,7 +195,7 @@ inline bool StatemachineBase::gotoState( Args&& ...args )
 		}
 		catch(const std::exception& e)
 		{
-			throw OnEnterStateException( e.what() );
+			throw OnEnterStateException( transition, e.what() );
 		}
 
 		return true;
@@ -219,6 +221,7 @@ inline bool StatemachineBase::pushState( Args&& ...args )
 	
     if( transition.prevState != transition.nextState )
     {
+        // this can throw BadParentAccessException, but the memory for pointer won't leak
         BaseStateType *nextState = new StateType( std::forward<Args>(args)... );
         if( !nextState->setParent( this ) )
         {
@@ -255,7 +258,7 @@ inline bool StatemachineBase::pushState( Args&& ...args )
             {
                 m_isCurrentlyLeavingAState = false;
                 delete nextState;
-                throw OnLeaveStateException( e.what() );    
+                throw OnLeaveStateException( transition, e.what() );    
             }
 
             m_isCurrentlyLeavingAState = false;
@@ -269,7 +272,7 @@ inline bool StatemachineBase::pushState( Args&& ...args )
 		}
 		catch(const std::exception& e)
 		{
-			throw OnEnterStateException( e.what() );
+			throw OnEnterStateException( transition, e.what() );
 		}
 
 		return true;
@@ -320,7 +323,7 @@ inline bool StatemachineBase::popState()
             m_isCurrentlyLeavingAState = false;
             // push this state back so that SM goes back to as it was before except now its condition is undefined
             m_stackStates.push( currentState );
-            throw OnLeaveStateException( e.what() );
+            throw OnLeaveStateException( transition, e.what() );
         }
         
         delete currentState;
@@ -334,7 +337,7 @@ inline bool StatemachineBase::popState()
         }
         catch(const std::exception& e)
         {
-            throw OnEnterStateException( e.what() );
+            throw OnEnterStateException( transition, e.what() );
         }
 
         return true;

@@ -2,7 +2,6 @@
 #define __CHESTNUT_STATEMACHINE_STATE_H__
 
 #include "state_base.hpp"
-#include "statemachine.hpp"
 
 namespace chestnut::fsm
 {

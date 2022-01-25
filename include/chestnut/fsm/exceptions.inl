@@ -1,22 +1,32 @@
 namespace chestnut::fsm
 {
-    
-inline StateChangeException::StateChangeException( const char *msg ) throw()
+
+inline StatemachineException::StatemachineException( const char *msg ) throw()
 {
-    message = msg;
+    this->message = msg;
 }
 
-inline const char* StateChangeException::what() const throw()
+inline const char* StatemachineException::what() const throw() 
 {
-    return message.c_str();
+    return this->message.c_str();
 }
 
-inline OnEnterStateException::OnEnterStateException( const char *msg ) throw() : StateChangeException( msg )
+inline BadParentAccessException::BadParentAccessException( const char *msg ) : StatemachineException( msg ) 
+{
+
+}
+
+inline StateChangeException::StateChangeException( StateTransition transition, const char *msg ) throw() : StatemachineException( msg )
+{
+    this->transition = transition;
+}
+
+inline OnEnterStateException::OnEnterStateException( StateTransition transition, const char *msg ) throw() : StateChangeException( transition, msg )
 {
     message = "Exception was thrown when entering a state: " + message;
 }
 
-inline OnLeaveStateException::OnLeaveStateException( const char *msg ) throw() : StateChangeException( msg )
+inline OnLeaveStateException::OnLeaveStateException( StateTransition transition, const char *msg ) throw() : StateChangeException( transition, msg )
 {
     message = "Exception was thrown when leaving a state: " + message;
 }
