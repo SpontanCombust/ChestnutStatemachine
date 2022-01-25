@@ -1,14 +1,3 @@
-/**
- * @file state.hpp
- * @author Przemysław Cedro (SpontanCombust)
- * @brief Header file with the template state type used to create a state class with an access to the parent statemachine
- * @version 3.0.0
- * @date 2022-01-20
- * 
- * @copyright MIT License (c) 2021-2022
- * 
- */
-
 #ifndef __CHESTNUT_STATEMACHINE_STATE_H__
 #define __CHESTNUT_STATEMACHINE_STATE_H__
 
@@ -18,53 +7,42 @@
 namespace chestnut::fsm
 {
 
-/**
- * @brief Template state type used to create a state class with an access to the parent statemachine; it derives from fsm::StateBase
- * 
- * @tparam ParentStatemachineClass type of the statemachine that will be this state's parent
- * 
- */
-template< class ParentStatemachineClass >
-class State : public ParentStatemachineClass::BaseStateType
+// When you want to extend a state of a base statemachine class
+template< class ParentStatemachineClass, class BaseStateClass = void >
+class State : virtual public ParentStatemachineClass::BaseStateType, virtual public BaseStateClass
 {
 public:
-    /**
-     * @brief Typedef of parent statemachine class to be used as class member type
-     */
     typedef ParentStatemachineClass StatemachineType;
-    /**
-     * @brief Typedef of parent statemachine class pointer be used as class member type
-     */
-    typedef ParentStatemachineClass* StatemachinePtrType;
-
-    /**
-     * @brief Make the template Statemachine a friend of this template class
-     */
-    friend Statemachine<typename ParentStatemachineClass::BaseStateType>;
-
-
-protected:
-    /**
-     * @brief Pointer to the statemachine object that houses the state
-     */
-    ParentStatemachineClass *parent;
-
+    typedef class ParentStatemachineClass::BaseStateType BaseStateType;
 
 public:
-    /**
-     * @brief State constructor
-     */
-    State() noexcept;
-
+    // Don't call in constructor! BadParentAccessException
+    virtual StatemachineType& getParent() override;
+    // Don't call in constructor! BadParentAccessException
+    virtual const StatemachineType& getParent() const override;
 
 private:
-    /**
-     * @brief Sets the pointer to the parent statemachine object.
-     * Thanks to the friendship with Statemachine template it can be called from that and only that type.
-     * 
-     * @param parent pointer to parent statemachine 
-     */
-    void setParent( StatemachinePtrType parent ) noexcept;
+    // Returns whether this state type can be bound to a given statemachine type
+    virtual bool setParent( StatemachineBase *parent_ ) noexcept override;
+};
+
+// When you just want a state for a statemachine
+template< class ParentStatemachineClass >
+class State<ParentStatemachineClass, void> : virtual public ParentStatemachineClass::BaseStateType
+{
+public:
+    typedef ParentStatemachineClass StatemachineType;
+    typedef class ParentStatemachineClass::BaseStateType BaseStateType;
+
+public:
+    // Don't call in constructor! BadParentAccessException
+    virtual StatemachineType& getParent() override;
+    // Don't call in constructor! BadParentAccessException
+    virtual const StatemachineType& getParent() const override;
+
+private:
+    // Returns whether this state type can be bound to a given statemachine type
+    virtual bool setParent( StatemachineBase *parent_ ) noexcept override;
 };
 
 } // namespace chestnut::fsm

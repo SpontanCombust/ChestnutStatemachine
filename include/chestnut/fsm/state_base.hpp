@@ -17,13 +17,34 @@
 namespace chestnut::fsm
 {
 
+// forward declaration because of mutual dependence
+class StatemachineBase;
+
+
 /**
  * @brief Base class of State, housing the methods that don't depend on state's parent statemachine type
  * 
  */
 class StateBase
 {
+protected:
+    StatemachineBase *parent;
+
+
 public:
+    /**
+     * @brief Typedef of parent statemachine class to be used as class member type
+     */
+    typedef StatemachineBase StatemachineType;
+    // Befriended fsm::Statemachine so that it can call setParent()
+    friend StatemachineBase;
+
+    typedef StateBase BaseStateType;
+    
+
+public:
+    StateBase();
+    
     /**
      * @brief Virtual State destructor, it's marked as default
      */
@@ -67,6 +88,18 @@ public:
      * @param transition state transition data
      */
     virtual void onLeaveState( StateTransition transition );
+
+
+protected:
+    // Don't call in constructor! BadParentAccessException
+    virtual StatemachineBase& getParent();
+    // Don't call in constructor! BadParentAccessException
+    virtual const StatemachineBase& getParent() const;
+
+
+private:
+    // Returns whether this state type can be bound to a given statemachine type
+    virtual bool setParent( StatemachineBase *parent_ ) noexcept;
 };
 
 } // namespace chestnut::fsm

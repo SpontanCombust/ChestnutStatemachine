@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <mutex>
-#include <shared_mutex>
 #include <thread>
 
 // ================= 0. (Optional) For convenience include fsm.hpp and do a 'using' on namespace ====================
@@ -39,8 +38,8 @@ using namespace chestnut::fsm;
 #include <chestnut/fsm/state_base.hpp>
 
 // 1.2 
-// Inherit from chestnut::fsm::StateBase
-class IDoorState : public StateBase
+// Create the extension class, it can by any class as long as it itself does not have chestnut::fsm::StateBase as a base class
+class DoorStateExtension
 {
 public:
 // 1.3. 
@@ -62,13 +61,13 @@ public:
 
 // ...If you decided to use a custom base state class before, in the template parameter of chestnut::fsm::Statemachine
 // input this type. Otherwise you can just write chestnut::fsm::Statemachine<> and the base state class will be the default one.
-class CDoorStatemachine : public Statemachine<IDoorState>
+class CDoorStatemachine : public Statemachine<DoorStateExtension>
 {
 public:
     // 2.2. (Optional) 
     // You can make your statemachine able to be used across threads in an async manner
     // The base Statemachine type does not support multithreading, so you'll have to set up the necessary precautions yourself
-    mutable std::recursive_mutex doorMutex;
+    mutable std::mutex doorMutex;
 
 
     CDoorStatemachine();
@@ -80,13 +79,13 @@ public:
 
     bool tryOpen()
     {
-        std::lock_guard< std::recursive_mutex > lock( doorMutex );
+        std::lock_guard<std::mutex> lock( doorMutex );
         return getCurrentState()->tryOpen();
     }
 
     bool tryClose()
     {
-        std::lock_guard< std::recursive_mutex > lock( doorMutex );
+        std::lock_guard<std::mutex> lock( doorMutex );
         return getCurrentState()->tryClose();
     }
 };
@@ -228,8 +227,7 @@ void CDoorStateClosed::onLeaveState( StateTransition transition )
 
 bool CDoorStateClosed::tryOpen()
 {
-    std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
-    parent->pushState<CDoorStateOpening>();
+    getParent().pushState<CDoorStateOpening>();
     return true;  
 }
 
@@ -248,8 +246,9 @@ void CDoorStateOpening::onEnterState( StateTransition transition )
     // spawn a thread that'll wait 2 seconds and then transition to next state
     std::thread( [this] {
         std::this_thread::sleep_for( std::chrono::seconds(2) );
-        std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
-        parent->gotoState<CDoorStateOpen>();
+        // we're in a different thread, we have to lock the parent
+        std::lock_guard<std::mutex> lock( getParent().doorMutex );
+        getParent().gotoState<CDoorStateOpen>();
     }).detach();
 }
 
@@ -298,8 +297,7 @@ bool CDoorStateOpen::tryOpen()
 
 bool CDoorStateOpen::tryClose()
 {
-    std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
-    parent->gotoState<CDoorStateClosing>();
+    getParent().gotoState<CDoorStateClosing>();
     return true;
 }
 
@@ -311,8 +309,9 @@ void CDoorStateClosing::onEnterState( StateTransition transition )
 
     std::thread( [this] {
         std::this_thread::sleep_for( std::chrono::seconds(2) );
-        std::lock_guard< std::recursive_mutex > lock( parent->doorMutex );
-        parent->popState();
+        // we're in a different thread, we have to lock the parent
+        std::lock_guard<std::mutex> lock( getParent().doorMutex );
+        getParent().popState();
     }).detach();
 }
 
@@ -373,8 +372,6 @@ int main(int argc, char const *argv[])
         while( door.isCurrentlyInState<CDoorStateOpening>() )
         {
             std::this_thread::sleep_for( std::chrono::milliseconds(100) ); // we'll keep waiting small intervals until the door fully opens
-
-            std::lock_guard< std::recursive_mutex > lock( door.doorMutex );
         }
 
         printDoorState();
@@ -386,8 +383,6 @@ int main(int argc, char const *argv[])
             while( door.isCurrentlyInState<CDoorStateClosing>() )
             {
                 std::this_thread::sleep_for( std::chrono::milliseconds(100) );
-
-                std::lock_guard< std::recursive_mutex > lock( door.doorMutex );
             }
 
             printDoorState();
