@@ -108,6 +108,7 @@ inline bool StatemachineBase::initState( Args&& ...args )
 		}
 		catch(const std::exception& e)
 		{
+            // the init state stays on the stack, but its condition is undefined
 			throw OnEnterStateException( transition, e.what() );   
 		}
 

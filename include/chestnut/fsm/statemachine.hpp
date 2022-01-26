@@ -41,6 +41,10 @@ public:
     typedef class BaseStatemachineClass::BaseStateType BaseStateType;
 
     typedef class BaseStatemachineClass::StateExtensionType StateExtensionType;
+
+
+public:
+    Statemachine();
 };
 
 // This can be achieved by regular inheritance of chestnut::fsm::StatemachineBase
@@ -49,6 +53,7 @@ public:
 template<>
 class Statemachine<void,chestnut::fsm::StatemachineBase> : public chestnut::fsm::StatemachineBase
 {
+public:
     typedef chestnut::fsm::StatemachineBase BaseStatemachineType;
 
     typedef chestnut::fsm::StatemachineBase::BaseStateType BaseStateType;

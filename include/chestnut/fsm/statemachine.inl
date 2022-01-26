@@ -16,4 +16,11 @@ typename Statemachine<StateExtension, BaseStatemachineClass>::BaseStateType* Sta
     return dynamic_cast< BaseStateType* >( BaseStatemachineClass::getCurrentState() );   
 }
 
+template<class BaseStatemachineClass>
+Statemachine<void,BaseStatemachineClass>::Statemachine() 
+{
+    static_assert( std::is_base_of<StatemachineBase, BaseStatemachineClass>::value, 
+        "BaseStatemachineClass has to be a child of StatemachineBase!" );
+}
+
 } // namespace chestnut::fsm

@@ -47,15 +47,27 @@ bool State<ParentStatemachineClass, BaseStateClass>::setParent( StatemachineBase
 template<class ParentStatemachineClass>
 typename State<ParentStatemachineClass, void>::StatemachineType& State<ParentStatemachineClass, void>::getParent() 
 {
-    // setParent ensures to the statemachine the parent pointer is valid 
-    // so this will either be null or valid StatemachineType
-    return *static_cast<StatemachineType*>( this->parent );
+    if( this->parent )
+    {
+        return *static_cast<StatemachineType*>( this->parent );
+    }
+    else
+    {
+        throw BadParentAccessException( "State parent access violation!");
+    }
 }
 
 template<class ParentStatemachineClass>
 const typename State<ParentStatemachineClass, void>::StatemachineType& State<ParentStatemachineClass, void>::getParent() const 
 {
-    return *static_cast<StatemachineType*>( this->parent );
+    if( this->parent )
+    {
+        return *static_cast<StatemachineType*>( this->parent );
+    }
+    else
+    {
+        throw BadParentAccessException( "State parent access violation!");
+    }
 }
 
 template<class ParentStatemachineClass>
