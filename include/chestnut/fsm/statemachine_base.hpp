@@ -1,3 +1,15 @@
+/**
+ * @file statemachine_base.hpp
+ * @author Przemysław Cedro (SpontanCombust)
+ * @brief Header file with fsm::StatemachineBase
+ * @version 3.0.0
+ * @date 2022-01-30
+ * 
+ * @copyright MIT License (c) 2021-2022
+ * 
+ */
+
+
 #ifndef __CHESTNUT_STATEMACHINE_STATEMACHINE_BASE_H__
 #define __CHESTNUT_STATEMACHINE_STATEMACHINE_BASE_H__
 
@@ -27,6 +39,9 @@ public:
      */
     typedef StateBase BaseStateType;
 
+    /**
+     * @brief Typef of the state extension type. This is the base statemachine type so there is no extension
+     */
     typedef void StateExtensionType;
 
 

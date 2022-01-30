@@ -3,7 +3,7 @@
  * @author SpontanCombust
  * @brief Header file with exception types.
  * @version 3.0.0
- * @date 2022-01-20
+ * @date 2022-01-30
  * 
  * @copyright MIT License (c) 2021-2022
  * 
@@ -32,6 +32,9 @@ struct StatemachineException : std::exception
     const char* what() const throw() override;
 };
 
+/**
+ * @brief Exception used when accessing the state parent pointer before it has been set
+ */
 struct BadParentAccessException : StatemachineException
 {
     BadParentAccessException( const char *msg );

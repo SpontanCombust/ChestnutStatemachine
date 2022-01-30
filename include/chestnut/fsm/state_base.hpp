@@ -1,9 +1,9 @@
 /**
  * @file state_base.hpp
  * @author Przemysław Cedro (SpontanCombust)
- * @brief Header file with fsm::StateBase - the most base class to create a state class
+ * @brief Header file with fsm::StateBase
  * @version 3.0.0
- * @date 2022-01-20
+ * @date 2022-01-30
  * 
  * @copyright MIT License (c) 2021-2022
  * 
@@ -22,12 +22,15 @@ class StatemachineBase;
 
 
 /**
- * @brief Base class of State, housing the methods that don't depend on state's parent statemachine type
+ * @brief Base class of State with the most essential methods
  * 
  */
 class StateBase
 {
 protected:
+    /**
+     * @brief Pointer to the statemachine that will house the state instance
+     */
     StatemachineBase *parent;
 
 
@@ -38,11 +41,16 @@ public:
     typedef StatemachineBase StatemachineType;
     // Befriended fsm::Statemachine so that it can call setParent()
     friend StatemachineBase;
-
+    /**
+     * @brief Typedef of the base class (here it is this class itself)
+     */
     typedef StateBase BaseStateType;
     
 
 public:
+    /**
+     * @brief The constructor
+     */
     StateBase();
     
     /**
@@ -75,9 +83,21 @@ public:
 
 
 protected:
-    // Don't call in constructor! BadParentAccessException
+    /**
+     * @brief Get the parent statemachine reference
+     *  
+     * @return parent statemachine reference
+     * 
+     * @throws BadParentAccessException if used before the parent pointer has been set (this will happen if used in a constructor)
+     */
     virtual StatemachineBase& getParent();
-    // Don't call in constructor! BadParentAccessException
+    /**
+     * @brief Get the parent statemachine reference
+     * 
+     * @return parent statemachine reference
+     * 
+     * @throws BadParentAccessException if used before the parent pointer has been set (this will happen if used in a constructor)
+     */
     virtual const StatemachineBase& getParent() const;
 
     /**
@@ -99,7 +119,12 @@ protected:
 
 
 private:
-    // Returns whether this state type can be bound to a given statemachine type
+    /**
+     * @brief Set the parent pointer. This method is called internally from the statemachine
+     * 
+     * @param parent_ parent statemachine pointer
+     * @return Returns whether this state type can be bound to a given statemachine type
+     */
     virtual bool setParent( StatemachineBase *parent_ ) noexcept;
 };
 

@@ -25,46 +25,34 @@ using namespace chestnut::fsm;
 
 
 
-// ================================= 1. Decide on the base state class you'll use ====================================
 
-// 1.1. 
-// The default template type for the chestnut::fsm::Statemachine class is chestnut::fsm::StateBase
-// chestnut::fsm::StateBase has all the necessary methods for the statemachine to work
-// You can use the default chestnut::fsm::StateBase class or extend it and that's what we're going to do now
-// This way we will be able to call custom methods on current states
-//
-// To create a base state extension first include state_base.hpp header
+// ====================================== 1. Define your statemachine type ============================================
 
-#include <chestnut/fsm/state_base.hpp>
-
-// 1.2 
-// Create the extension class, it can by any class as long as it itself does not have chestnut::fsm::StateBase as a base class
+// 1.1. (Optional)
+// Create a state extension class.
+// By default a statemachine class has access only to the very basic state methods like canEnterState.
+// States will still be able to transition between each other, the statemachine class will simply not be able to interact with them in any more custom manner.
+// An extension class will allow you to use more than these basic methods and set up a way to communicate with states.
+// Extension can have pure virtual methods for example so that states will actually be forced to implement them.
+// By creating a statemachine with state extension you will be able to call public methods of that extension on states
 class DoorStateExtension
 {
 public:
-// 1.3. 
-// Define virtual methods you'll want to call on your states
     virtual bool tryOpen() = 0;
     virtual bool tryClose() = 0;
 };
 
-
-
-
-// ====================================== 2. Define your statemachine type ============================================
-
-
-// 2.1. 
+// 1.2. 
 // To create a custom statemachine class include statemachine.hpp header
 
 #include <chestnut/fsm/statemachine.hpp>
 
-// ...If you decided to use a custom base state class before, in the template parameter of chestnut::fsm::Statemachine
-// input this type. Otherwise you can just write chestnut::fsm::Statemachine<> and the base state class will be the default one.
+// ...If you decided to use a state extension class, in the template parameter of chestnut::fsm::Statemachine
+// input this type. Otherwise you can just write chestnut::fsm::Statemachine<> for a basic setup
 class CDoorStatemachine : public Statemachine<DoorStateExtension>
 {
 public:
-    // 2.2. (Optional) 
+    // 1.3. (Optional) 
     // You can make your statemachine able to be used across threads in an async manner
     // The base Statemachine type does not support multithreading, so you'll have to set up the necessary precautions yourself
     mutable std::mutex doorMutex;
@@ -73,7 +61,7 @@ public:
     CDoorStatemachine();
 
 
-    // 2.3. (Optional) If you want you can create methods in the statemachine with the same signatures that you gave in point 1.3
+    // 1.4. (Optional) If you want you can create methods in the statemachine with the same signatures that you gave in point 1.1
     // This will make them look as a sort of "state-virtual" methods, 
     // i.e. methods which behaviour depends almost solely on the current state of the statemachine
 
@@ -93,9 +81,9 @@ public:
 
 
 
-// ====================================== 3. Define your states ======================================
+// ====================================== 2. Define your states ======================================
 
-// 3.1. Be aware of the order of your includes!
+// 2.1. Be aware of the order of your includes!
 //
 // Calls to initState(), gotoState() and pushState() require that the state type given to them in the template parameter is a *complete* type.
 // If you need a mutual state dependency (e.g. state A goes to state B and vice versa) it's best to properly divide
@@ -105,7 +93,7 @@ public:
 //
 // More on incomplete types: https://en.cppreference.com/w/cpp/language/type#Incomplete_type
 
-// 3.2
+// 2.2
 // To create a state class first include state.hpp header
 
 #include <chestnut/fsm/state.hpp>
@@ -116,19 +104,20 @@ public:
 class CDoorStateClosed : public State<CDoorStatemachine>
 {
 public:
-    // 3.3. (Optional) States can have a custom constructor or just a default one
+    // 2.3. (Optional) 
+    // States can have a custom constructor or just a default one
     // You pass these custom parameters when you call initState(), gotoState() or pushState()
     CDoorStateClosed( bool printOnNullState = false );
 
-    // 3.4. (Optional) Override methods that will be called when a statemachine enter or leaves the state
+    // 2.4. (Optional) 
+    // Override methods that will be called when a statemachine enter or leaves the state
     // The data about the transition (whether it was done with popState() method for example) is in StateTransition struct in the parameter
-    //
-    // As the statemachine requires that at least one state stays on the state stack throughout statemachine's lifetime after init()
-    // you could as well create a completely empty state with no overrides!
+    // You are not obligated to override these methods however
     void onEnterState( StateTransition transition ) override;
     void onLeaveState( StateTransition transition ) override;
     
-    // 3.5. (Optional) Override the virtual methods you specified in point 1.3
+    // 2.5. (Optional) 
+    // Override the virtual methods you specified in point 1.1
     bool tryOpen() override;
     bool tryClose() override;
 
@@ -139,7 +128,8 @@ private:
 class CDoorStateOpening : public State<CDoorStatemachine>
 {
 public:
-    // 3.6. You don't even need to define a constructor at all if you don't need to!
+    // 2.6. 
+    // You don't even need to define a constructor at all if you don't need to!
 
     void onEnterState( StateTransition transition ) override;
     void onLeaveState( StateTransition transition ) override;
@@ -174,7 +164,8 @@ public:
 
 CDoorStatemachine::CDoorStatemachine() 
 {
-    // 3.7. A statemachine has to be initialized with some entry state
+    // 2.7. 
+    // A statemachine has to be initialized with some entry state
     // This state will stay on the state stack throughout the lifetime of the statemachine and won't be possible to get poppped
     // If you don't have a state that could be good candidate for a state that the machine should always eventually transition back to
     // you can simply create an empty state! Just inherit from the base state type and that's it. 
@@ -183,7 +174,8 @@ CDoorStatemachine::CDoorStatemachine()
     // Based on point 3.1 if we wanted to use a state transition method on CDoorStateClosed we have to use it AFTER its complete type body.
     // Hence why CDoorStatemachine() constructor definition is all the way here, but it's only because we're working in a single .cpp file.
 
-    // 3.8. (Optional) We can call state transition method with custom parameters. These parameters will be forwarded to state's constructor. See point 3.3.
+    // 2.8. (Optional) 
+    // We can call state transition method with custom parameters. These parameters will be forwarded to state's constructor. See point 3.3.
     // Calling initState() inside a constructor ensures it will always be initialised with this state
     initState<CDoorStateClosed>( true );
 }
@@ -194,8 +186,10 @@ CDoorStatemachine::CDoorStatemachine()
 
 CDoorStateClosed::CDoorStateClosed( bool printOnNullState )
 {
-    // 3.7. Inside a state constructor you cannot use the `parent` pointer as it has not been bound to the state object by the point of state object creattion
-    // If you want to use the `parent` pointer do it in onEnterState and onLeaveState methods instead
+    // 2.7. 
+    // Inside a state constructor you shouldn't use the getParent() method, because the pointer to the parent statemachine has not been set up by this point
+    // Calling it here will throw BadParentAccessException
+    // If you want to use the parent statemchine do it in onEnterState and onLeaveState methods instead
     this->printOnNullState = printOnNullState;
 }
 
@@ -349,7 +343,7 @@ const char *doorStateTypeToString( std::type_index type )
     return "";
 }
 
-// ===================== 4. Create and setup your statemachine object =====================
+// ===================== 3. Use your statemachine object =====================
 
 int main(int argc, char const *argv[])
 {
@@ -391,3 +385,22 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
+
+/* CONSOLE OUTPUT
+CDoorStateClosed is the init state!
+Door state: Closed; state stack size: 1
+The door is already closed!
+The door is no longer closed!
+The door is openning...
+Door state: Opening; state stack size: 2
+The door has finished openning!
+The door is now open!
+Door state: Open; state stack size: 2
+The door is no longer open!
+The door is closing...
+Door state: Closing; state stack size: 2
+The door has finished closing!
+The door is now closed!
+Door state: Closed; state stack size: 1
+Statemachine is being destroyed!
+*/
