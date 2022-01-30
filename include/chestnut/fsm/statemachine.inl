@@ -8,6 +8,13 @@ Statemachine<StateExtension, BaseStatemachineClass>::Statemachine()
 {
     static_assert( std::is_base_of<StatemachineBase, BaseStatemachineClass>::value, 
         "BaseStatemachineClass has to be a child of StatemachineBase!" );
+    
+    using BaseStateExtensionType = typename BaseStatemachineClass::StateExtensionType;
+    if constexpr( !std::is_same<void, BaseStateExtensionType>::value )
+    {
+        static_assert( std::is_base_of<BaseStateExtensionType, StateExtension>::value, 
+            "StateExtension should be a subclass of the extension type from the BaseStatemachineClass!" );
+    }
 }
 
 template<class StateExtension, class BaseStatemachineClass>

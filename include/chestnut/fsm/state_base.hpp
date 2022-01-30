@@ -72,6 +72,14 @@ public:
      */
     virtual bool canLeaveState( StateTransition transition ) const noexcept;
     
+
+
+protected:
+    // Don't call in constructor! BadParentAccessException
+    virtual StatemachineBase& getParent();
+    // Don't call in constructor! BadParentAccessException
+    virtual const StatemachineBase& getParent() const;
+
     /**
      * @brief A method called whenever statemachine enters this state
      * 
@@ -88,13 +96,6 @@ public:
      * @param transition state transition data
      */
     virtual void onLeaveState( StateTransition transition );
-
-
-protected:
-    // Don't call in constructor! BadParentAccessException
-    virtual StatemachineBase& getParent();
-    // Don't call in constructor! BadParentAccessException
-    virtual const StatemachineBase& getParent() const;
 
 
 private:
