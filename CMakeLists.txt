@@ -15,3 +15,6 @@ target_link_libraries(DoorStatemachineExample PRIVATE ${PROJECT_NAME} Threads::T
 add_executable(AnimalStatemachineExample examples/animal_statemachine.cpp)
 target_link_libraries(AnimalStatemachineExample PRIVATE ${PROJECT_NAME})
 
+add_executable(AeltoEventManagerExample examples/aelto_event_manager.cpp)
+target_link_libraries(AeltoEventManagerExample PRIVATE ${PROJECT_NAME})
+
