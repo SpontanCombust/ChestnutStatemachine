@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structchestnut_1_1fsm_1_1_statemachine_exception.html" title="Base exception class for all statemachine related exceptions." alt="" coords="5,39,487,80"/>
+<area shape="rect" id="node2" href="$structchestnut_1_1fsm_1_1_bad_parent_access_exception.html" title="Exception used when accessing the state parent pointer before it has been set." alt="" coords="551,5,982,47"/>
+<area shape="rect" id="node3" href="$structchestnut_1_1fsm_1_1_state_change_exception.html" title="Base exception class for OnEnterStateException and OnLeaveStateException." alt="" coords="535,71,999,112"/>
+<area shape="rect" id="node4" href="$structchestnut_1_1fsm_1_1_on_enter_state_exception.html" title="Exception type thrown if onEnterState method in a state throws an unhandled exception." alt="" coords="1047,37,1528,79"/>
+<area shape="rect" id="node5" href="$structchestnut_1_1fsm_1_1_on_leave_state_exception.html" title="Exception type thrown if onLeaveState method in a state throws an unhandled exception." alt="" coords="1047,103,1528,144"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="chestnut::fsm::StatemachineException" name="chestnut::fsm::StatemachineException">
+<area shape="rect" id="node1" title="Base exception class for all statemachine related exceptions." alt="" coords="216,5,697,47"/>
+<area shape="rect" id="node2" href="$structchestnut_1_1fsm_1_1_bad_parent_access_exception.html" title="Exception used when accessing the state parent pointer before it has been set." alt="" coords="5,95,436,136"/>
+<area shape="rect" id="node3" href="$structchestnut_1_1fsm_1_1_state_change_exception.html" title="Base exception class for OnEnterStateException and OnLeaveStateException." alt="" coords="461,95,925,136"/>
+<area shape="rect" id="node4" href="$structchestnut_1_1fsm_1_1_on_enter_state_exception.html" title="Exception type thrown if onEnterState method in a state throws an unhandled exception." alt="" coords="199,184,680,225"/>
+<area shape="rect" id="node5" href="$structchestnut_1_1fsm_1_1_on_leave_state_exception.html" title="Exception type thrown if onLeaveState method in a state throws an unhandled exception." alt="" coords="704,184,1185,225"/>
+</map>

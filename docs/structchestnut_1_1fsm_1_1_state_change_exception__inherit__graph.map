@@ -1,6 +1,6 @@
 <map id="chestnut::fsm::StateChangeException" name="chestnut::fsm::StateChangeException">
-<area shape="rect" id="node1" title="Base exception class for OnEnterException and OnExitException." alt="" coords="137,80,323,121"/>
-<area shape="rect" id="node3" href="$structchestnut_1_1fsm_1_1_on_enter_exception.html" title="Exception type thrown if onEnter method in a state throws an unhandled exception." alt="" coords="5,169,220,196"/>
-<area shape="rect" id="node4" href="$structchestnut_1_1fsm_1_1_on_exit_exception.html" title="Exception type thrown if onExit method in a state throws an unhandled exception." alt="" coords="244,169,451,196"/>
-<area shape="rect" id="node2" title=" " alt="" coords="179,5,281,32"/>
+<area shape="rect" id="node1" title="Base exception class for OnEnterStateException and OnLeaveStateException." alt="" coords="266,95,730,136"/>
+<area shape="rect" id="node3" href="$structchestnut_1_1fsm_1_1_on_enter_state_exception.html" title="Exception type thrown if onEnterState method in a state throws an unhandled exception." alt="" coords="5,184,487,225"/>
+<area shape="rect" id="node4" href="$structchestnut_1_1fsm_1_1_on_leave_state_exception.html" title="Exception type thrown if onLeaveState method in a state throws an unhandled exception." alt="" coords="511,184,992,225"/>
+<area shape="rect" id="node2" href="$structchestnut_1_1fsm_1_1_statemachine_exception.html" title="Base exception class for all statemachine related exceptions." alt="" coords="257,5,739,47"/>
 </map>

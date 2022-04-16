@@ -1,0 +1,4 @@
+<map id="chestnut::fsm::StateBase" name="chestnut::fsm::StateBase">
+<area shape="rect" id="node1" title="Base class of State with the most essential methods." alt="" coords="5,20,436,47"/>
+<area shape="rect" id="node2" href="$classchestnut_1_1fsm_1_1_statemachine_1_1_base_state_class.html" title="Base state class that all state classes in this statemachine will derive from." alt="" coords="484,5,1064,61"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="chestnut::fsm::StatemachineException" name="chestnut::fsm::StatemachineException">
+<area shape="rect" id="node1" title="Base exception class for all statemachine related exceptions." alt="" coords="5,80,487,121"/>
+<area shape="rect" id="node2" title=" " alt="" coords="116,5,376,32"/>
+</map>

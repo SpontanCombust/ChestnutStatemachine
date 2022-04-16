@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chestnut Statemachine
-   &#160;<span id="projectnumber">v2.2.0</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">A C++ header-only library for finite statemachine implementation.</div>
   </td>
@@ -61,35 +61,61 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <div id="doc-content">
 <div class="contents">
 &#160;<ul>
+<li>canEnterState()
+: <a class="el" href="classchestnut_1_1fsm_1_1_state_base.html#a3335116cba48dc4587982f3033d43651">chestnut::fsm::StateBase</a>
+</li>
+<li>canLeaveState()
+: <a class="el" href="classchestnut_1_1fsm_1_1_state_base.html#ad8356895f1001529baecdb2ea42d1d88">chestnut::fsm::StateBase</a>
+</li>
 <li>getCurrentState()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a2e8a173c1e46ebe4b539cb1bbc7cb77f">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine.html#a6a8ecaf5426f0da91914558fd309e2d5">chestnut::fsm::Statemachine&lt; StateExtension, BaseStatemachineClass &gt;</a>
+, <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#a83216920962f7ba3f67ac80c9b264f53">chestnut::fsm::StatemachineBase</a>
 </li>
 <li>getCurrentStateType()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#aa8e417b0dbf00826e594d84a5037c029">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#a793f3aec09319d62761fe8c5602507be">chestnut::fsm::StatemachineBase</a>
+</li>
+<li>getParent()
+: <a class="el" href="classchestnut_1_1fsm_1_1_state.html#a967d39517f742095f9849618af27f6f0">chestnut::fsm::State&lt; ParentStatemachineClass, BaseStateClass &gt;</a>
+, <a class="el" href="classchestnut_1_1fsm_1_1_state_base.html#a84b45e4c425b4b3c9215d9cb64f9c9e1">chestnut::fsm::StateBase</a>
 </li>
 <li>getStateStackSize()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a5bae0a2f3858f38318ad28f82fc63a97">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#a9b58527a6050d81b5b12a45fca869cc2">chestnut::fsm::StatemachineBase</a>
 </li>
 <li>gotoState()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#ab4c97e6bfd6dbb5cc880dd20a3a81623">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#aed5da3a3b5352423f9ca7be6a301f0ce">chestnut::fsm::StatemachineBase</a>
 </li>
-<li>init()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a7f72a855a282178a02f251539f77f928">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+<li>initState()
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#a48bea7fa54e8b90f5fce7088bb40944c">chestnut::fsm::StatemachineBase</a>
 </li>
-<li>onEnter()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_state.html#adbab5ce69b7f9aed758e85596d228487">chestnut::fsm::IState&lt; ParentStatemachine &gt;</a>
+<li>isCurrentlyInState()
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#a64794d5a7d8e82c2be14a7561fa2520b">chestnut::fsm::StatemachineBase</a>
 </li>
-<li>onExit()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_state.html#a9466c2b6f4a172d62c5e0d6156bc0339">chestnut::fsm::IState&lt; ParentStatemachine &gt;</a>
+<li>onEnterState()
+: <a class="el" href="classchestnut_1_1fsm_1_1_state_base.html#a477186ebe00663339d40f33148813c0e">chestnut::fsm::StateBase</a>
+</li>
+<li>onLeaveState()
+: <a class="el" href="classchestnut_1_1fsm_1_1_state_base.html#a04de0761445a08b47500e2311228e420">chestnut::fsm::StateBase</a>
 </li>
 <li>popState()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a90eab368603749bf1ead65c851c3c50a">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#ac7d65f29068f25e052730c2b5b929980">chestnut::fsm::StatemachineBase</a>
 </li>
 <li>pushState()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a0b4c2350709294f619eac3e92a0aaa2e">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#af40a915687dda0e3089f2a2c4bf28607">chestnut::fsm::StatemachineBase</a>
 </li>
-<li>~IStatemachine()
-: <a class="el" href="classchestnut_1_1fsm_1_1_i_statemachine.html#a9441f804a58fffaef41c39123ff248c8">chestnut::fsm::IStatemachine&lt; StateInterface &gt;</a>
+<li>StateBase()
+: <a class="el" href="classchestnut_1_1fsm_1_1_state_base.html#a6c4b7114752f4b093a658b2026285057">chestnut::fsm::StateBase</a>
+</li>
+<li>Statemachine()
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine.html#abd9e722d10d05d8378b87b2e1f5f2d3f">chestnut::fsm::Statemachine&lt; StateExtension, BaseStatemachineClass &gt;</a>
+</li>
+<li>StatemachineBase()
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#a60fe415c809202e906117955f02af951">chestnut::fsm::StatemachineBase</a>
+</li>
+<li>~StateBase()
+: <a class="el" href="classchestnut_1_1fsm_1_1_state_base.html#acdede76b49b60e407963bdb30bbe7873">chestnut::fsm::StateBase</a>
+</li>
+<li>~StatemachineBase()
+: <a class="el" href="classchestnut_1_1fsm_1_1_statemachine_base.html#aaa908d4dd70a247d62f5fc0a27a08657">chestnut::fsm::StatemachineBase</a>
 </li>
 </ul>
 </div><!-- contents -->

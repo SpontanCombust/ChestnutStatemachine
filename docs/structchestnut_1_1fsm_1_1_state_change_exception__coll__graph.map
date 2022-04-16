@@ -1,4 +1,5 @@
 <map id="chestnut::fsm::StateChangeException" name="chestnut::fsm::StateChangeException">
-<area shape="rect" id="node1" title="Base exception class for OnEnterException and OnExitException." alt="" coords="5,80,192,121"/>
-<area shape="rect" id="node2" title=" " alt="" coords="47,5,150,32"/>
+<area shape="rect" id="node1" title="Base exception class for OnEnterStateException and OnLeaveStateException." alt="" coords="279,109,743,151"/>
+<area shape="rect" id="node2" href="$structchestnut_1_1fsm_1_1_statemachine_exception.html" title="Base exception class for all statemachine related exceptions." alt="" coords="5,5,487,47"/>
+<area shape="rect" id="node3" href="$structchestnut_1_1fsm_1_1_state_transition.html" title="Struct containing data describing a state transition." alt="" coords="511,13,1043,39"/>
 </map>

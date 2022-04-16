@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Chestnut Statemachine: include/chestnut/statemachine/state.hpp Source File</title>
+<title>Chestnut Statemachine: include/chestnut/fsm/state.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chestnut Statemachine
-   &#160;<span id="projectnumber">v2.2.0</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">A C++ header-only library for finite statemachine implementation.</div>
   </td>
@@ -65,53 +65,66 @@ $(document).ready(function(){initNavTree('state_8hpp_source.html',''); initResiz
 </div><!--header-->
 <div class="contents">
 <a href="state_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#ifndef __CHESTNUT_STATEMACHINE_STATE_H__</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#define __CHESTNUT_STATEMACHINE_STATE_H__</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;typeindex&gt;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>chestnut::fsm</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">template</span>&lt; <span class="keyword">class</span> ParentStatemachine &gt;</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classchestnut_1_1fsm_1_1_i_state.html">   29</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classchestnut_1_1fsm_1_1_i_state.html">IState</a></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classchestnut_1_1fsm_1_1_i_state.html#abc02548f6191aaa0c03154ea14ea89b8">   35</a></span>&#160;        ParentStatemachine *<a class="code" href="classchestnut_1_1fsm_1_1_i_state.html#abc02548f6191aaa0c03154ea14ea89b8">parent</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keyword">typedef</span> ParentStatemachine* ParentStatemachinePtrType;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="classchestnut_1_1fsm_1_1_i_state.html">IState</a>( ParentStatemachine *parent_ );</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="classchestnut_1_1fsm_1_1_i_state.html">IState</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classchestnut_1_1fsm_1_1_i_state.html#adbab5ce69b7f9aed758e85596d228487">onEnter</a>( std::type_index prevState ) = 0;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classchestnut_1_1fsm_1_1_i_state.html#a9466c2b6f4a172d62c5e0d6156bc0339">onExit</a>( std::type_index nextState ) = 0;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    };</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="state_8hpp.html#a8ca4888ee93a132642f4a514ea8bf3ef">   72</a></span>&#160;    <span class="keyword">const</span> std::type_index <a class="code" href="state_8hpp.html#a8ca4888ee93a132642f4a514ea8bf3ef">NULL_STATE</a> = std::type_index( <span class="keyword">typeid</span>(<span class="keyword">nullptr</span>) );</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;} <span class="comment">// namespace chestnut::fsm</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#ifndef __CHESTNUT_STATEMACHINE_STATE_H__</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#define __CHESTNUT_STATEMACHINE_STATE_H__</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="state__base_8hpp.html">state_base.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>chestnut::fsm</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span>&lt; <span class="keyword">class</span> ParentStatemachineClass, <span class="keyword">class</span> BaseStateClass = <span class="keywordtype">void</span> &gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classchestnut_1_1fsm_1_1_state.html">   36</a></span>&#160;<span class="keyword">class </span><a class="code" href="classchestnut_1_1fsm_1_1_state.html">State</a> : <span class="keyword">virtual</span> <span class="keyword">public</span> ParentStatemachineClass::BaseStateType, <span class="keyword">virtual</span> <span class="keyword">public</span> BaseStateClass</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">   42</a></span>&#160;    <span class="keyword">typedef</span> ParentStatemachineClass <a class="code" href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">StatemachineType</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classchestnut_1_1fsm_1_1_state.html#a36715135b722ec0e9b732146b562d788">   46</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">class </span>ParentStatemachineClass::BaseStateType <a class="code" href="classchestnut_1_1fsm_1_1_state.html#a36715135b722ec0e9b732146b562d788">BaseStateType</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">StatemachineType</a>&amp; <a class="code" href="classchestnut_1_1fsm_1_1_state.html#a967d39517f742095f9849618af27f6f0">getParent</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">StatemachineType</a>&amp; <a class="code" href="classchestnut_1_1fsm_1_1_state.html#a967d39517f742095f9849618af27f6f0">getParent</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> setParent( <a class="code" href="classchestnut_1_1fsm_1_1_statemachine_base.html">StatemachineBase</a> *parent_ ) noexcept <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;};</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#include &quot;state.inl&quot;</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif // __CHESTNUT_STATEMACHINE_STATE_H__</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">// This is a specialization for when there is no additional state class to inherit from.</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// So in this scenario this inherits only from statemachine&#39;s base state type.</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">template</span>&lt; <span class="keyword">class</span> ParentStatemachineClass &gt;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">class </span><a class="code" href="classchestnut_1_1fsm_1_1_state.html">State</a>&lt;ParentStatemachineClass, void&gt; : <span class="keyword">virtual</span> <span class="keyword">public</span> ParentStatemachineClass::BaseStateType</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">typedef</span> ParentStatemachineClass <a class="code" href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">StatemachineType</a>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">class </span>ParentStatemachineClass::BaseStateType <a class="code" href="classchestnut_1_1fsm_1_1_state.html#a36715135b722ec0e9b732146b562d788">BaseStateType</a>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">StatemachineType</a>&amp; <a class="code" href="classchestnut_1_1fsm_1_1_state.html#a967d39517f742095f9849618af27f6f0">getParent</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">StatemachineType</a>&amp; <a class="code" href="classchestnut_1_1fsm_1_1_state.html#a967d39517f742095f9849618af27f6f0">getParent</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> setParent( <a class="code" href="classchestnut_1_1fsm_1_1_statemachine_base.html">StatemachineBase</a> *parent_ ) noexcept <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;} <span class="comment">// namespace chestnut::fsm</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#include &quot;state.inl&quot;</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif // __CHESTNUT_STATEMACHINE_STATE_H__</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclasschestnut_1_1fsm_1_1_i_state_html_adbab5ce69b7f9aed758e85596d228487"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_i_state.html#adbab5ce69b7f9aed758e85596d228487">chestnut::fsm::IState::onEnter</a></div><div class="ttdeci">virtual void onEnter(std::type_index prevState)=0</div><div class="ttdoc">A method called whenever statemachine enters this state.</div></div>
-<div class="ttc" id="astate_8hpp_html_a8ca4888ee93a132642f4a514ea8bf3ef"><div class="ttname"><a href="state_8hpp.html#a8ca4888ee93a132642f4a514ea8bf3ef">chestnut::fsm::NULL_STATE</a></div><div class="ttdeci">const std::type_index NULL_STATE</div><div class="ttdoc">A constant type index meant to represent a lack of state.</div><div class="ttdef"><b>Definition:</b> state.hpp:72</div></div>
-<div class="ttc" id="aclasschestnut_1_1fsm_1_1_i_state_html_a9466c2b6f4a172d62c5e0d6156bc0339"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_i_state.html#a9466c2b6f4a172d62c5e0d6156bc0339">chestnut::fsm::IState::onExit</a></div><div class="ttdeci">virtual void onExit(std::type_index nextState)=0</div><div class="ttdoc">A method called whenever statemachine exits this state.</div></div>
-<div class="ttc" id="aclasschestnut_1_1fsm_1_1_i_state_html"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_i_state.html">chestnut::fsm::IState</a></div><div class="ttdoc">Base generic abstract class used for creating state interface.</div><div class="ttdef"><b>Definition:</b> state.hpp:29</div></div>
-<div class="ttc" id="aclasschestnut_1_1fsm_1_1_i_state_html_abc02548f6191aaa0c03154ea14ea89b8"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_i_state.html#abc02548f6191aaa0c03154ea14ea89b8">chestnut::fsm::IState::parent</a></div><div class="ttdeci">ParentStatemachine * parent</div><div class="ttdoc">Pointer to the statemachine that houses the state.</div><div class="ttdef"><b>Definition:</b> state.hpp:35</div></div>
+<div class="ttc" id="aclasschestnut_1_1fsm_1_1_state_html_ace9ce33a879e446905587430c9cabbf7"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_state.html#ace9ce33a879e446905587430c9cabbf7">chestnut::fsm::State::StatemachineType</a></div><div class="ttdeci">ParentStatemachineClass StatemachineType</div><div class="ttdoc">Typedef of the parent statemachine type; overrides the typedef from the base state class.</div><div class="ttdef"><b>Definition:</b> state.hpp:42</div></div>
+<div class="ttc" id="aclasschestnut_1_1fsm_1_1_state_html_a967d39517f742095f9849618af27f6f0"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_state.html#a967d39517f742095f9849618af27f6f0">chestnut::fsm::State::getParent</a></div><div class="ttdeci">virtual StatemachineType &amp; getParent() override</div><div class="ttdoc">Get the parent statemachine reference.</div><div class="ttdef"><b>Definition:</b> state.inl:7</div></div>
+<div class="ttc" id="aclasschestnut_1_1fsm_1_1_state_html_a36715135b722ec0e9b732146b562d788"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_state.html#a36715135b722ec0e9b732146b562d788">chestnut::fsm::State&lt; Lumberjack &gt;::BaseStateType</a></div><div class="ttdeci">class Lumberjack ::BaseStateType BaseStateType</div><div class="ttdoc">Typedef of the base class to this state class; overrides the typedef from the base state class.</div><div class="ttdef"><b>Definition:</b> state.hpp:46</div></div>
+<div class="ttc" id="astate__base_8hpp_html"><div class="ttname"><a href="state__base_8hpp.html">state_base.hpp</a></div><div class="ttdoc">An all encompassing header for this library's types.</div></div>
+<div class="ttc" id="aclasschestnut_1_1fsm_1_1_state_html"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_state.html">chestnut::fsm::State</a></div><div class="ttdoc">Template state class. Inherit from this class to create a proper state class.</div><div class="ttdef"><b>Definition:</b> state.hpp:36</div></div>
+<div class="ttc" id="aclasschestnut_1_1fsm_1_1_statemachine_base_html"><div class="ttname"><a href="classchestnut_1_1fsm_1_1_statemachine_base.html">chestnut::fsm::StatemachineBase</a></div><div class="ttdoc">Base statemachine type. This class is used internally.</div><div class="ttdef"><b>Definition:</b> statemachine_base.hpp:29</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_2cf27a69c9be39de311d04d77fb67992.html">chestnut</a></li><li class="navelem"><a class="el" href="dir_9cbe923588e73139886440fafa77d3ea.html">statemachine</a></li><li class="navelem"><a class="el" href="state_8hpp.html">state.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_2cf27a69c9be39de311d04d77fb67992.html">chestnut</a></li><li class="navelem"><a class="el" href="dir_728fb3781d105212bdd6e24bea4a37a2.html">fsm</a></li><li class="navelem"><a class="el" href="state_8hpp.html">state.hpp</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>

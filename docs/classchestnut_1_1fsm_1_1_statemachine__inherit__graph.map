@@ -1,0 +1,4 @@
+<map id="chestnut::fsm::Statemachine&lt; StateExtension, BaseStatemachineClass &gt;" name="chestnut::fsm::Statemachine&lt; StateExtension, BaseStatemachineClass &gt;">
+<area shape="rect" id="node1" title="Template statemachine class. Inherit from this type to create a proper statemachine class." alt="" coords="5,80,585,136"/>
+<area shape="rect" id="node2" href="$classchestnut_1_1fsm_1_1_statemachine_base.html" title="Base statemachine type. This class is used internally." alt="" coords="21,5,570,32"/>
+</map>

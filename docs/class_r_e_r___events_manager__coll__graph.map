@@ -1,0 +1,7 @@
+<map id="RER_EventsManager" name="RER_EventsManager">
+<area shape="rect" id="node1" title=" " alt="" coords="351,199,662,225"/>
+<area shape="rect" id="node2" href="$classchestnut_1_1fsm_1_1_statemachine.html" title=" " alt="" coords="32,109,547,136"/>
+<area shape="rect" id="node3" href="$classchestnut_1_1fsm_1_1_statemachine_base.html" title="Base statemachine type. This class is used internally." alt="" coords="5,13,555,39"/>
+<area shape="rect" id="node4" href="$struct_c_random_encounters.html" title=" " alt="" coords="589,109,899,136"/>
+<area shape="rect" id="node5" href="$struct_c_random_encounters_1_1_settings.html" title=" " alt="" coords="579,5,925,47"/>
+</map>
